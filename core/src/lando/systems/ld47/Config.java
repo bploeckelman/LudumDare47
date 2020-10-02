@@ -1,7 +1,7 @@
 package lando.systems.ld47;
 
 public class Config {
-    public static String title = "Ludum Dare 46";
+    public static String title = "Ludum Dare 47";
     public static int windowWidth = 1280;
     public static int windowHeight = 720;
     public static boolean resizable = true;
