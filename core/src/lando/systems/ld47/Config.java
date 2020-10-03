@@ -9,5 +9,5 @@ public class Config {
     public static boolean vsync = true;
     public static boolean debug = false;
     public static boolean shaderDebug = false;
-    public static boolean showLaunchScreen = true;
+    public static boolean showLaunchScreen = false;
 }

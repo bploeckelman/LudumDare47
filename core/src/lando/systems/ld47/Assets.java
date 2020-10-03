@@ -37,6 +37,7 @@ public class Assets implements Disposable {
 
     public TextureRegion whitePixel;
     public TextureRegion whiteCircle;
+    public TextureRegion tetradSquare;
 
     public NinePatch border;
     public NinePatch inset;
@@ -89,6 +90,8 @@ public class Assets implements Disposable {
 
         whitePixel = atlas.findRegion("white-pixel");
         whiteCircle = atlas.findRegion("white-circle");
+
+        tetradSquare = atlas.findRegion("tetrad-square");
 
         border = new NinePatch(atlas.findRegion("ninepatches/border"), 9, 9, 9, 9);
         inset  = new NinePatch(atlas.findRegion("ninepatches/inset"), 9, 9, 9, 9);

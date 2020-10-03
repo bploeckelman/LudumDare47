@@ -1,5 +1,7 @@
 package lando.systems.ld47.screens;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import lando.systems.ld47.Game;
@@ -7,6 +9,15 @@ import lando.systems.ld47.Game;
 public class TitleScreen extends BaseScreen {
     public TitleScreen(Game game) {
         super(game);
+    }
+
+    @Override
+    public void update(float dt) {
+        super.update(dt);
+
+        if (Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+            game.setScreen(new GameScreen(game));
+        }
     }
 
     @Override
