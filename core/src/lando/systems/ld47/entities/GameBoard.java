@@ -46,6 +46,7 @@ public class GameBoard {
     }
 
     public void update(float dt) {
+        Tetrad.GLOBAL_ANIM += dt;
 
         for (int i = tetrads.size -1; i >= 0; i--) {
             Tetrad tetrad = tetrads.get(i);

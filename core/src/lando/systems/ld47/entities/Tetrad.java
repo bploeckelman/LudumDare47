@@ -12,6 +12,7 @@ import lando.systems.ld47.Game;
 public class Tetrad {
     public static float POINT_WIDTH = 25;
     private static float GLOBAL_HUE = 0;
+    public static float GLOBAL_ANIM = 0;
 
     private GameBoard gameBoard;
     private Game game;
@@ -33,25 +34,20 @@ public class Tetrad {
         position = new Vector2(0, 0);
 
         // get your fucking shine block
-        animation = game.assets.blueBlock;
+
 
         points = new Array<>();
         buildNewPiece();
-        color = new Color(Color.WHITE);
+
         GLOBAL_HUE += 137;
         hue = GLOBAL_HUE;
-        color.fromHsv(hue, 1, 1);
+//        color.fromHsv(hue, 1, 1);
     }
 
     public void update(float dt) {
         accum += dt;
         for (TetradPiece point : points) {
             point.update(dt);
-        }
-        if (flashing){
-            color.fromHsv(hue, MathUtils.sin(accum*10f), 1);
-        } else {
-            color.fromHsv(hue, 1, 1);
         }
         // Allow tetrads to live outside of the gameboard
         if (origin != null) {
@@ -60,8 +56,12 @@ public class Tetrad {
     }
 
     public void render(SpriteBatch batch) {
-        batch.setColor(color);
-        TextureRegion blockImage = animation.getKeyFrame(accum);
+        if (flashing) {
+            batch.setColor(1, 1, 1, (1f + MathUtils.sin(accum * 10f))/2f);
+        } else {
+            batch.setColor(Color.WHITE);
+        }
+        TextureRegion blockImage = animation.getKeyFrame(GLOBAL_ANIM);
         for (TetradPiece point : points) {
             if (!point.remove) {
                 batch.draw(blockImage, position.x + (POINT_WIDTH * point.x), position.y + (POINT_WIDTH * point.y), POINT_WIDTH, POINT_WIDTH);
@@ -149,6 +149,8 @@ public class Tetrad {
                 points.add(new TetradPiece(3, 2, color));
                 center.set(2, 2.5f);
                 bounds = 3;
+                animation = game.assets.blueBlock;
+                color = new Color(Color.BLUE);
                 break;
             case 1:
                 // L
@@ -158,6 +160,8 @@ public class Tetrad {
                 points.add(new TetradPiece(2, 1, color));
                 center.set(1.5f, 2f);
                 bounds = 2;
+                animation = game.assets.greenBlock;
+                color = new Color(Color.GREEN);
                 break;
             case 2:
                 // Other L
@@ -167,6 +171,8 @@ public class Tetrad {
                 points.add(new TetradPiece(2, 2, color));
                 center.set(1.5f, 2f);
                 bounds = 2;
+                animation = game.assets.orangeBlock;
+                color = new Color(Color.ORANGE);
                 break;
             case 3:
                 // square
@@ -176,6 +182,8 @@ public class Tetrad {
                 points.add(new TetradPiece(1, 1, color));
                 center.set(1f, 1f);
                 bounds = 1;
+                animation = game.assets.redBlock;
+                color = new Color(Color.RED);
                 break;
             case 4:
                 // S
@@ -185,6 +193,8 @@ public class Tetrad {
                 points.add(new TetradPiece(2, 2, color));
                 center.set(1.5f, 2f);
                 bounds = 2;
+                animation = game.assets.redBlock;
+                color = new Color(Color.RED);
                 break;
             case 5:
                 // other S
@@ -194,6 +204,8 @@ public class Tetrad {
                 points.add(new TetradPiece(2, 1, color));
                 center.set(1.5f, 2f);
                 bounds = 2;
+                animation = game.assets.blueBlock;
+                color = new Color(Color.BLUE);
                 break;
             case 6:
                 // T
@@ -203,6 +215,8 @@ public class Tetrad {
                 points.add(new TetradPiece(2, 1, color));
                 center.set(1.5f, 2f);
                 bounds = 2;
+                animation = game.assets.redBlock;
+                color = new Color(Color.RED);
                 break;
         }
         // I
