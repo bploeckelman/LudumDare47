@@ -27,7 +27,8 @@ public class GameHud {
         this.bounds = new Rectangle(0, 0, this.camera.viewportWidth, this.camera.viewportHeight);
 
         uiElements.add(new ScoreUI(gameState));
-        uiElements.add(new NextUI(gameState, 10, bounds.height - 10));
+        uiElements.add(new NextUI(gameState, this.camera.viewportWidth - 130, bounds.height - 50));
+        uiElements.add(new LeaderboardUI(gameState));
 
         controllerText = new StringBuilder();
     }
