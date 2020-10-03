@@ -22,6 +22,7 @@ public class GameHud {
         this.bounds = new Rectangle(0, 0, this.camera.viewportWidth, this.camera.viewportHeight);
 
         uiElements.add(new ScoreUI(gameState));
+        uiElements.add(new NextUI(gameState, 10, bounds.height - 10));
     }
 
     public void update(float dt) {

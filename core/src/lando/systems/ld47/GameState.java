@@ -28,7 +28,7 @@ public class GameState {
     }
 
     // for hud
-    public Tetrad getNext() {
+    public Tetrad viewNext() {
         return next;
     }
 

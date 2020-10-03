@@ -98,6 +98,11 @@ public class Tetrad {
         position.set(x, y);
     }
 
+    public void center(Vector2 center) {
+        // I'm sorry
+        position.set(center.x - 50, center.y - 50);
+    }
+
     private void buildNewPiece(){
         int type = MathUtils.random(6);
         switch(type){
