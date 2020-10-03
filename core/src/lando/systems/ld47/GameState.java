@@ -27,6 +27,10 @@ public class GameState {
         return tetrad;
     }
 
+    public void setNext(Tetrad tetrad){
+        this.next = tetrad;
+    }
+
     // for hud
     public Tetrad viewNext() {
         return next;

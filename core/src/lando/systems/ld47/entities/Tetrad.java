@@ -9,6 +9,7 @@ import lando.systems.ld47.Game;
 
 public class Tetrad {
     public static float POINT_WIDTH = 25;
+    private static float GLOBAL_HUE = 0;
 
     private GameBoard gameBoard;
     private Game game;
@@ -19,8 +20,11 @@ public class Tetrad {
     public Vector2 origin;
     public Color color;
     private int bounds;
+    public boolean flashing;
+    private float accum;
+    private float hue;
 
-    private static float hue = 0;
+
 
     public Tetrad(Game game) {
         this.game = game;
@@ -30,11 +34,18 @@ public class Tetrad {
         points = new Array<>();
         buildNewPiece();
         color = new Color(Color.WHITE);
-        hue += 137;
+        GLOBAL_HUE += 137;
+        hue = GLOBAL_HUE;
         color.fromHsv(hue, 1, 1);
     }
 
     public void update(float dt) {
+        accum += dt;
+        if (flashing){
+            color.fromHsv(hue, MathUtils.sin(accum), 1);
+        } else {
+            color.fromHsv(hue, 1, 1);
+        }
         // Allow tetrads to live outside of the gameboard
         if (origin != null) {
             position.set(gameBoard.gameBounds.x + origin.x * POINT_WIDTH, gameBoard.gameBounds.y + origin.y * POINT_WIDTH);

@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectSet;
+import com.badlogic.gdx.utils.OrderedSet;
 import lando.systems.ld47.GameState;
 
 public class GameBoard {
@@ -19,9 +21,12 @@ public class GameBoard {
     private final Array<Tetrad> tetrads;
 
     private Tetrad activeTetrad;
+    private Tetrad tetradToRemove;
     public Rectangle gameBounds;
     float fallInterval;
     float timeToFall;
+
+    int blocksToFallTilRemove;
 
     public GameBoard(GameState gameState) {
         this.gameState = gameState;
@@ -30,6 +35,7 @@ public class GameBoard {
         float width = TILESWIDE * Tetrad.POINT_WIDTH;
         float height = TILESHIGH * Tetrad.POINT_WIDTH;
         gameBounds = new Rectangle((camera.viewportWidth - width) / 2f, (camera.viewportHeight - height) / 2f, width, height);
+        blocksToFallTilRemove = 3;
         fallInterval = 1f;
         timeToFall = fallInterval;
     }
@@ -116,8 +122,11 @@ public class GameBoard {
     public boolean collidesWithBlocks(Tetrad tetrad, Vector2 dir) {
         if (tetrad.origin == null) return false;
         testOrigin.set(tetrad.origin.x + dir.x, tetrad.origin.y + dir.y);
-        for (Vector2 point : tetrad.points) {
-            for (Tetrad placedPiece : tetrads) {
+        for (int i = 0; i < tetrad.points.size; i++) {
+            Vector2 point = tetrad.points.get(i);
+            for (int j = 0; j < tetrads.size; j++) {
+                Tetrad placedPiece = tetrads.get(j);
+                if (placedPiece == tetrad) continue;
                 for (Vector2 placedPoint : placedPiece.points) {
                     if (placedPiece.origin == null) continue;
                     if (point.x + testOrigin.x == placedPoint.x + placedPiece.origin.x &&
@@ -141,6 +150,25 @@ public class GameBoard {
         return false;
     }
 
+    public Tetrad getFreeBottomPiece(){
+        OrderedSet<Tetrad> bottomPieces = new OrderedSet<>();
+        for (int x = 0; x < TILESWIDE; x++) {
+            for (Tetrad tetrad : tetrads) {
+                if (tetrad.containsPoint(x, 0)){
+                    bottomPieces.add(tetrad);
+                }
+            }
+        }
+        Array<Tetrad> tetradArray = bottomPieces.orderedItems();
+        tetradArray.shuffle();
+        for (Tetrad t : tetradArray){
+            if (!collidesWithBlocks(t, new Vector2(0, -1))){
+                return t;
+            }
+        }
+        return null;
+    }
+
     public void moveDown(Tetrad tetrad) {
         if (invalidMove(tetrad, new Vector2(0, -1))) {
             tetrads.add(activeTetrad);
@@ -148,6 +176,22 @@ public class GameBoard {
 
             // TODO make this more async
             checkForFullRows();
+
+
+            // TODO: Make sure this hasn't been cleared
+            blocksToFallTilRemove --;
+            if (blocksToFallTilRemove <= 0){
+                if (tetradToRemove != null){
+                    tetradToRemove.flashing = false;
+                    gameState.setNext(tetradToRemove);
+                    tetrads.removeValue(tetradToRemove, true);
+                }
+                tetradToRemove = getFreeBottomPiece();
+                if (tetradToRemove != null) {
+                    tetradToRemove.flashing = true;
+                }
+                blocksToFallTilRemove = 3;
+            }
         } else {
             tetrad.origin.y -= 1;
         }
