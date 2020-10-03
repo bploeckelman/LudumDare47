@@ -13,7 +13,7 @@ public class Tetrad {
 
     private GameBoard gameBoard;
     private Game game;
-    public Array<Vector2> points;
+    public Array<TetradPiece> points;
     private Vector2 center = new Vector2();
 
     public Vector2 position;
@@ -54,14 +54,14 @@ public class Tetrad {
 
     public void render(SpriteBatch batch) {
         batch.setColor(color);
-        for (Vector2 point : points) {
+        for (TetradPiece point : points) {
             batch.draw(game.assets.tetradSquare, position.x + (POINT_WIDTH * point.x), position.y + (POINT_WIDTH * point.y), POINT_WIDTH, POINT_WIDTH);
         }
         batch.setColor(Color.WHITE);
     }
 
     public void rotate(int dir) {
-        for (Vector2 point : points) {
+        for (TetradPiece point : points) {
             if (dir < 0) {
                 point.set(point.y, bounds - point.x);
             } else {
@@ -71,7 +71,7 @@ public class Tetrad {
     }
 
     public boolean containsPoint(int x, int y) {
-        for (Vector2 point : points) {
+        for (TetradPiece point : points) {
             if (point.x + origin.x == x && point.y + origin.y == y) return true;
         }
         return false;
@@ -82,7 +82,7 @@ public class Tetrad {
             origin.y--;
         } else {
             for (int i = points.size - 1; i >= 0; i--) {
-                Vector2 point = points.get(i);
+                TetradPiece point = points.get(i);
                 if (y == origin.y + point.y) {
                     points.removeIndex(i);
                 } else if (y < origin.y + point.y) {
@@ -95,8 +95,8 @@ public class Tetrad {
     public void insertIntoBoard(GameBoard gameBoard) {
         this.gameBoard = gameBoard;
         int height = 0;
-        for (Vector2 point : points) {
-            if (point.y > height) height = (int) point.y;
+        for (TetradPiece point : points) {
+            if (point.y > height) height = point.y;
         }
         origin = new Vector2(4, 19 - height);
     }
@@ -115,64 +115,64 @@ public class Tetrad {
         switch (type) {
             case 0:
                 // I
-                points.add(new Vector2(0, 2));
-                points.add(new Vector2(1, 2));
-                points.add(new Vector2(2, 2));
-                points.add(new Vector2(3, 2));
+                points.add(new TetradPiece(0, 2, color));
+                points.add(new TetradPiece(1, 2, color));
+                points.add(new TetradPiece(2, 2, color));
+                points.add(new TetradPiece(3, 2, color));
                 center.set(2, 2.5f);
                 bounds = 3;
                 break;
             case 1:
                 // L
-                points.add(new Vector2(0, 2));
-                points.add(new Vector2(0, 1));
-                points.add(new Vector2(1, 1));
-                points.add(new Vector2(2, 1));
+                points.add(new TetradPiece(0, 2, color));
+                points.add(new TetradPiece(0, 1, color));
+                points.add(new TetradPiece(1, 1, color));
+                points.add(new TetradPiece(2, 1, color));
                 center.set(1.5f, 2f);
                 bounds = 2;
                 break;
             case 2:
                 // Other L
-                points.add(new Vector2(0, 1));
-                points.add(new Vector2(1, 1));
-                points.add(new Vector2(2, 1));
-                points.add(new Vector2(2, 2));
+                points.add(new TetradPiece(0, 1, color));
+                points.add(new TetradPiece(1, 1, color));
+                points.add(new TetradPiece(2, 1, color));
+                points.add(new TetradPiece(2, 2, color));
                 center.set(1.5f, 2f);
                 bounds = 2;
                 break;
             case 3:
                 // square
-                points.add(new Vector2(0, 0));
-                points.add(new Vector2(0, 1));
-                points.add(new Vector2(1, 0));
-                points.add(new Vector2(1, 1));
+                points.add(new TetradPiece(0, 0, color));
+                points.add(new TetradPiece(0, 1, color));
+                points.add(new TetradPiece(1, 0, color));
+                points.add(new TetradPiece(1, 1, color));
                 center.set(1f, 1f);
                 bounds = 1;
                 break;
             case 4:
                 // S
-                points.add(new Vector2(0, 1));
-                points.add(new Vector2(1, 1));
-                points.add(new Vector2(1, 2));
-                points.add(new Vector2(2, 2));
+                points.add(new TetradPiece(0, 1, color));
+                points.add(new TetradPiece(1, 1, color));
+                points.add(new TetradPiece(1, 2, color));
+                points.add(new TetradPiece(2, 2, color));
                 center.set(1.5f, 2f);
                 bounds = 2;
                 break;
             case 5:
                 // other S
-                points.add(new Vector2(0, 2));
-                points.add(new Vector2(1, 2));
-                points.add(new Vector2(1, 1));
-                points.add(new Vector2(2, 1));
+                points.add(new TetradPiece(0, 2, color));
+                points.add(new TetradPiece(1, 2, color));
+                points.add(new TetradPiece(1, 1, color));
+                points.add(new TetradPiece(2, 1, color));
                 center.set(1.5f, 2f);
                 bounds = 2;
                 break;
             case 6:
                 // T
-                points.add(new Vector2(0, 1));
-                points.add(new Vector2(1, 1));
-                points.add(new Vector2(1, 2));
-                points.add(new Vector2(2, 1));
+                points.add(new TetradPiece(0, 1, color));
+                points.add(new TetradPiece(1, 1, color));
+                points.add(new TetradPiece(1, 2, color));
+                points.add(new TetradPiece(2, 1, color));
                 center.set(1.5f, 2f);
                 bounds = 2;
                 break;

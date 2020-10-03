@@ -52,7 +52,7 @@ public class GameBoard {
                 //TODO something else
                 tetrads.clear();
             }
-            timeToFall = fallInterval; // TODO make this faster
+            timeToFall = fallInterval;
         }
 
         if (activeTetrad != null) {
@@ -125,11 +125,11 @@ public class GameBoard {
         if (tetrad.origin == null) return false;
         testOrigin.set(tetrad.origin.x + dir.x, tetrad.origin.y + dir.y);
         for (int i = 0; i < tetrad.points.size; i++) {
-            Vector2 point = tetrad.points.get(i);
+            TetradPiece point = tetrad.points.get(i);
             for (int j = 0; j < tetrads.size; j++) {
                 Tetrad placedPiece = tetrads.get(j);
                 if (placedPiece == tetrad) continue;
-                for (Vector2 placedPoint : placedPiece.points) {
+                for (TetradPiece placedPoint : placedPiece.points) {
                     if (placedPiece.origin == null) continue;
                     if (point.x + testOrigin.x == placedPoint.x + placedPiece.origin.x &&
                             point.y + testOrigin.y == placedPoint.y + placedPiece.origin.y) {
@@ -145,7 +145,7 @@ public class GameBoard {
     public boolean collidesWithWalls(Tetrad tetrad, Vector2 dir) {
         if (tetrad.origin == null) return false;
         testOrigin.set(tetrad.origin.x + dir.x, tetrad.origin.y + dir.y);
-        for (Vector2 point : tetrad.points){
+        for (TetradPiece point : tetrad.points){
             if (point.x + testOrigin.x < 0 || point.x + testOrigin.x >= TILESWIDE) return true;
             if (point.y + testOrigin.y < 0 || point.y + testOrigin.y >= TILESHIGH) return true;
         }
