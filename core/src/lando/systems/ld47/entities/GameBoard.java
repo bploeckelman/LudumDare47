@@ -86,6 +86,10 @@ public class GameBoard {
         if (activeTetrad != null) {
             activeTetrad.update(dt);
         }
+
+        for (Tetrad tetrad : tetrads) {
+            tetrad.update(dt);
+        }
     }
 
 

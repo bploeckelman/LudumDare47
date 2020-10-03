@@ -67,14 +67,17 @@ public class Tetrad {
     }
 
     public void deleteRow(int y) {
-        for (int i = points.size - 1; i >= 0; i--) {
-            Vector2 point = points.get(i);
-            if (y == origin.y + point.y) {
-                points.removeIndex(i);
-            } else if (y < origin.y + point.y) {
-                point.y -= 1;
+        if (y < origin.y) {
+            origin.y--;
+        } else {
+            for (int i = points.size - 1; i >= 0; i--) {
+                Vector2 point = points.get(i);
+                if (y == origin.y + point.y) {
+                    points.removeIndex(i);
+                } else if (y < origin.y + point.y) {
+                    point.y -= 1;
+                }
             }
-
         }
     }
 
