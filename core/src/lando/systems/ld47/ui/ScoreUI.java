@@ -1,12 +1,14 @@
 package lando.systems.ld47.ui;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import lando.systems.ld47.GameState;
 
 public class ScoreUI extends UserInterface {
 
     private int score = 0;
+    private float moneyLabel;
 
     public ScoreUI(GameState gameState) {
         super(gameState);
@@ -14,10 +16,11 @@ public class ScoreUI extends UserInterface {
 
     public void update(float dt) {
         score = gameState.getScore();
+        moneyLabel = MathUtils.lerp(moneyLabel, score, 0.1f);
     }
 
     public void draw(SpriteBatch batch, Rectangle bounds) {
-        String text = "Score: " + score;
+        String text = "Score: " + Math.round(moneyLabel);
         layout.setText(assets.font, text);
         assets.font.draw(batch, layout,
                 bounds.width - layout.width - 10f,
