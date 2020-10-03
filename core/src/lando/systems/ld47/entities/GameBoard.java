@@ -35,8 +35,8 @@ public class GameBoard {
 
     public void update(float dt) {
         if (activeTetrad == null){
-            activeTetrad = new Tetrad(this);
-            activeTetrad.insertIntoBoard();
+            activeTetrad = new Tetrad(game);
+            activeTetrad.insertIntoBoard(this);
             if (collidesAt(activeTetrad, Vector2.Zero)){
                 //GAME OVER
                 //TODO something else

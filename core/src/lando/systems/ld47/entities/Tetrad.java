@@ -22,9 +22,8 @@ public class Tetrad {
     private static float hue = 0;
 
 
-    public Tetrad (GameBoard gameBoard) {
-        this.gameBoard = gameBoard;
-        this.game = gameBoard.game;
+    public Tetrad (Game game) {
+        this.game = game;
 
         position = new Vector2(0,0);
 
@@ -85,7 +84,8 @@ public class Tetrad {
         }
     }
 
-    public void insertIntoBoard(){
+    public void insertIntoBoard(GameBoard gameBoard){
+        this.gameBoard = gameBoard;
         int height = 0;
         for (Vector2 point : points){
             if (point.y > height) height = (int)point.y;
