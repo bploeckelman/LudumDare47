@@ -175,7 +175,7 @@ public class GameBoard {
         if (invalidMove(tetrad, new Vector2(0, -1))) {
             tetrads.add(activeTetrad);
             activeTetrad = null;
-            fallInterval = Math.max(.2f, fallInterval - .05f);
+            fallInterval = Math.max(.2f, fallInterval - .005f);
 
             // TODO make this more async
             checkForFullRows();
