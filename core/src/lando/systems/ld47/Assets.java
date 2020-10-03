@@ -37,7 +37,17 @@ public class Assets implements Disposable {
 
     public TextureRegion whitePixel;
     public TextureRegion whiteCircle;
-    public TextureRegion tetradSquare;
+    //public TextureRegion tetradSquare;
+    public Animation<TextureRegion> orangeBlock;
+    public Animation<TextureRegion> redBlock;
+    public Animation<TextureRegion> blueBlock;
+    public Animation<TextureRegion> greenBlock;
+    public Animation<TextureRegion> shineBlock;
+
+    public Animation<TextureRegion> sasquatch;
+    public Animation<TextureRegion> sasquatch_jump;
+    public Animation<TextureRegion> sasquatch_throw;
+    public Animation<TextureRegion> sasquatch_stun;
 
     public NinePatch border;
     public NinePatch inset;
@@ -91,7 +101,18 @@ public class Assets implements Disposable {
         whitePixel = atlas.findRegion("white-pixel");
         whiteCircle = atlas.findRegion("white-circle");
 
-        tetradSquare = atlas.findRegion("tetrad-square");
+        //tetradSquare = atlas.findRegion("tetrad-square");
+        blueBlock = new Animation<>(0.1f, atlas.findRegions("block-blue"), Animation.PlayMode.LOOP);
+        greenBlock = new Animation<>(0.1f, atlas.findRegions("block-green"), Animation.PlayMode.LOOP);
+        shineBlock = new Animation<>(0.1f, atlas.findRegions("block-shine"), Animation.PlayMode.LOOP);
+        orangeBlock = new Animation<>(0.1f, atlas.findRegions("block-orange"), Animation.PlayMode.LOOP);
+        redBlock = new Animation<>(0.1f, atlas.findRegions("block-red"), Animation.PlayMode.LOOP);
+
+        sasquatch = new Animation<>(0.1f, atlas.findRegions("dime_walk"), Animation.PlayMode.LOOP);
+        sasquatch_jump = new Animation<>(0.1f, atlas.findRegions("dime_knock_back"), Animation.PlayMode.LOOP_PINGPONG);
+        sasquatch_stun = new Animation<>(0.1f, atlas.findRegions("dime_stun"), Animation.PlayMode.LOOP);
+        sasquatch_throw = new Animation<>(0.1f, atlas.findRegions("dime_dead"), Animation.PlayMode.LOOP);
+
 
         border = new NinePatch(atlas.findRegion("ninepatches/border"), 9, 9, 9, 9);
         inset  = new NinePatch(atlas.findRegion("ninepatches/inset"), 9, 9, 9, 9);

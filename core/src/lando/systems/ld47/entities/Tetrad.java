@@ -1,7 +1,9 @@
 package lando.systems.ld47.entities;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -21,15 +23,17 @@ public class Tetrad {
     public Color color;
     private int bounds;
     public boolean flashing;
-    private float accum;
+    private float accum = 0;
     private float hue;
 
-
+    private Animation<TextureRegion> animation;
 
     public Tetrad(Game game) {
         this.game = game;
         position = new Vector2(0, 0);
 
+        // get your fucking shine block
+        animation = game.assets.blueBlock;
 
         points = new Array<>();
         buildNewPiece();
@@ -57,9 +61,10 @@ public class Tetrad {
 
     public void render(SpriteBatch batch) {
         batch.setColor(color);
+        TextureRegion blockImage = animation.getKeyFrame(accum);
         for (TetradPiece point : points) {
             if (!point.remove) {
-                batch.draw(game.assets.tetradSquare, position.x + (POINT_WIDTH * point.x), position.y + (POINT_WIDTH * point.y), POINT_WIDTH, POINT_WIDTH);
+                batch.draw(blockImage, position.x + (POINT_WIDTH * point.x), position.y + (POINT_WIDTH * point.y), POINT_WIDTH, POINT_WIDTH);
             }
         }
         batch.setColor(Color.WHITE);

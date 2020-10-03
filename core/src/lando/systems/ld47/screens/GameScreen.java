@@ -8,6 +8,7 @@ import lando.systems.ld47.Game;
 import lando.systems.ld47.GameState;
 import lando.systems.ld47.entities.GameBoard;
 import lando.systems.ld47.particles.Particles;
+import lando.systems.ld47.entities.Sasquatch;
 import lando.systems.ld47.ui.GameHud;
 
 public class GameScreen extends BaseScreen{
@@ -16,12 +17,16 @@ public class GameScreen extends BaseScreen{
     public final GameBoard gameBoard;
     public final GameHud gameHud;
 
+    public Sasquatch sasquatch;
+
     public GameScreen(Game game) {
         super(game);
 
         gameState = new GameState(this);
         gameBoard = new GameBoard(gameState);
         gameHud = new GameHud(gameState);
+
+        sasquatch = new Sasquatch(this);
 
         playMusic(Audio.Musics.mood_track);
     }
@@ -34,6 +39,7 @@ public class GameScreen extends BaseScreen{
             game.setScreen(new EndScreen(game));
         }
         gameBoard.update(dt);
+        sasquatch.update(dt);
         gameHud.update(dt);
     }
 
@@ -43,6 +49,7 @@ public class GameScreen extends BaseScreen{
         batch.begin();
         {
             gameBoard.render(batch);
+            sasquatch.render(batch);
             particles.draw(batch, Particles.Layer.front);
         }
         batch.end();
