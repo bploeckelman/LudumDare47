@@ -41,6 +41,9 @@ public class Tetrad {
 
     public void update(float dt) {
         accum += dt;
+        for (TetradPiece point : points) {
+            point.update(dt);
+        }
         if (flashing){
             color.fromHsv(hue, MathUtils.sin(accum*10f), 1);
         } else {
@@ -55,7 +58,9 @@ public class Tetrad {
     public void render(SpriteBatch batch) {
         batch.setColor(color);
         for (TetradPiece point : points) {
-            batch.draw(game.assets.tetradSquare, position.x + (POINT_WIDTH * point.x), position.y + (POINT_WIDTH * point.y), POINT_WIDTH, POINT_WIDTH);
+            if (!point.remove) {
+                batch.draw(game.assets.tetradSquare, position.x + (POINT_WIDTH * point.x), position.y + (POINT_WIDTH * point.y), POINT_WIDTH, POINT_WIDTH);
+            }
         }
         batch.setColor(Color.WHITE);
     }
@@ -73,6 +78,20 @@ public class Tetrad {
     public boolean containsPoint(int x, int y) {
         for (TetradPiece point : points) {
             if (point.x + origin.x == x && point.y + origin.y == y) return true;
+        }
+        return false;
+    }
+
+    public TetradPiece getPieceAt(int x, int y) {
+        for (TetradPiece point : points) {
+            if (point.x + origin.x == x && point.y + origin.y == y) return point;
+        }
+        return null;
+    }
+
+    public boolean resolvingTetrad() {
+        for (TetradPiece piece : points) {
+            if (piece.destroyTimer != null && piece.destroyTimer > 0) return true;
         }
         return false;
     }

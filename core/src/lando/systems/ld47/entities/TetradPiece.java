@@ -6,6 +6,8 @@ public class TetradPiece {
     public int x;
     public int y;
     public Color color;
+    public Float destroyTimer;
+    public boolean remove;
 
     public TetradPiece(int x, int y, Color color) {
         this.x = x;
@@ -16,5 +18,16 @@ public class TetradPiece {
     public void set(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    public void update(float dt) {
+        if (destroyTimer != null){
+            destroyTimer -= dt;
+            if (destroyTimer <= 0) remove = true;
+        }
+    }
+
+    public void setDestroyTimer(float time) {
+        destroyTimer = time;
     }
 }

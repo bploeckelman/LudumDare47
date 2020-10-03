@@ -7,10 +7,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectSet;
-import com.badlogic.gdx.utils.OrderedSet;
+
 import lando.systems.ld47.Audio;
+import com.badlogic.gdx.utils.*;
 import lando.systems.ld47.GameState;
 
 public class GameBoard {
@@ -43,68 +42,96 @@ public class GameBoard {
     }
 
     public void update(float dt) {
-        playerInput.update(dt);
-        if (activeTetrad == null) {
-            activeTetrad = gameState.popNext();
-
-            activeTetrad.insertIntoBoard(this);
-            if (invalidMove(activeTetrad, Vector2.Zero)) {
-                //GAME OVER
-                //TODO something else
-                tetrads.clear();
-            }
-            timeToFall = fallInterval;
-        }
-
-        if (activeTetrad != null) {
-            PlayerInput.TriggerState state = playerInput.isRightPressed();
-            if (state.pressed) {
-                if (state.triggered && !invalidMove(activeTetrad, new Vector2(1, 0))) {
-                    activeTetrad.origin.x += 1;
-                }
-            } else if (playerInput.isLeftPressed().triggered) {
-                if (!invalidMove(activeTetrad, new Vector2(-1, 0))) {
-                    activeTetrad.origin.x -= 1;
-                }
-            }
-
-            if (playerInput.isRotateRight()) {
-                activeTetrad.rotate(-1);
-                if (invalidMove(activeTetrad, Vector2.Zero)) {
-                    activeTetrad.rotate(1);
-                }
-            }
-            if (playerInput.isRotateLeft()) {
-                activeTetrad.rotate(1);
-                if (invalidMove(activeTetrad, Vector2.Zero)) {
-                    activeTetrad.rotate(-1);
-                }
-            }
-
-            if (playerInput.isDownPressed()) {
-                moveDown(activeTetrad);
-            }
-
-            if (activeTetrad != null) {
-                if (playerInput.isPlungedPressed()) {
-                    while (moveDown(activeTetrad)) {
-                    }
-                }
-            }
-        }
-
-        timeToFall -= dt;
-        if (timeToFall < 0) {
-            moveDown(activeTetrad);
-        }
-
-        if (activeTetrad != null) {
-            activeTetrad.update(dt);
-        }
 
         for (Tetrad tetrad : tetrads) {
             tetrad.update(dt);
         }
+
+        for (int y = TILESHIGH - 1; y >= 0 ; y--){
+            int cellsReady = 0;
+            for (int x = 0; x < TILESWIDE; x++){
+                for (Tetrad tetrad : tetrads) {
+                    TetradPiece piece = tetrad.getPieceAt(x, y);
+                    if ( piece != null && piece.remove){
+                        cellsReady ++;
+                    }
+                }
+            }
+            if (cellsReady == TILESWIDE) {
+                deleteRow(y);
+            }
+        }
+
+        boolean boardResolving = false;
+        for (Tetrad tetrad : tetrads) {
+            if (tetrad.resolvingTetrad()) boardResolving = true;
+        }
+
+        if (!boardResolving) {
+
+            playerInput.update(dt);
+            if (activeTetrad == null) {
+                activeTetrad = gameState.popNext();
+
+                activeTetrad.insertIntoBoard(this);
+                if (invalidMove(activeTetrad, Vector2.Zero)) {
+                    //GAME OVER
+                    //TODO something else
+                    tetrads.clear();
+                }
+                timeToFall = fallInterval;
+            }
+
+            checkForPullOut();
+
+            if (activeTetrad != null) {
+                PlayerInput.TriggerState state = playerInput.isRightPressed();
+                if (state.pressed) {
+                    if (state.triggered && !invalidMove(activeTetrad, new Vector2(1, 0))) {
+                        activeTetrad.origin.x += 1;
+                    }
+                } else if (playerInput.isLeftPressed().triggered) {
+                    if (!invalidMove(activeTetrad, new Vector2(-1, 0))) {
+                        activeTetrad.origin.x -= 1;
+                    }
+                }
+
+                if (playerInput.isRotateRight()) {
+                    activeTetrad.rotate(-1);
+                    if (invalidMove(activeTetrad, Vector2.Zero)) {
+                        activeTetrad.rotate(1);
+                    }
+                }
+                if (playerInput.isRotateLeft()) {
+                    activeTetrad.rotate(1);
+                    if (invalidMove(activeTetrad, Vector2.Zero)) {
+                        activeTetrad.rotate(-1);
+                    }
+                }
+
+                if (playerInput.isDownPressed()) {
+                    moveDown(activeTetrad);
+                }
+
+                if (activeTetrad != null) {
+                    if (playerInput.isPlungedPressed()) {
+                        while (moveDown(activeTetrad)) {
+                        }
+                    }
+                }
+            }
+
+            timeToFall -= dt;
+            if (timeToFall < 0) {
+                moveDown(activeTetrad);
+            }
+
+            if (activeTetrad != null) {
+                activeTetrad.update(dt);
+            }
+        }
+
+
     }
 
 
@@ -190,50 +217,56 @@ public class GameBoard {
             // TODO make this more async
             checkForFullRows();
 
+            blocksToFallTilRemove --;
 
             if (!tetrads.contains(tetradToRemove, true)) {
                 tetradToRemove = null;
             }
-            blocksToFallTilRemove --;
-            if (blocksToFallTilRemove <= 0){
-                if (tetradToRemove != null){
-                    tetradToRemove.flashing = false;
-                    gameState.setNext(tetradToRemove);
-                    tetrads.removeValue(tetradToRemove, true);
-                    if (tetrads.size > 0){
-                        boolean removedLine = true;
-                        float volume = 0.5f;
-                        while (removedLine) {
-                            boolean clearLine = true;
-                            for (int x = 0; x < TILESWIDE; x++) {
-                                for (Tetrad t : tetrads) {
-                                    if (t.containsPoint(x, 0)) {
-                                        clearLine = false;
-                                    }
-                                }
-                            }
-                            if (clearLine) {
-                                deleteRow(0);
-                                playSound(Audio.Sounds.tet_clearLine, volume+= 0.1f);
-                                removedLine = true;
-                            } else {
-                                removedLine = false;
-                            }
-                        }
-                    }
-                }
-                tetradToRemove = getFreeBottomPiece();
-                if (tetradToRemove != null) {
-                    tetradToRemove.flashing = true;
-                }
-                blocksToFallTilRemove = 3;
-            }
+
+
+
         } else {
             tetrad.origin.y -= 1;
             valid = true;
         }
         timeToFall = fallInterval;
         return valid;
+    }
+
+    private void checkForPullOut() {
+        if (blocksToFallTilRemove <= 0){
+            if (tetradToRemove != null){
+                tetradToRemove.flashing = false;
+                gameState.setNext(tetradToRemove);
+                tetrads.removeValue(tetradToRemove, true);
+                if (tetrads.size > 0){
+                    boolean removedLine = true;
+                    float volume = 0.5f;
+                    while (removedLine) {
+                        boolean clearLine = true;
+                        for (int x = 0; x < TILESWIDE; x++) {
+                            for (Tetrad t : tetrads) {
+                                if (t.containsPoint(x, 0)) {
+                                    clearLine = false;
+                                }
+                            }
+                        }
+                        if (clearLine) {
+                            deleteRow(0);
+                            playSound(Audio.Sounds.tet_clearLine, volume+= 0.1f);
+                            removedLine = true;
+                        } else {
+                            removedLine = false;
+                        }
+                    }
+                }
+            }
+            tetradToRemove = getFreeBottomPiece();
+            if (tetradToRemove != null) {
+                tetradToRemove.flashing = true;
+            }
+            blocksToFallTilRemove = 3;
+        }
     }
 
     public void checkForFullRows() {
@@ -252,8 +285,8 @@ public class GameBoard {
                 }
             }
             if (!emptySpot) {
-                deleteRow(y);
-                y += 1;
+                markRowForDeletion(y, .2f);
+//                y += 1;
                 rowsCleared++;
             }
 
@@ -280,7 +313,19 @@ public class GameBoard {
     private void playSound(Audio.Sounds sound) {
         this.playSound(sound, 1f);
     }
+
     private void playSound(Audio.Sounds sound, float volume) {
         gameState.gameScreen.game.audio.playSound(sound, volume);
+    }
+
+    private void markRowForDeletion(int y, float delay) {
+        for (Tetrad tetrad : tetrads) {
+            for (TetradPiece piece : tetrad.points) {
+                if (tetrad.origin.y + piece.y == y) {
+                    piece.destroyTimer = delay + (tetrad.origin.x + piece.x) * .07f;
+                }
+            }
+        }
+
     }
 }
