@@ -67,13 +67,13 @@ public class GameBoard {
                 }
             }
 
-            if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            if (playerInput.isRotateRight()) {
                 activeTetrad.rotate(-1);
                 if (invalidMove(activeTetrad, Vector2.Zero)) {
                     activeTetrad.rotate(1);
                 }
             }
-            if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+            if (playerInput.isRotateLeft()) {
                 activeTetrad.rotate(1);
                 if (invalidMove(activeTetrad, Vector2.Zero)) {
                     activeTetrad.rotate(-1);

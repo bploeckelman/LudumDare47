@@ -58,4 +58,12 @@ public class PlayerInput {
         }
         return  triggered;
     }
+
+    public boolean isRotateLeft() {
+        return Gdx.input.isKeyJustPressed(Input.Keys.Q) || Gdx.input.isKeyJustPressed(Input.Keys.J);
+    }
+
+    public boolean isRotateRight() {
+        return Gdx.input.isKeyJustPressed(Input.Keys.E) || Gdx.input.isKeyJustPressed(Input.Keys.L);
+    }
 }
