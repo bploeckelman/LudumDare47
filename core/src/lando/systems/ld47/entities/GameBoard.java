@@ -84,8 +84,11 @@ public class GameBoard {
                 moveDown(activeTetrad);
             }
 
-            if (playerInput.isPlungedPressed()) {
-                while(moveDown(activeTetrad)) { }
+            if (activeTetrad != null) {
+                if (playerInput.isPlungedPressed()) {
+                    while (moveDown(activeTetrad)) {
+                    }
+                }
             }
         }
 
