@@ -23,7 +23,7 @@ public class Game extends ApplicationAdapter {
 	public Assets assets;
 	public Audio audio;
 
-	BaseScreen currentScreen;
+	public BaseScreen currentScreen;
 
 	@Override
 	public void create () {

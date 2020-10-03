@@ -3,17 +3,22 @@ package lando.systems.ld47.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Net;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import lando.systems.ld47.Game;
 import lando.systems.ld47.entities.GameBoard;
+import lando.systems.ld47.ui.ScoreUI;
 
 public class GameScreen extends BaseScreen{
 
     GameBoard gameBoard;
+    public ScoreUI scoreUI;
 
     public GameScreen(Game game) {
         super(game);
         gameBoard = new GameBoard(game, worldCamera);
+        this.scoreUI = new ScoreUI(assets, this);
+
     }
 
     @Override
@@ -23,16 +28,26 @@ public class GameScreen extends BaseScreen{
             game.setScreen(new EndScreen(game));
         }
         gameBoard.update(dt);
+        scoreUI.update(dt);
+
     }
 
     @Override
     public void render(SpriteBatch batch) {
-        batch.begin();
         batch.setProjectionMatrix(worldCamera.combined);
-
-        gameBoard.render(batch);
-
+        batch.begin();
+        {
+            gameBoard.render(batch);
+        }
         batch.end();
 
+        batch.setProjectionMatrix(hudCamera.combined);
+        batch.begin();
+        {
+            batch.setColor(Color.WHITE);
+            scoreUI.draw(batch);
+
+        }
+        batch.end();
     }
 }
