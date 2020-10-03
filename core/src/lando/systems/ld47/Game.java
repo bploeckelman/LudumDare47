@@ -8,16 +8,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import lando.systems.ld47.accessors.*;
-import lando.systems.ld47.screens.*;
-
+import lando.systems.ld47.screens.BaseScreen;
+import lando.systems.ld47.screens.LaunchScreen;
+import lando.systems.ld47.screens.TitleScreen;
+import lando.systems.ld47.utils.accessors.*;
 
 public class Game extends ApplicationAdapter {
+
 	public TweenManager tween;
 	public Assets assets;
 
@@ -26,7 +26,6 @@ public class Game extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
-
 		if (tween == null) {
 			tween = new TweenManager();
 			Tween.setWaypointsLimit(4);
@@ -70,4 +69,5 @@ public class Game extends ApplicationAdapter {
 	public void dispose () {
 		assets.dispose();
 	}
+
 }

@@ -1,4 +1,4 @@
-package lando.systems.ld47.accessors;
+package lando.systems.ld47.utils.accessors;
 
 import aurelienribon.tweenengine.TweenAccessor;
 import com.badlogic.gdx.math.Vector2;
