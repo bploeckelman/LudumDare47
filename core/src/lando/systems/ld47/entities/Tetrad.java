@@ -111,6 +111,10 @@ public class Tetrad {
         }
     }
 
+    public boolean isEmpty() {
+        return points.size == 0;
+    }
+
     public void insertIntoBoard(GameBoard gameBoard) {
         this.gameBoard = gameBoard;
         int height = 0;

@@ -7,6 +7,7 @@ import lando.systems.ld47.Audio;
 import lando.systems.ld47.Game;
 import lando.systems.ld47.GameState;
 import lando.systems.ld47.entities.GameBoard;
+import lando.systems.ld47.particles.Particles;
 import lando.systems.ld47.ui.GameHud;
 
 public class GameScreen extends BaseScreen{
@@ -42,6 +43,7 @@ public class GameScreen extends BaseScreen{
         batch.begin();
         {
             gameBoard.render(batch);
+            particles.draw(batch, Particles.Layer.front);
         }
         batch.end();
 

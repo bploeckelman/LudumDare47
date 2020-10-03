@@ -47,8 +47,12 @@ public class GameBoard {
 
     public void update(float dt) {
 
-        for (Tetrad tetrad : tetrads) {
+        for (int i = tetrads.size -1; i >= 0; i--) {
+            Tetrad tetrad = tetrads.get(i);
             tetrad.update(dt);
+            if (tetrad.isEmpty()) {
+                tetrads.removeIndex(i);
+            }
         }
 
         for (int y = TILESHIGH - 1; y >= 0 ; y--){
@@ -329,7 +333,10 @@ public class GameBoard {
         for (Tetrad tetrad : tetrads) {
             for (TetradPiece piece : tetrad.points) {
                 if (tetrad.origin.y + piece.y == y) {
-                    piece.destroyTimer = delay + (tetrad.origin.x + piece.x) * .07f;
+                    piece.destroyTimer = delay + (tetrad.origin.x + piece.x) * .05f;
+                    gameState.gameScreen.particles.addPieceDeleteParticles(gameBounds.x + (tetrad.origin.x + piece.x + .5f) * Tetrad.POINT_WIDTH,
+                            gameBounds.y + (tetrad.origin.y + piece.y + .5f) * Tetrad.POINT_WIDTH,
+                            tetrad.color);
                 }
             }
         }
