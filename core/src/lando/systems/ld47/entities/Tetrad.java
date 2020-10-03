@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import lando.systems.ld47.Game;
 
 public class Tetrad {
-    public static float POINT_WIDTH = 20;
+    public static float POINT_WIDTH = 25;
 
     private GameBoard gameBoard;
     private Game game;
@@ -64,6 +64,25 @@ public class Tetrad {
 //            point.add(centerX, centerY);
         }
 
+    }
+
+    public boolean containsPoint(int x, int y) {
+        for (Vector2 point : points){
+            if (point.x + origin.x == x && point.y + origin.y == y) return true;
+        }
+        return false;
+    }
+
+    public void deleteRow(int y){
+        for (int i = points.size - 1; i >= 0; i -- ){
+            Vector2 point = points.get(i);
+            if (y == origin.y + point.y){
+                points.removeIndex(i);
+            } else if (y < origin.y + point.y){
+                point.y -= 1;
+            }
+
+        }
     }
 
     public void insertIntoBoard(){

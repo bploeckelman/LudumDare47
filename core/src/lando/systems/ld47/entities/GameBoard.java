@@ -127,10 +127,43 @@ public class GameBoard {
             tetrads.add(activeTetrad);
             activeTetrad = null;
 
-            // TODO clear rows
+            // TODO make this more async
+            checkForFullRows();
         } else {
             tetrad.origin.y -= 1;
         }
         timeToFall = fallInterval;
+    }
+
+    public void checkForFullRows(){
+        int rowsCleared = 0;
+        for (int y = TILESHIGH -1; y >= 0; y--){
+            boolean emptySpot = false;
+            for (int x = 0; x < TILESWIDE; x++){
+                boolean tileFilled = false;
+                for (Tetrad tetrad : tetrads){
+                    if (tetrad.containsPoint(x, y)){
+                        tileFilled = true;
+                    }
+                }
+                if (!tileFilled) {
+                    emptySpot = true;
+                }
+            }
+            if (!emptySpot){
+                deleteRow(y);
+                y += 1;
+                rowsCleared++;
+            }
+
+        }
+
+        // TODO: Score based on rows cleared
+    }
+
+    private void deleteRow(int y){
+        for (Tetrad tetrad : tetrads){
+            tetrad.deleteRow(y);
+        }
     }
 }
