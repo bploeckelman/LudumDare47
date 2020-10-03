@@ -46,7 +46,7 @@ public class Assets implements Disposable {
 
     // audio
     public Sound sampleSound;
-    public Music sampleMusic;
+    public Music moodTrack;
 
     public Assets() {
         this(Loading.SYNC);
@@ -69,7 +69,7 @@ public class Assets implements Disposable {
 
         // audio
         mgr.load("audio/sample-sound.wav", Sound.class);
-        mgr.load("audio/sample-music.wav", Music.class);
+        mgr.load("audio/track-mood.mp3", Music.class);
 
         if (loading == Loading.SYNC) {
             mgr.finishLoading();
@@ -107,7 +107,8 @@ public class Assets implements Disposable {
         sampleSound = mgr.get("audio/sample-sound.wav", Sound.class);
 
         // music
-        sampleMusic = mgr.get("audio/sample-music.wav", Music.class);
+        moodTrack = mgr.get("audio/track-mood.mp3", Music.class);
+
     }
 
     private static ShaderProgram loadShader(String vertSourcePath, String fragSourcePath) {

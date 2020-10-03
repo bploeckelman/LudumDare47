@@ -3,6 +3,7 @@ package lando.systems.ld47.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import lando.systems.ld47.Audio;
 import lando.systems.ld47.Game;
 import lando.systems.ld47.GameState;
 import lando.systems.ld47.entities.GameBoard;
@@ -20,6 +21,8 @@ public class GameScreen extends BaseScreen{
         gameState = new GameState(this);
         gameBoard = new GameBoard(gameState);
         gameHud = new GameHud(gameState);
+
+        playMusic(Audio.Musics.mood_track);
     }
 
     @Override
