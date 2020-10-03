@@ -17,7 +17,7 @@ public class PlayerInput {
     }
 
     private float horizontalOffset = 0.09f;
-    private float dropOffset = 0.04f;
+    private float dropOffset = 0.025f;
 
     private float rightHold = horizontalOffset;
     private float leftHold = horizontalOffset;
