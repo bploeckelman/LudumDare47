@@ -83,6 +83,10 @@ public class GameBoard {
             if (playerInput.isDownPressed()) {
                 moveDown(activeTetrad);
             }
+
+            if (playerInput.isPlungedPressed()) {
+                while(moveDown(activeTetrad)) { }
+            }
         }
 
         timeToFall -= dt;
@@ -171,7 +175,8 @@ public class GameBoard {
         return null;
     }
 
-    public void moveDown(Tetrad tetrad) {
+    public boolean moveDown(Tetrad tetrad) {
+        boolean valid = false;
         if (invalidMove(tetrad, new Vector2(0, -1))) {
             tetrads.add(activeTetrad);
             activeTetrad = null;
@@ -218,8 +223,10 @@ public class GameBoard {
             }
         } else {
             tetrad.origin.y -= 1;
+            valid = true;
         }
         timeToFall = fallInterval;
+        return valid;
     }
 
     public void checkForFullRows() {
