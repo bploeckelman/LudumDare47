@@ -3,6 +3,8 @@ package lando.systems.ld47;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -41,6 +43,10 @@ public class Assets implements Disposable {
     public NinePatch screws;
     public NinePatch speech;
 
+    // audio
+    public Sound sampleSound;
+    public Music sampleMusic;
+
     public Assets() {
         this(Loading.SYNC);
     }
@@ -59,6 +65,10 @@ public class Assets implements Disposable {
         mgr.load(titleTextureAsset);
         mgr.load(launchTextureAsset);
         mgr.load(riseFont16Asset);
+
+        // audio
+        mgr.load("audio/sample-sound.wav", Sound.class);
+        mgr.load("audio/sample-music.wav", Music.class);
 
         if (loading == Loading.SYNC) {
             mgr.finishLoading();
@@ -85,10 +95,17 @@ public class Assets implements Disposable {
         screws = new NinePatch(atlas.findRegion("ninepatches/screws"), 7, 7, 7, 7);
         speech = new NinePatch(atlas.findRegion("ninepatches/speech-bubble"), 12, 9, 12, 9);
 
+        loadAudio();
         return 1;
     }
 
+    private void loadAudio() {
+        // sounds
+        sampleSound = mgr.get("audio/sample-sound.wav", Sound.class);
 
+        // music
+        sampleMusic = mgr.get("audio/sample-music.wav", Music.class);
+    }
 
     private static ShaderProgram loadShader(String vertSourcePath, String fragSourcePath) {
         ShaderProgram.pedantic = false;

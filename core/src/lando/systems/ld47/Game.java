@@ -21,10 +21,10 @@ public class Game extends ApplicationAdapter {
 
 	public TweenManager tween;
 	public Assets assets;
+	public Audio audio;
 
 	BaseScreen currentScreen;
 
-	
 	@Override
 	public void create () {
 		if (tween == null) {
@@ -40,6 +40,10 @@ public class Game extends ApplicationAdapter {
 
 		if (assets == null) {
 			assets = new Assets();
+		}
+
+		if (audio == null) {
+			audio = new Audio(this);
 		}
 
 		if (Gdx.app.getType() == Application.ApplicationType.WebGL || Config.showLaunchScreen) {
@@ -60,6 +64,7 @@ public class Game extends ApplicationAdapter {
 
 		float dt = Math.min(Gdx.graphics.getDeltaTime(), 1f / 30f);
 		tween.update(dt);
+		audio.update(dt);
 		currentScreen.update(dt);
 
 		currentScreen.render(assets.batch);
