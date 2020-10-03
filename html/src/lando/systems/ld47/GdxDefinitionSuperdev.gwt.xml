@@ -6,6 +6,8 @@
     <inherits name='lando.systems.ld47.GdxDefinition' />
 	<inherits name='aurelienribon.tweenengine' />
 
+	<extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld47.particles.Particle" />
+
 
 	<collapse-all-properties />
     
