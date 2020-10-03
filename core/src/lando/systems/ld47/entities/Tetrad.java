@@ -20,15 +20,11 @@ public class Tetrad {
     public Color color;
     private int bounds;
 
-    private boolean flip = true;
-    private int rotation = 0;
-
     private static float hue = 0;
 
-
-    public Tetrad (Game game) {
+    public Tetrad(Game game) {
         this.game = game;
-        position = new Vector2(0,0);
+        position = new Vector2(0, 0);
 
 
         points = new Array<>();
@@ -38,7 +34,7 @@ public class Tetrad {
         color.fromHsv(hue, 1, 1);
     }
 
-    public void update (float dt) {
+    public void update(float dt) {
         // Allow tetrads to live outside of the gameboard
         if (origin != null) {
             position.set(gameBoard.gameBounds.x + origin.x * POINT_WIDTH, gameBoard.gameBounds.y + origin.y * POINT_WIDTH);
@@ -54,52 +50,44 @@ public class Tetrad {
     }
 
     public void rotate(int dir) {
-        rotation++;
-        if (flip) {
-            dir = (rotation % 2) == 0 ? 1 : -1;
-        }
-
-        for (Vector2 point : points){
-//            point.sub(centerX, centerY);
-            if (dir < 0){
-                point.set(point.y, bounds-point.x);
+        for (Vector2 point : points) {
+            if (dir < 0) {
+                point.set(point.y, bounds - point.x);
             } else {
-                point.set(bounds-point.y, point.x);
+                point.set(bounds - point.y, point.x);
             }
-//            point.add(centerX, centerY);
         }
-
     }
 
     public boolean containsPoint(int x, int y) {
-        for (Vector2 point : points){
+        for (Vector2 point : points) {
             if (point.x + origin.x == x && point.y + origin.y == y) return true;
         }
         return false;
     }
 
-    public void deleteRow(int y){
-        for (int i = points.size - 1; i >= 0; i -- ){
+    public void deleteRow(int y) {
+        for (int i = points.size - 1; i >= 0; i--) {
             Vector2 point = points.get(i);
-            if (y == origin.y + point.y){
+            if (y == origin.y + point.y) {
                 points.removeIndex(i);
-            } else if (y < origin.y + point.y){
+            } else if (y < origin.y + point.y) {
                 point.y -= 1;
             }
 
         }
     }
 
-    public void insertIntoBoard(GameBoard gameBoard){
+    public void insertIntoBoard(GameBoard gameBoard) {
         this.gameBoard = gameBoard;
         int height = 0;
-        for (Vector2 point : points){
-            if (point.y > height) height = (int)point.y;
+        for (Vector2 point : points) {
+            if (point.y > height) height = (int) point.y;
         }
         origin = new Vector2(4, 19 - height);
     }
 
-    public void  setAbsolutePosition(float x, float y) {
+    public void setAbsolutePosition(float x, float y) {
         origin = null;
         position.set(x, y);
     }
@@ -108,9 +96,9 @@ public class Tetrad {
         position.set(center.x - this.center.x * POINT_WIDTH, center.y - this.center.y * POINT_WIDTH);
     }
 
-    private void buildNewPiece(){
+    private void buildNewPiece() {
         int type = MathUtils.random(6);
-        switch(type){
+        switch (type) {
             case 0:
                 // I
                 points.add(new Vector2(0, 2));
@@ -127,7 +115,6 @@ public class Tetrad {
                 points.add(new Vector2(1, 1));
                 points.add(new Vector2(2, 1));
                 center.set(1.5f, 2f);
-                flip = false;
                 bounds = 2;
                 break;
             case 2:
@@ -137,7 +124,6 @@ public class Tetrad {
                 points.add(new Vector2(2, 1));
                 points.add(new Vector2(2, 2));
                 center.set(1.5f, 2f);
-                flip = false;
                 bounds = 2;
                 break;
             case 3:
