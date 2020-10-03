@@ -39,7 +39,7 @@ public class GameBoard {
             activeTetrad = gameState.popNext();
 
             activeTetrad.insertIntoBoard(this);
-            if (collidesAt(activeTetrad, Vector2.Zero)) {
+            if (invalidMove(activeTetrad, Vector2.Zero)) {
                 //GAME OVER
                 //TODO something else
                 tetrads.clear();
@@ -49,25 +49,25 @@ public class GameBoard {
 
         if (activeTetrad != null) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.A) || Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-                if (!collidesAt(activeTetrad, new Vector2(-1, 0))) {
+                if (!invalidMove(activeTetrad, new Vector2(-1, 0))) {
                     activeTetrad.origin.x -= 1;
                 }
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.D) || Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-                if (!collidesAt(activeTetrad, new Vector2(1, 0))) {
+                if (!invalidMove(activeTetrad, new Vector2(1, 0))) {
                     activeTetrad.origin.x += 1;
                 }
             }
 
             if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
                 activeTetrad.rotate(-1);
-                if (collidesAt(activeTetrad, Vector2.Zero)) {
+                if (invalidMove(activeTetrad, Vector2.Zero)) {
                     activeTetrad.rotate(1);
                 }
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
                 activeTetrad.rotate(1);
-                if (collidesAt(activeTetrad, Vector2.Zero)) {
+                if (invalidMove(activeTetrad, Vector2.Zero)) {
                     activeTetrad.rotate(-1);
                 }
             }
@@ -106,9 +106,14 @@ public class GameBoard {
         }
     }
 
+
+    public boolean invalidMove(Tetrad tetrad, Vector2 dir) {
+        return collidesWithBlocks(tetrad, dir) || collidesWithWalls(tetrad, dir);
+    }
+
     Vector2 testOrigin = new Vector2();
 
-    public boolean collidesAt(Tetrad tetrad, Vector2 dir) {
+    public boolean collidesWithBlocks(Tetrad tetrad, Vector2 dir) {
         if (tetrad.origin == null) return false;
         testOrigin.set(tetrad.origin.x + dir.x, tetrad.origin.y + dir.y);
         for (Vector2 point : tetrad.points) {
@@ -121,17 +126,24 @@ public class GameBoard {
                     }
                 }
             }
-            if (point.x + testOrigin.x < 0 || point.x + testOrigin.x >= TILESWIDE) return true;
-            if (point.y + testOrigin.y < 0 || point.y + testOrigin.y >= TILESHIGH) return true;
         }
 
         return false;
     }
 
+    public boolean collidesWithWalls(Tetrad tetrad, Vector2 dir) {
+        if (tetrad.origin == null) return false;
+        testOrigin.set(tetrad.origin.x + dir.x, tetrad.origin.y + dir.y);
+        for (Vector2 point : tetrad.points){
+            if (point.x + testOrigin.x < 0 || point.x + testOrigin.x >= TILESWIDE) return true;
+            if (point.y + testOrigin.y < 0 || point.y + testOrigin.y >= TILESHIGH) return true;
+        }
+        return false;
+    }
+
     public void moveDown(Tetrad tetrad) {
-        if (collidesAt(tetrad, new Vector2(0, -1))) {
+        if (invalidMove(tetrad, new Vector2(0, -1))) {
             tetrads.add(activeTetrad);
-            gameState.addScore(10);
             activeTetrad = null;
 
             // TODO make this more async
@@ -165,7 +177,16 @@ public class GameBoard {
 
         }
 
-        // TODO: Score based on rows cleared
+        switch (rowsCleared){
+            case 1:
+                gameState.addScore(100); break;
+            case 2:
+                gameState.addScore(300); break;
+            case 3:
+                gameState.addScore(500); break;
+            case 4:
+                gameState.addScore(800); break;
+        }
     }
 
     private void deleteRow(int y) {
