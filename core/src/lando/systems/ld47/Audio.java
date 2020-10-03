@@ -134,28 +134,31 @@ public class Audio implements Disposable {
         if (playImmediately) {
             if (currentMusic != null && currentMusic.isPlaying()) {
                 currentMusic.stop();
-                currentMusic = musics.get(musicOptions);
-                currentMusic.setLooping(looping);
-                currentMusic.play();
+                currentMusic = startMusic(musicOptions, looping);
             }
         } else {
             if (currentMusic == null || !currentMusic.isPlaying()) {
-                currentMusic = musics.get(musicOptions);
-                currentMusic.setLooping(looping);
-                currentMusic.play();
+                currentMusic = startMusic(musicOptions, looping);
             } else {
                 currentMusic.setLooping(false);
                 currentMusic.setOnCompletionListener(music -> {
-                    currentMusic = musics.get(musicOptions);
-                    currentMusic.setLooping(looping);
-                    currentMusic.play();
+                    currentMusic = startMusic(musicOptions, looping);
                 });
             }
         }
         return currentMusic;
     }
 
-    public void fadeMusic(Musics musicOption){
+    private Music startMusic(Musics musicOptions, boolean looping) {
+        Music music = musics.get(musicOptions);
+        if (music != null) {
+            music.setLooping(looping);
+            music.play();
+        }
+        return music;
+    }
+
+    public void fadeMusic(Musics musicOption) {
         if (eCurrentMusic == musicOption) return;
         Timeline.createSequence()
                 .push(Tween.to(musicVolume, 1, 1).target(0).ease(Linear.INOUT))

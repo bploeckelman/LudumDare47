@@ -1,9 +1,11 @@
 package lando.systems.ld47.screens;
 
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import lando.systems.ld47.Assets;
+import lando.systems.ld47.Audio;
 import lando.systems.ld47.Config;
 import lando.systems.ld47.Game;
 import lando.systems.ld47.particles.Particles;
@@ -11,7 +13,6 @@ import lando.systems.ld47.particles.Particles;
 public abstract class BaseScreen extends InputAdapter {
     public final Game game;
     public final Assets assets;
-    //    public final AudioManager audio;
     public final SpriteBatch batch;
     public final Particles particles;
 
@@ -44,5 +45,13 @@ public abstract class BaseScreen extends InputAdapter {
     }
 
     public abstract void render(SpriteBatch batch);
+
+    protected long playSound(Audio.Sounds sound) {
+        return this.game.audio.playSound(sound);
+    }
+
+    protected Music playMusic(Audio.Musics music) {
+        return this.game.audio.playMusic(music, false, true);
+    }
 
 }
