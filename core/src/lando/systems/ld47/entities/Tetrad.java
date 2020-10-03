@@ -13,6 +13,7 @@ public class Tetrad {
     private GameBoard gameBoard;
     private Game game;
     public Array<Vector2> points;
+    private Vector2 center = new Vector2();
 
     public Vector2 position;
     public Vector2 origin;
@@ -99,8 +100,7 @@ public class Tetrad {
     }
 
     public void center(Vector2 center) {
-        // I'm sorry
-        position.set(center.x - 50, center.y - 50);
+        position.set(center.x - this.center.x * POINT_WIDTH, center.y - this.center.y * POINT_WIDTH);
     }
 
     private void buildNewPiece(){
@@ -112,6 +112,7 @@ public class Tetrad {
                 points.add(new Vector2(1, 2));
                 points.add(new Vector2(2, 2));
                 points.add(new Vector2(3, 2));
+                center.set(2, 2.5f);
                 bounds = 3;
                 break;
             case 1:
@@ -120,6 +121,7 @@ public class Tetrad {
                 points.add(new Vector2(0, 1));
                 points.add(new Vector2(1, 1));
                 points.add(new Vector2(2, 1));
+                center.set(1.5f, 2f);
                 bounds = 2;
                 break;
             case 2:
@@ -128,6 +130,7 @@ public class Tetrad {
                 points.add(new Vector2(1, 1));
                 points.add(new Vector2(2, 1));
                 points.add(new Vector2(2, 2));
+                center.set(1.5f, 2f);
                 bounds = 2;
                 break;
             case 3:
@@ -136,6 +139,7 @@ public class Tetrad {
                 points.add(new Vector2(0, 1));
                 points.add(new Vector2(1, 0));
                 points.add(new Vector2(1, 1));
+                center.set(1f, 1f);
                 bounds = 1;
                 break;
             case 4:
@@ -144,6 +148,7 @@ public class Tetrad {
                 points.add(new Vector2(1, 1));
                 points.add(new Vector2(1, 2));
                 points.add(new Vector2(2, 2));
+                center.set(1.5f, 2f);
                 bounds = 2;
                 break;
             case 5:
@@ -152,6 +157,7 @@ public class Tetrad {
                 points.add(new Vector2(1, 2));
                 points.add(new Vector2(1, 1));
                 points.add(new Vector2(2, 1));
+                center.set(1.5f, 2f);
                 bounds = 2;
                 break;
             case 6:
@@ -160,6 +166,7 @@ public class Tetrad {
                 points.add(new Vector2(1, 1));
                 points.add(new Vector2(1, 2));
                 points.add(new Vector2(2, 1));
+                center.set(1.5f, 2f);
                 bounds = 2;
                 break;
         }
