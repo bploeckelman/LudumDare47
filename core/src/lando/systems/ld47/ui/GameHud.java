@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import com.sun.org.apache.xpath.internal.operations.Or;
 import lando.systems.ld47.GameState;
 
 public class GameHud {

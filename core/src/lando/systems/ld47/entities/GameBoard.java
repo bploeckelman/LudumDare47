@@ -18,6 +18,7 @@ public class GameBoard {
 
     private final GameState gameState;
     private final OrthographicCamera camera;
+    private final PlayerInput playerInput = new PlayerInput();
     private final Array<Tetrad> tetrads;
 
     private Tetrad activeTetrad;
@@ -41,6 +42,7 @@ public class GameBoard {
     }
 
     public void update(float dt) {
+        playerInput.update(dt);
         if (activeTetrad == null) {
             activeTetrad = gameState.popNext();
 
@@ -54,14 +56,14 @@ public class GameBoard {
         }
 
         if (activeTetrad != null) {
-            if (Gdx.input.isKeyJustPressed(Input.Keys.A) || Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+            PlayerInput.TriggerState state = playerInput.isRightPressed();
+            if (state.pressed) {
+                if (state.triggered && !invalidMove(activeTetrad, new Vector2(1, 0))) {
+                    activeTetrad.origin.x += 1;
+                }
+            } else if (playerInput.isLeftPressed().triggered) {
                 if (!invalidMove(activeTetrad, new Vector2(-1, 0))) {
                     activeTetrad.origin.x -= 1;
-                }
-            }
-            if (Gdx.input.isKeyJustPressed(Input.Keys.D) || Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-                if (!invalidMove(activeTetrad, new Vector2(1, 0))) {
-                    activeTetrad.origin.x += 1;
                 }
             }
 
@@ -78,11 +80,10 @@ public class GameBoard {
                 }
             }
 
-            if (Gdx.input.isKeyJustPressed(Input.Keys.S) || Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+            if (playerInput.isDownPressed()) {
                 moveDown(activeTetrad);
             }
         }
-
 
         timeToFall -= dt;
         if (timeToFall < 0) {
@@ -97,6 +98,7 @@ public class GameBoard {
             tetrad.update(dt);
         }
     }
+
 
 
     public void render(SpriteBatch batch) {
