@@ -1,16 +1,16 @@
 package lando.systems.ld47.entities;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.OrderedSet;
 import lando.systems.ld47.Audio;
-import com.badlogic.gdx.utils.*;
 import lando.systems.ld47.GameState;
+import lando.systems.ld47.input.PlayerInput;
 
 public class GameBoard {
     public static int TILESWIDE = 10;
@@ -39,6 +39,10 @@ public class GameBoard {
         blocksToFallTilRemove = 3;
         fallInterval = 1f;
         timeToFall = fallInterval;
+
+        // TODO: move this stuff up to BaseScreen or Game so we can use controllers on other screens
+        Controllers.clearListeners();
+        Controllers.addListener(playerInput);
     }
 
     public void update(float dt) {

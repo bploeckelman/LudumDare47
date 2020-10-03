@@ -6,7 +6,6 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -47,8 +46,6 @@ public class Game extends ApplicationAdapter {
 			audio = new Audio(this);
 		}
 
-
-
 		if (Gdx.app.getType() == Application.ApplicationType.WebGL || Config.showLaunchScreen) {
 			setScreen(new LaunchScreen(this));
 		} else {
@@ -72,7 +69,6 @@ public class Game extends ApplicationAdapter {
 
 		currentScreen.render(assets.batch);
 	}
-
 
 	public void setScreen(BaseScreen screen) {
 		currentScreen = screen;
