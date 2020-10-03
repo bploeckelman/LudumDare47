@@ -2,6 +2,7 @@ package lando.systems.ld47;
 
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -13,13 +14,15 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import lando.systems.ld47.accessors.*;
+import lando.systems.ld47.screens.*;
+
 
 public class Game extends ApplicationAdapter {
 	public TweenManager tween;
+	public Assets assets;
 
+	BaseScreen currentScreen;
 
-	SpriteBatch batch;
-	Texture img;
 	
 	@Override
 	public void create () {
@@ -35,22 +38,36 @@ public class Game extends ApplicationAdapter {
 			Tween.registerAccessor(OrthographicCamera.class, new CameraAccessor());
 		}
 
-		batch = new SpriteBatch();
-		img = new Texture("images/badlogic.jpg");
+		if (assets == null) {
+			assets = new Assets();
+		}
+
+		if (Gdx.app.getType() == Application.ApplicationType.WebGL || Config.showLaunchScreen) {
+			setScreen(new LaunchScreen(this));
+		} else {
+			setScreen(new TitleScreen(this));
+		}
 	}
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();
+
+		float dt = Math.min(Gdx.graphics.getDeltaTime(), 1f / 30f);
+		tween.update(dt);
+		currentScreen.update(dt);
+
+		currentScreen.render(assets.batch);
 	}
-	
+
+
+	public void setScreen(BaseScreen screen) {
+		currentScreen = screen;
+	}
+
 	@Override
 	public void dispose () {
-		batch.dispose();
-		img.dispose();
+		assets.dispose();
 	}
 }
