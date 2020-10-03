@@ -63,7 +63,7 @@ public class PlayerInput {
         return Gdx.input.isKeyJustPressed(Input.Keys.Q) || Gdx.input.isKeyJustPressed(Input.Keys.J);
     }
 
-    public boolean isRotatLeft() {
+    public boolean isRotateLeft() {
         return Gdx.input.isKeyJustPressed(Input.Keys.E) || Gdx.input.isKeyJustPressed(Input.Keys.L);
     }
 }
