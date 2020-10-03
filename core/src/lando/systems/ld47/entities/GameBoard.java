@@ -292,6 +292,9 @@ public class GameBoard {
 
         }
 
+        gameState.gameScreen.shaker.addDamage(.2f*rowsCleared);
+
+
         switch (rowsCleared){
             case 1:
                 gameState.addScore(100); break;

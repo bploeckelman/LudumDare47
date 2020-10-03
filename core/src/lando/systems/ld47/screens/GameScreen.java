@@ -38,7 +38,7 @@ public class GameScreen extends BaseScreen{
 
     @Override
     public void render(SpriteBatch batch) {
-        batch.setProjectionMatrix(worldCamera.combined);
+        batch.setProjectionMatrix(shaker.getCombinedMatrix());
         batch.begin();
         {
             gameBoard.render(batch);
