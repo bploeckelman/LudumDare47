@@ -2,6 +2,7 @@ package lando.systems.ld47.entities;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld47.Game;
@@ -16,6 +17,7 @@ public class Tetrad {
     public Vector2 position;
     public Vector2 origin;
     public Color color;
+    private int bounds;
 
     private static float hue = 0;
 
@@ -28,13 +30,9 @@ public class Tetrad {
 
 
         points = new Array<>();
-        // Test just an I for now
-        points.add(new Vector2(0, 1));
-        points.add(new Vector2(1, 1));
-        points.add(new Vector2(2, 1));
-        points.add(new Vector2(3, 1));
+        buildNewPiece();
         color = new Color(Color.WHITE);
-        hue += 37;
+        hue += 137;
         color.fromHsv(hue, 1, 1);
     }
 
@@ -54,38 +52,94 @@ public class Tetrad {
     }
 
     public void rotate(int dir){
-        int minX = 4;
-        int maxX = 0;
-        int minY = 4;
-        int maxY = 0;
-        for (Vector2 point : points){
-            if (point.x < minX) minX = (int)point.x;
-            if (point.x > maxX) maxX = (int)point.x;
-            if (point.y < minY) minY = (int)point.y;
-            if (point.y > maxY) maxY = (int)point.y;
-        }
-        int centerX = (maxX - minX)/2 + minX;
-        int centerY = (maxY - minY)/2 + minY;
+
 
         for (Vector2 point : points){
-            point.sub(centerX, centerY);
+//            point.sub(centerX, centerY);
             if (dir < 0){
-                point.set(point.y, -point.x);
+                point.set(point.y, bounds-point.x);
             } else {
-                point.set(point.y, point.x);
+                point.set(bounds-point.y, point.x);
             }
-            point.add(centerX, centerY);
+//            point.add(centerX, centerY);
         }
 
     }
 
     public void insertIntoBoard(){
-        // TODO make this push down if the piece is vertical after it drops out
-        origin = new Vector2(4, 18);
+        int height = 0;
+        for (Vector2 point : points){
+            if (point.y > height) height = (int)point.y;
+        }
+        origin = new Vector2(4, 19 - height);
     }
 
     public void  setAbsolutePosition(float x, float y) {
         origin = null;
         position.set(x, y);
+    }
+
+    private void buildNewPiece(){
+        int type = MathUtils.random(6);
+        switch(type){
+            case 0:
+                // I
+                points.add(new Vector2(0, 2));
+                points.add(new Vector2(1, 2));
+                points.add(new Vector2(2, 2));
+                points.add(new Vector2(3, 2));
+                bounds = 3;
+                break;
+            case 1:
+                // L
+                points.add(new Vector2(0, 2));
+                points.add(new Vector2(0, 1));
+                points.add(new Vector2(1, 1));
+                points.add(new Vector2(2, 1));
+                bounds = 2;
+                break;
+            case 2:
+                // Other L
+                points.add(new Vector2(0, 1));
+                points.add(new Vector2(1, 1));
+                points.add(new Vector2(2, 1));
+                points.add(new Vector2(2, 2));
+                bounds = 2;
+                break;
+            case 3:
+                // square
+                points.add(new Vector2(0, 0));
+                points.add(new Vector2(0, 1));
+                points.add(new Vector2(1, 0));
+                points.add(new Vector2(1, 1));
+                bounds = 1;
+                break;
+            case 4:
+                // S
+                points.add(new Vector2(0, 1));
+                points.add(new Vector2(1, 1));
+                points.add(new Vector2(1, 2));
+                points.add(new Vector2(2, 2));
+                bounds = 2;
+                break;
+            case 5:
+                // other S
+                points.add(new Vector2(0, 2));
+                points.add(new Vector2(1, 2));
+                points.add(new Vector2(1, 1));
+                points.add(new Vector2(2, 1));
+                bounds = 2;
+                break;
+            case 6:
+                // T
+                points.add(new Vector2(0, 1));
+                points.add(new Vector2(1, 1));
+                points.add(new Vector2(1, 2));
+                points.add(new Vector2(2, 1));
+                bounds = 2;
+                break;
+        }
+        // I
+
     }
 }
