@@ -128,6 +128,7 @@ public class GameBoard {
     public void moveDown(Tetrad tetrad) {
         if (collidesAt(tetrad, new Vector2(0, -1))) {
             tetrads.add(activeTetrad);
+            gameState.addScore(10);
             activeTetrad = null;
 
             // TODO make this more async

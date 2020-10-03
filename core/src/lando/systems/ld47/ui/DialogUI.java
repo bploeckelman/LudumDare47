@@ -10,9 +10,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
 import lando.systems.ld47.Assets;
+import lando.systems.ld47.GameState;
 import lando.systems.ld47.utils.accessors.*;
 
 public class DialogUI extends UserInterface {
@@ -30,10 +32,10 @@ public class DialogUI extends UserInterface {
 
     private boolean transitionComplete;
 
-    public DialogUI(Assets assets, TweenManager tween, Camera camera) {
-        super(assets, tween);
+    public DialogUI(GameState gameState) {
+        super(gameState);
 
-        this.camera = camera;
+        this.camera = gameState.gameScreen.hudCamera;
 
         this.mousePos = new Vector3();
         this.alpha = new MutableFloat(0f);
@@ -59,7 +61,7 @@ public class DialogUI extends UserInterface {
         }
     }
 
-    public void draw(SpriteBatch batch) {
+    public void draw(SpriteBatch batch, Rectangle hudBounds) {
         // draw background
         batch.setColor(0x30 / 255f, 0x30 / 255f, 0x30 / 255f, alpha.floatValue());
         batch.draw(assets.whitePixel, bounds.x, bounds.y, bounds.width, bounds.height);
