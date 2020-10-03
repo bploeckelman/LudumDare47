@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
+import lando.systems.ld47.Assets;
+import lando.systems.ld47.utils.accessors.*;
 
 public class DialogUI extends UserInterface {
 
@@ -70,8 +72,8 @@ public class DialogUI extends UserInterface {
         if (transitionComplete) {
             // draw header text
             String headerText = "Header";
-            layout.setText(assets.niceFont, headerText, Color.LIGHT_GRAY, bounds.width, Align.center, false);
-            assets.niceFont.draw(batch, layout, bounds.x, bounds.y + bounds.height - layout.height / 2f);
+            layout.setText(assets.font, headerText, Color.LIGHT_GRAY, bounds.width, Align.center, false);
+            assets.font.draw(batch, layout, bounds.x, bounds.y + bounds.height - layout.height / 2f);
 
             // TODO: move the icon layout to update (when its visible)
             //   so that we have button rectangles to test for clicks
@@ -161,7 +163,7 @@ public class DialogUI extends UserInterface {
                                         .ease(Quad.OUT)
                         )
                 )
-                .setCallback((i, baseTween) -> InventoryUI.super.hide())
+                .setCallback((i, baseTween) -> DialogUI.super.hide())
                 .start(tween);
     }
 

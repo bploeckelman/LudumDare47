@@ -4,10 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Disposable;
@@ -19,6 +16,7 @@ public class Assets implements Disposable {
     private final AssetDescriptor<Texture> pixelTextureAsset = new AssetDescriptor<>("images/pixel.png", Texture.class);
     private final AssetDescriptor<Texture> launchTextureAsset = new AssetDescriptor<>("images/launch.png", Texture.class);
     private final AssetDescriptor<Texture> titleTextureAsset = new AssetDescriptor<>("images/title.png", Texture.class);
+    private final AssetDescriptor<BitmapFont> riseFont16Asset = new AssetDescriptor<>("fonts/chevyray-rise-16.fnt", BitmapFont.class);
 
     public enum Loading { SYNC, ASYNC }
 
@@ -26,6 +24,7 @@ public class Assets implements Disposable {
     public SpriteBatch batch;
     public ShapeRenderer shapes;
     public GlyphLayout layout;
+    public BitmapFont font;
     public boolean initialized;
 
     public Texture launchImage;
@@ -36,6 +35,11 @@ public class Assets implements Disposable {
 
     public TextureRegion whitePixel;
     public TextureRegion whiteCircle;
+
+    public NinePatch border;
+    public NinePatch inset;
+    public NinePatch screws;
+    public NinePatch speech;
 
     public Assets() {
         this(Loading.SYNC);
@@ -54,7 +58,7 @@ public class Assets implements Disposable {
         mgr.load(pixelTextureAsset);
         mgr.load(titleTextureAsset);
         mgr.load(launchTextureAsset);
-
+        mgr.load(riseFont16Asset);
 
         if (loading == Loading.SYNC) {
             mgr.finishLoading();
@@ -69,11 +73,17 @@ public class Assets implements Disposable {
         pixel = mgr.get(pixelTextureAsset);
         launchImage = mgr.get(launchTextureAsset);
         titleImage = mgr.get(titleTextureAsset);
+        font = mgr.get(riseFont16Asset);
 
         atlas = mgr.get(atlasAsset);
 
         whitePixel = atlas.findRegion("white-pixel");
         whiteCircle = atlas.findRegion("white-circle");
+
+        border = new NinePatch(atlas.findRegion("ninepatches/border"), 9, 9, 9, 9);
+        inset  = new NinePatch(atlas.findRegion("ninepatches/inset"), 9, 9, 9, 9);
+        screws = new NinePatch(atlas.findRegion("ninepatches/screws"), 7, 7, 7, 7);
+        speech = new NinePatch(atlas.findRegion("ninepatches/speech-bubble"), 12, 9, 12, 9);
 
         return 1;
     }

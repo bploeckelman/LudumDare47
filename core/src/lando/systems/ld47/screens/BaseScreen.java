@@ -6,13 +6,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import lando.systems.ld47.Assets;
 import lando.systems.ld47.Config;
 import lando.systems.ld47.Game;
+import lando.systems.ld47.particles.Particles;
 
 public abstract class BaseScreen extends InputAdapter {
     public final Game game;
     public final Assets assets;
     //    public final AudioManager audio;
     public final SpriteBatch batch;
-//    public final Particles particles;
+    public final Particles particles;
 
     public OrthographicCamera worldCamera;
     public OrthographicCamera hudCamera;
@@ -22,7 +23,7 @@ public abstract class BaseScreen extends InputAdapter {
         this.game = game;
         this.assets = game.assets;
         this.batch = assets.batch;
-//        this.particles = new Particles(assets);
+        this.particles = new Particles(assets);
 
         this.worldCamera = new OrthographicCamera();
         this.worldCamera.setToOrtho(false, Config.windowWidth, Config.windowHeight);

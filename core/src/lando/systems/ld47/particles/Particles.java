@@ -2,8 +2,9 @@ package lando.systems.ld47.particles;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.*;
+import lando.systems.ld47.Assets;
 
-public class ParticleManager implements Disposable {
+public class Particles implements Disposable {
 
     public enum Layer { back, front, overlay }
 
@@ -13,7 +14,7 @@ public class ParticleManager implements Disposable {
 
     private final Pool<Particle> particlePool = Pools.get(Particle.class, 3000);
 
-    public ParticleManager(Assets assets) {
+    public Particles(Assets assets) {
         this.assets = assets;
         this.activeParticles = new ObjectMap<>();
         this.activeParticles.put(Layer.back,  new Array<>(false, 1000));
