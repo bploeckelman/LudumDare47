@@ -42,7 +42,7 @@ public class Tetrad {
     public void update(float dt) {
         accum += dt;
         if (flashing){
-            color.fromHsv(hue, MathUtils.sin(accum), 1);
+            color.fromHsv(hue, MathUtils.sin(accum*10f), 1);
         } else {
             color.fromHsv(hue, 1, 1);
         }

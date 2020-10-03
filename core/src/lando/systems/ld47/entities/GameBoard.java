@@ -173,12 +173,15 @@ public class GameBoard {
         if (invalidMove(tetrad, new Vector2(0, -1))) {
             tetrads.add(activeTetrad);
             activeTetrad = null;
+            fallInterval = Math.max(.2f, fallInterval - .05f);
 
             // TODO make this more async
             checkForFullRows();
 
 
-            // TODO: Make sure this hasn't been cleared
+            if (!tetrads.contains(tetradToRemove, true)) {
+                tetradToRemove = null;
+            }
             blocksToFallTilRemove --;
             if (blocksToFallTilRemove <= 0){
                 if (tetradToRemove != null){
