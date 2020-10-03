@@ -20,12 +20,14 @@ public class Tetrad {
     public Color color;
     private int bounds;
 
+    private boolean flip = true;
+    private int rotation = 0;
+
     private static float hue = 0;
 
 
     public Tetrad (Game game) {
         this.game = game;
-
         position = new Vector2(0,0);
 
 
@@ -51,8 +53,11 @@ public class Tetrad {
         batch.setColor(Color.WHITE);
     }
 
-    public void rotate(int dir){
-
+    public void rotate(int dir) {
+        rotation++;
+        if (flip) {
+            dir = (rotation % 2) == 0 ? 1 : -1;
+        }
 
         for (Vector2 point : points){
 //            point.sub(centerX, centerY);
@@ -122,6 +127,7 @@ public class Tetrad {
                 points.add(new Vector2(1, 1));
                 points.add(new Vector2(2, 1));
                 center.set(1.5f, 2f);
+                flip = false;
                 bounds = 2;
                 break;
             case 2:
@@ -131,6 +137,7 @@ public class Tetrad {
                 points.add(new Vector2(2, 1));
                 points.add(new Vector2(2, 2));
                 center.set(1.5f, 2f);
+                flip = false;
                 bounds = 2;
                 break;
             case 3:

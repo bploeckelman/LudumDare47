@@ -80,7 +80,7 @@ public class GameBoard {
 
         timeToFall -= dt;
         if (timeToFall < 0) {
-            moveDown(activeTetrad);
+            //moveDown(activeTetrad);
 
         }
 
