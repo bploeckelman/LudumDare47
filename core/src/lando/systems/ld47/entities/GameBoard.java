@@ -188,6 +188,25 @@ public class GameBoard {
                     tetradToRemove.flashing = false;
                     gameState.setNext(tetradToRemove);
                     tetrads.removeValue(tetradToRemove, true);
+                    if (tetrads.size > 0){
+                        boolean removedLine = true;
+                        while (removedLine) {
+                            boolean clearLine = true;
+                            for (int x = 0; x < TILESWIDE; x++) {
+                                for (Tetrad t : tetrads) {
+                                    if (t.containsPoint(x, 0)) {
+                                        clearLine = false;
+                                    }
+                                }
+                            }
+                            if (clearLine) {
+                                deleteRow(0);
+                                removedLine = true;
+                            } else {
+                                removedLine = false;
+                            }
+                        }
+                    }
                 }
                 tetradToRemove = getFreeBottomPiece();
                 if (tetradToRemove != null) {
