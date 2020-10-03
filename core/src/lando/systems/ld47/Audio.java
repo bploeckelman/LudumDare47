@@ -21,7 +21,7 @@ public class Audio implements Disposable {
 
     // none should not have a sound
     public enum Sounds {
-        none, sample_sound
+        none, tet_plunge, tet_rotate, tet_land, tet_clearLine, sas_punch, sas_swat, sas_throw, sas_jump, sas_land, sas_stun
     }
 
     public enum Musics {
@@ -43,7 +43,8 @@ public class Audio implements Disposable {
         this.assets = game.assets;
         this.tween = game.tween;
 
-        putSound(Sounds.sample_sound, assets.sampleSound);
+        putSound(Sounds.tet_land, assets.sampleSound);
+        putSound(Sounds.tet_clearLine, assets.sampleSound);
 
         musics.put(Musics.mood_track, assets.moodTrack);
 

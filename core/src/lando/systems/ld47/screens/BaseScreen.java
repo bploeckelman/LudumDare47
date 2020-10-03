@@ -46,7 +46,7 @@ public abstract class BaseScreen extends InputAdapter {
 
     public abstract void render(SpriteBatch batch);
 
-    protected long playSound(Audio.Sounds sound) {
+    public long playSound(Audio.Sounds sound) {
         return this.game.audio.playSound(sound);
     }
 

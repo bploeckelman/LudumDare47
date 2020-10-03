@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.OrderedSet;
+import lando.systems.ld47.Audio;
 import lando.systems.ld47.GameState;
 
 public class GameBoard {
@@ -182,6 +183,7 @@ public class GameBoard {
         boolean valid = false;
         if (invalidMove(tetrad, new Vector2(0, -1))) {
             tetrads.add(activeTetrad);
+            playSound(Audio.Sounds.tet_land);
             activeTetrad = null;
             fallInterval = Math.max(.2f, fallInterval - .005f);
 
@@ -200,6 +202,7 @@ public class GameBoard {
                     tetrads.removeValue(tetradToRemove, true);
                     if (tetrads.size > 0){
                         boolean removedLine = true;
+                        float volume = 0.5f;
                         while (removedLine) {
                             boolean clearLine = true;
                             for (int x = 0; x < TILESWIDE; x++) {
@@ -211,6 +214,7 @@ public class GameBoard {
                             }
                             if (clearLine) {
                                 deleteRow(0);
+                                playSound(Audio.Sounds.tet_clearLine, volume+= 0.1f);
                                 removedLine = true;
                             } else {
                                 removedLine = false;
@@ -271,5 +275,12 @@ public class GameBoard {
         for (Tetrad tetrad : tetrads) {
             tetrad.deleteRow(y);
         }
+    }
+
+    private void playSound(Audio.Sounds sound) {
+        this.playSound(sound, 1f);
+    }
+    private void playSound(Audio.Sounds sound, float volume) {
+        gameState.gameScreen.game.audio.playSound(sound, volume);
     }
 }
