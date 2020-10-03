@@ -1,25 +1,21 @@
 package lando.systems.ld47.entities;
 
-
-import java.time.LocalDateTime;
-
 public class LeaderboardScore implements Comparable{
     public long id;
     public String name;
     public long score;
-    public LocalDateTime date;
 
     public LeaderboardScore(){
         name = "";
         score = 0;
     }
 
-    public LeaderboardScore(long score, int side) {
+    public LeaderboardScore(long score) {
         name = "";
         this.score = score;
     }
 
-    public LeaderboardScore(long id, String name, long score, int side) {
+    public LeaderboardScore(long id, String name, long score) {
         this.id = id;
         this.name = name;
         this.score = score;
