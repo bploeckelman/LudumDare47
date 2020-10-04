@@ -74,4 +74,21 @@ public class Particles implements Disposable {
         }
     }
 
+    public void addPiecePunchedParticles(float x, float y, Color c) {
+        int sparks = 100;
+        for (int i = 0; i < sparks; i++) {
+            float speed = MathUtils.random(10, 200);
+            float dir = MathUtils.random(360);
+            activeParticles.get(Layer.front).add(Particle.initializer(particlePool.obtain())
+                    .keyframe(assets.whitePixel)
+                    .startPos(x, y)
+                    .velocity(MathUtils.cosDeg(dir) * speed, MathUtils.sinDeg(dir) * speed)
+                    .startSize(3, 3)
+                    .endSize(1, 1)
+                    .startColor(c)
+                    .endAlpha(0)
+                    .timeToLive(.5f)
+                    .init());
+        }
+    }
 }

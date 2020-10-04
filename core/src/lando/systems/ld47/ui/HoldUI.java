@@ -1,10 +1,13 @@
 package lando.systems.ld47.ui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
+import lando.systems.ld47.Audio;
 import lando.systems.ld47.GameState;
 import lando.systems.ld47.entities.Tetrad;
 
@@ -33,6 +36,13 @@ public class HoldUI extends UserInterface {
         if (hold != null) {
             hold.center(center);
         }
+
+        if (Gdx.input.justTouched()) {
+            Vector3 projection = new Vector3();
+            projection = gameState.gameScreen.hudCamera.unproject(projection);
+            projection.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            System.out.println("{ " + projection.x + ", " + projection.y + "}");
+        }
     }
 
     @Override
@@ -42,7 +52,6 @@ public class HoldUI extends UserInterface {
         assets.font.getData().setScale(.7f);
         layout.setText(assets.font, text, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.center, false);
         assets.font.draw(batch, layout, bounds.x - 85f, bounds.y + size + 20f);
-        //batch.draw(assets.whitePixel, bounds.x, bounds.y, bounds.width, bounds.height);
         if (hold != null) {
             hold.render(batch);
         }
@@ -51,6 +60,8 @@ public class HoldUI extends UserInterface {
     public void punchBox() {
         // play sound and animate!
         if (hold != null) {
+            gameState.gameScreen.playSound(Audio.Sounds.tet_forced);
+            gameState.gameScreen.particles.addPiecePunchedParticles(hold.position.x, hold.position.y, hold.color);
             hold = null;
         }
     }

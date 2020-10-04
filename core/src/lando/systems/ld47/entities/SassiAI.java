@@ -21,10 +21,17 @@ public class SassiAI {
     boolean animating = false;
     int lastAction = 3; // walk left
 
-    float left, right, top, bottom, maxX, maxY;
+    float tleft, tright, bleft, bright, top, bottom, maxX, maxY;
 
     private final Vector2 holdPosition;
     private final Vector2 nextPosition;
+
+    // if the location of the board or it gets moved, this will need to change
+    private float[] yPosCoords = { 685, 635, 590, 545, 505, 465, 430, 395, 360, 325, 295, 265, 235, 210, 185, 160, 135, 110, 90, 65, 45 };
+    // bottom x, top x left side
+    private Vector2 leftDiff = new Vector2(450, 520);
+    // top x, bottom y right side
+    private Vector2 rightDiff = new Vector2(760,830);
 
     // right
     private int direction = 1;
@@ -36,23 +43,25 @@ public class SassiAI {
         this.screen = screen;
         this.sasquatch = sasquatch;
 
-        float width = this.sasquatch.size.x / 2;
+        float width = this.sasquatch.size.x;
 
-        Rectangle bounds = screen.gameBoard.gameBounds;
-        left = bounds.x - width;
-        right = bounds.x + bounds.width - width;
-        top = bounds.y + bounds.height;
-        bottom = bounds.y;
+        tleft = leftDiff.y - width;
+        tright = rightDiff.x;
+        bleft = leftDiff.x - width;
+        bright = rightDiff.y;
 
-        bounds = screen.gameHud.getNextBox().bounds;
+        top = yPosCoords[0];
+        bottom = yPosCoords[19];
+
+        Rectangle bounds = screen.gameHud.getNextBox().bounds;
         nextPosition = new Vector2(bounds.x, bounds.y);
 
         bounds = screen.gameHud.getHoldBox().bounds;
         holdPosition = new Vector2(bounds.x, bounds.y);
 
-        maxX = nextPosition.x - left;
+        maxX = nextPosition.x - bleft;
         maxY = top - bottom;
-        sasquatch.position.set(left, top);
+        sasquatch.position.set(tleft, top);
     }
 
     public void update(float dt) {
@@ -79,16 +88,16 @@ public class SassiAI {
     }
 
     private void randomAction() {
-        lastAction = getNextAction();
+        int action = getNextAction();
         switch (lastAction) {
             case 0:
                 hitNext();
                 break;
             case 1:
-                hitLeft();
-                break;
+                hitLeft(lastAction != 2);
+                 break;
             case 2:
-                hitRight();
+                hitRight(lastAction != 1);
                 break;
             case 3:
                 walkLeft();
@@ -100,6 +109,7 @@ public class SassiAI {
                 hitHold();
                 break;
         }
+        lastAction = action;
     }
 
     private int getNextAction() {
@@ -111,11 +121,11 @@ public class SassiAI {
     }
 
     private void walkRight() {
-        walk(right, top, getTopState());
+        walk(tright, top, getTopState());
     }
 
     private void walkLeft() {
-        walk(left, top, getTopState());
+        walk(tleft, top, getTopState());
     }
 
     private Sasquatch.SasquatchState getTopState() {
@@ -123,41 +133,58 @@ public class SassiAI {
     }
 
     private void hitNext() {
-        walk(nextPosition.x, nextPosition.y, Sasquatch.SasquatchState.punch, screen.gameHud.getNextBox());
+        walk(nextPosition.x, nextPosition.y, Sasquatch.SasquatchState.punch, screen.gameHud.getNextBox(), false);
     }
 
     private void hitHold() {
-        walk(holdPosition.x, holdPosition.y, Sasquatch.SasquatchState.punch, screen.gameHud.getHoldBox());
+        walk(holdPosition.x, holdPosition.y, Sasquatch.SasquatchState.punch, screen.gameHud.getHoldBox(), false);
     }
 
-    private void hitRight() {
-        float pos = randomY(false);
-        if (pos == -1) {
+    private void hitRight(boolean drop) {
+        Vector2 pos = getSidePos(false);
+        if (pos == null) {
             animating = false;
             return;
         }
-        walk(right, pos, Sasquatch.SasquatchState.punch);
+        walk(pos.x, pos.y, Sasquatch.SasquatchState.punch, null, drop);
     }
 
-    private void hitLeft() {
-        float pos = randomY(true);
-        if (pos == -1) {
+    private void hitLeft(boolean drop) {
+        Vector2 pos = getSidePos(true);
+        if (pos == null) {
             animating = false;
             return;
         }
-        walk(left, pos, Sasquatch.SasquatchState.punch);
+        walk(pos.x, pos.y, Sasquatch.SasquatchState.punch, null, drop);
     }
 
-    private float randomY(boolean left) {
+    Vector2 sidePos = new Vector2();
+    private Vector2 getSidePos(boolean left) {
         Array<Integer> rows = screen.gameBoard.getRowEnds(left);
-        if (rows.isEmpty()) { return -1; }
-         return bottom + (Tetrad.POINT_WIDTH * rows.random());
-    }
-    private void walk(float x, float y, Sasquatch.SasquatchState state) {
-        this.walk(x, y, state, null);
+        if (rows.isEmpty()) { return null; }
+
+        // array is reverse and I'm too lazy to switch it
+        int yPos = (yPosCoords.length - 1) - rows.random();
+
+        float x = getXPos(left, yPos);
+        sidePos.set(x, yPosCoords[yPos]);
+        return sidePos;
     }
 
-    private void walk(float x, float y, Sasquatch.SasquatchState state, HoldUI punchBox) {
+    private float getXPos(boolean left, int index) {
+        if (left) {
+            // x is bottom left, y is top left
+            return leftDiff.x + (leftDiff.y - leftDiff.x) / 20 * index;
+        }
+        // x is top right, y is bottom right
+        return rightDiff.y - (leftDiff.y - leftDiff.x) / 20 * index;
+    }
+
+    private void walk(float x, float y, Sasquatch.SasquatchState state) {
+        this.walk(x, y, state, null, false);
+    }
+
+    private void walk(float x, float y, Sasquatch.SasquatchState state, HoldUI punchBox, boolean drop) {
 
         Vector2 pos = sasquatch.position;
 
@@ -167,14 +194,13 @@ public class SassiAI {
         float wy = Math.max(y, pos.y) + 25;
         float wx = Math.min(x, pos.x) + dx;
 
-        if (pos.x == x) {
+        if (drop) {
             wy = Math.min(y, pos.y) + dy;
-            wx = x + ((x == left) ? -10 : 10);
         }
 
         float time = 5f * Math.max(dx / maxX, dy / maxY);
 
-        sasquatch.setState(Sasquatch.SasquatchState.walk);
+        sasquatch.setState(Sasquatch.SasquatchState.idle);
         Timeline.createSequence()
                 .push(Tween.to(sasquatch.position, Vector2Accessor.XY, time).waypoint(wx, wy).target(x, y).ease(TweenEquations.easeInOutCubic))
                 .start(screen.game.tween)

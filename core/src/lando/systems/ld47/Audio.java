@@ -21,7 +21,7 @@ public class Audio implements Disposable {
 
     // none should not have a sound
     public enum Sounds {
-        none, cha_ching, tet_plunge, tet_rotate, tet_land, tet_clearLine, sas_punch, sas_swat, sas_throw, sas_jump, sas_land, sas_stun
+        none, cha_ching, tet_plunge, tet_rotate, tet_land, tet_clearLine, tet_forced, sas_punch, sas_swat, sas_throw, sas_jump, sas_land, sas_stun
     }
 
     public enum Musics {
