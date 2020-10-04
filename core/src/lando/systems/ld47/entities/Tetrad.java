@@ -1,7 +1,6 @@
 package lando.systems.ld47.entities;
 
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -20,6 +19,7 @@ public class Tetrad implements Pool.Poolable {
     public static float GLOBAL_ANIM = 0;
 
     public static float blockHeight = 1f;
+    private static Color ghostColor = new Color(1,1,1,1f);
 
     private GameBoard gameBoard;
     private Game game;
@@ -112,18 +112,33 @@ public class Tetrad implements Pool.Poolable {
     }
 
     private void buildMesh(){
-        float offset = gameBoard.activeTetrad == this ? .4f : 0;
+        int downDist = 0;
+        float offset = 0;
+        boolean isActive = gameBoard.activeTetrad == this;
+        if (isActive) {
+            offset = .4f;
+            while(!gameBoard.invalidMove(this, new Vector2(0, downDist))) {
+                downDist --;
+            }
+            downDist++;
+        }
+
         verticesIndex = 0;
         for (TetradPiece point : points) {
             if (point.remove){
                 continue;
             }
-            addFace(origin.x + point.x, origin.y + point.y, offset, color, FACE.TOP, type );
-            addFace(origin.x + point.x, origin.y + point.y, offset, color, FACE.LEFT, type );
-            addFace(origin.x + point.x, origin.y + point.y, offset, color, FACE.RIGHT, type );
-            addFace(origin.x + point.x, origin.y + point.y, offset, color, FACE.FRONT, type );
+            computeFace(origin.x + point.x, origin.y + point.y, offset, color, FACE.TOP, type );
+            computeFace(origin.x + point.x, origin.y + point.y, offset, color, FACE.LEFT, type );
+            computeFace(origin.x + point.x, origin.y + point.y, offset, color, FACE.RIGHT, type );
+            computeFace(origin.x + point.x, origin.y + point.y, offset, color, FACE.FRONT, type );
 
-
+            if (isActive && gameBoard.gameState.showGhost){
+                computeGhostFace(origin.x + point.x, downDist + origin.y + point.y, offset, ghostColor, FACE.TOP );
+                computeGhostFace(origin.x + point.x, downDist + origin.y + point.y, offset, ghostColor, FACE.LEFT );
+                computeGhostFace(origin.x + point.x, downDist + origin.y + point.y, offset, ghostColor, FACE.RIGHT );
+                computeGhostFace(origin.x + point.x, downDist + origin.y + point.y, offset, ghostColor, FACE.FRONT );
+            }
         }
     }
 
@@ -134,7 +149,7 @@ public class Tetrad implements Pool.Poolable {
     Vector3 NOR = new Vector3();
     Vector2 UV1 = new Vector2();
     Vector2 UV2 = new Vector2();
-    private void addFace(float x, float y, float z, Color color, FACE face, int type) {
+    private void computeFace(float x, float y, float z, Color color, FACE face, int type) {
         switch (face) {
             case TOP:
                 LL.set(x, y, z + blockHeight);
@@ -167,6 +182,49 @@ public class Tetrad implements Pool.Poolable {
             case FRONT:
                 LL.set(x, y, z);
                 UL.set(x, y, z+blockHeight);
+                LR.set(x +1, y, z);
+                UR.set(x +1, y, z+blockHeight);
+                NOR.set(1,0, 0);
+                UV1.set(1/340f, 33/68f);
+                UV2.set(33f/340f, 67/68f);
+                break;
+        }
+
+        addFaceVerts(color);
+    }
+
+    private void computeGhostFace(float x, float y, float z, Color color, FACE face) {
+        switch (face) {
+            case TOP:
+                LL.set(x, y, z + blockHeight);
+                UL.set(x, y+1, z+ blockHeight);
+                LR.set(x+1, y, z+ blockHeight);
+                UR.set(x+1, y+1, z+ blockHeight);
+                NOR.set(0,0, 1);
+
+                break;
+            case LEFT:
+                LL.set(x, y+1, z);
+                UL.set(x, y+1, z+blockHeight);
+                LR.set(x, y, z);
+                UR.set(x, y, z+blockHeight);
+                NOR.set(0,-1, 0);
+                UV1.set(1/340f, 33/68f);
+                UV2.set(33f/340f, 67/68f);
+                break;
+            case RIGHT:
+                LL.set(x+1, y, z);
+                UL.set(x+1, y, z+blockHeight);
+                LR.set(x+1, y+1, z);
+                UR.set(x+1, y+1, z+blockHeight);
+                NOR.set(0,1, 0);
+                UV1.set(1/340f, 33/68f);
+                UV2.set(33f/340f, 67/68f);
+                break;
+
+            case FRONT:
+                LL.set(x, y, z);
+                UL.set(x, y, z+blockHeight);
                 LR.set(x + 1, y, z);
                 UR.set(x + 1, y, z+blockHeight);
                 NOR.set(1,0, 0);
@@ -174,8 +232,13 @@ public class Tetrad implements Pool.Poolable {
                 UV2.set(33f/340f, 67/68f);
                 break;
         }
+        UV1.set((1 + 34f)/340f, 33/68f);
+        UV2.set((34f * (2) - 1)/340f, 67/68f);
 
+        addFaceVerts(color);
+    }
 
+    private void addFaceVerts(Color color ) {
         vertices[verticesIndex++] = LL.x;
         vertices[verticesIndex++] = LL.y;
         vertices[verticesIndex++] = LL.z;
