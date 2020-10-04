@@ -42,6 +42,7 @@ public class GameScreen extends BaseScreen{
     @Override
     public void update(float dt) {
         super.update(dt);
+        shader = game.idkfa ? game.assets.cityShader2 : game.assets.cityShader;
         accum += dt;
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)){
             game.setScreen(new EndScreen(game));
