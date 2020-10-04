@@ -9,14 +9,13 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld47.GameState;
-import lando.systems.ld47.entities.LeaderboardScore;
-
-import java.util.*;
+import lando.systems.ld47.leaderboard.LeaderboardScore;
 
 public class LeaderboardUI extends UserInterface {
+
     private int currentScore = 0;
     private float currentScoreLabel;
-    ArrayList<LeaderboardScore> allScores;
+    private Array<LeaderboardScore> allScores;
     private MutableFloat pulse;
     private int currentRank;
     private LeaderboardScore currentLeaderboardScore;
@@ -26,52 +25,31 @@ public class LeaderboardUI extends UserInterface {
 
     public LeaderboardUI(GameState gameState) {
         super(gameState);
-        allScores = new ArrayList<>();
+        this.allScores = new Array<>();
         this.pulse = new MutableFloat(0f);
+        this.rankChangeCountdown = RANK_CHANGE_TIMER;
+        this.currentLeaderboardScore = new LeaderboardScore("YOU", currentScore, true);
+        this.allScores.add(currentLeaderboardScore);
+        this.currentRank = 1;
+
         Tween.to(pulse, -1, 0.66f)
                 .target(.3f)
                 .repeatYoyo(-1, 0.33f)
                 .start(tween);
-        this.rankChangeCountdown = RANK_CHANGE_TIMER;
-        currentLeaderboardScore = new LeaderboardScore("YOU", currentScore, true);
-        allScores.add(currentLeaderboardScore);
-        allScores.add(new LeaderboardScore(1, "TET", 5200));
-        allScores.add(new LeaderboardScore(2, "RIS", 100));
-        allScores.add(new LeaderboardScore(3, "TET", 100));
-        allScores.add(new LeaderboardScore(4, "RIS", 900));
-        allScores.add(new LeaderboardScore(5, "TET", 3200));
-        allScores.add(new LeaderboardScore(6, "RIS", 800));
-        allScores.add(new LeaderboardScore(7, "TET", 700));
-        allScores.add(new LeaderboardScore(8, "RIS", 600));
-        allScores.add(new LeaderboardScore(9, "TET", 500));
-        allScores.add(new LeaderboardScore(10, "RIS", 300));
-        allScores.add(new LeaderboardScore(11, "TET", 200));
-        allScores.add(new LeaderboardScore(12, "RIS", 400));
-        allScores.add(new LeaderboardScore(13, "TET", 2200));
-        allScores.add(new LeaderboardScore(14, "RIS", 4400));
-        allScores.add(new LeaderboardScore(13, "TET", 5200));
-        allScores.add(new LeaderboardScore(14, "RIS", 200));
-        allScores.add(new LeaderboardScore(15, "TET", 300));
-        allScores.add(new LeaderboardScore(16, "RIS", 200));
-        allScores.add(new LeaderboardScore(17, "TET", 100));
-        allScores.add(new LeaderboardScore(18, "RIS", 100));
-        allScores.add(new LeaderboardScore(19, "TET", 100));
-        allScores.add(new LeaderboardScore(20, "RIS", 100));
-        currentRank = allScores.size();
     }
 
     public void update(float dt) {
         currentScore = gameState.getScore();
         currentScoreLabel = MathUtils.lerp(currentScoreLabel, currentScore, 0.1f);
         for (LeaderboardScore score : allScores) {
-            if (score.isCurrentUser == true) {
+            if (score.isCurrentUser()) {
                 currentLeaderboardScore = score;
-                score.score = Math.round(currentScoreLabel);
+                score.setScore(Math.round(currentScoreLabel));
             }
         }
-        Collections.sort(allScores);
+        allScores.sort();
         int previousRank = currentRank;
-        currentRank = allScores.indexOf(currentLeaderboardScore) + 1;
+        currentRank = allScores.indexOf(currentLeaderboardScore, true) + 1;
         if (previousRank != currentRank) {
             rankChanged = true;
         }
@@ -87,42 +65,60 @@ public class LeaderboardUI extends UserInterface {
     public void draw(SpriteBatch batch, Rectangle bounds) {
         renderPanel(allScores, batch);
     }
-    private void renderPanel(ArrayList<LeaderboardScore> scores, SpriteBatch batch){
+
+    private void renderPanel(Array<LeaderboardScore> scores, SpriteBatch batch){
         String title = "High Score";
         int leaderboardCount = currentRank < 19 ? 18 : 17;
+
         batch.setColor(Color.WHITE);
         assets.screws.draw(batch, 50, 50, gameState.gameScreen.hudCamera.viewportWidth / 4, gameState.gameScreen.hudCamera.viewportHeight - 100f);
+
         assets.font.getData().setScale(1.2f);
         layout.setText(assets.font, title, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.center, false);
         assets.font.draw(batch, layout, 60, gameState.gameScreen.hudCamera.viewportHeight - 60);
-        assets.font.getData().setScale(.7f);
-        for (int i = 0; i < Math.min(scores.size(), leaderboardCount); i++){
+
+        float scoreScale = 0.4f;
+        assets.font.getData().setScale(scoreScale);
+        for (int i = 0; i < Math.min(scores.size, leaderboardCount); i++){
             LeaderboardScore score = scores.get(i);
             layout.setText(assets.font, (i+1) + ": ", Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
             assets.font.draw(batch, layout, 80, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*i));
-            assets.font.getData().setScale(.7f);
-            if (score.isCurrentUser) {
+
+            assets.font.getData().setScale(scoreScale);
+            if (score.isCurrentUser()) {
                 if (rankChanged) {
-                    assets.font.getData().setScale(.7f + pulse.floatValue());
+                    assets.font.getData().setScale(scoreScale + pulse.floatValue());
                 }
-                layout.setText(assets.font, score.name, Color.RED, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
-                assets.font.draw(batch, layout, 140, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*i));
+                layout.setText(assets.font, score.getName(), Color.RED, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
+                assets.font.draw(batch, layout, 110, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*i));
             }
             else {
-                layout.setText(assets.font, score.name, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
-                assets.font.draw(batch, layout, 140, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*i));
+                layout.setText(assets.font, score.getName(), Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
+                assets.font.draw(batch, layout, 110, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*i));
             }
-            assets.font.getData().setScale(.7f);
-            layout.setText(assets.font, String.valueOf(score.score), Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
-            assets.font.draw(batch, layout, 240, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*i));
+
+            assets.font.getData().setScale(scoreScale);
+            layout.setText(assets.font, String.valueOf(score.getScore()), Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
+            assets.font.draw(batch, layout, 260, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*i));
         }
+
         if (currentRank >= 19) {
             layout.setText(assets.font, currentRank + ": ", Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
             assets.font.draw(batch, layout, 80, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*17));
-            layout.setText(assets.font, currentLeaderboardScore.name, Color.RED, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
-            assets.font.draw(batch, layout, 140, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*17));
-            layout.setText(assets.font, String.valueOf(currentLeaderboardScore.score), Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
-            assets.font.draw(batch, layout, 240, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*17));
+
+            layout.setText(assets.font, currentLeaderboardScore.getName(), Color.RED, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
+            assets.font.draw(batch, layout, 110, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*17));
+
+            layout.setText(assets.font, String.valueOf(currentLeaderboardScore.getScore()), Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
+            assets.font.draw(batch, layout, 260, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*17));
         }
     }
+
+    public void updateScores(Array<LeaderboardScore> scores) {
+        allScores.clear();
+        allScores.add(currentLeaderboardScore);
+        allScores.addAll(scores);
+        currentRank = allScores.size;
+    }
+
 }

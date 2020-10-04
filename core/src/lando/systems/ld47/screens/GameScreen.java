@@ -29,7 +29,8 @@ public class GameScreen extends BaseScreen{
         gameState = new GameState(this);
         gameBoard = new GameBoard(gameState);
         gameHud = new GameHud(gameState);
-        leaderboardService = new LeaderboardService();
+        leaderboardService = new LeaderboardService(this);
+        leaderboardService.getScores();
 
         sasquatch = new Sasquatch(this);
 
@@ -48,7 +49,7 @@ public class GameScreen extends BaseScreen{
             leaderboardService.getScores();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) {
-            leaderboardService.postScore(leaderboardService.getRandomName(), MathUtils.random(1000L, 50000L));
+            leaderboardService.postScore(leaderboardService.getRandomName(), MathUtils.random(1000, 50000));
         }
         // TESTING ---------------
 

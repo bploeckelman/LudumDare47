@@ -87,6 +87,7 @@ public class PlayerInput extends ControllerAdapter {
                 else if (dPadDir == PovDirection.east)  controllerState.moveRightPressed = true;
                 else if (dPadDir == PovDirection.south) controllerState.moveDownPressed  = true;
                 else {
+                    // TODO: might want to not use the dpad to plunge, it can be touchy
                     boolean dPadUpPressed = (dPadDir == PovDirection.north);
                     controllerState.moveUpJustPressed = (dPadUpPressed && !controllerState.moveUpPressed);
                     controllerState.moveUpPressed = dPadUpPressed;

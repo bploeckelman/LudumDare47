@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.StringBuilder;
 import lando.systems.ld47.GameState;
+import lando.systems.ld47.leaderboard.LeaderboardScore;
 
 public class GameHud {
 
@@ -18,6 +19,7 @@ public class GameHud {
     private final Rectangle bounds;
 
     private GameInfoUI gameInfoUI;
+    private LeaderboardUI leaderboardUI;
 
     private final Array<UserInterface> uiElements = new Array<>();
 
@@ -30,8 +32,8 @@ public class GameHud {
 
 //        uiElements.add(new ScoreUI(gameState));
 //        uiElements.add(nextUI = new NextUI(gameState, this.camera.viewportWidth - 130, bounds.height - 50));
-        uiElements.add(new LeaderboardUI(gameState));
         uiElements.add(gameInfoUI = new GameInfoUI(gameState));
+        uiElements.add(leaderboardUI = new LeaderboardUI(gameState));
 
         controllerText = new StringBuilder();
     }
@@ -70,10 +72,17 @@ public class GameHud {
             ui.draw(batch, bounds);
         }
 
+        // DEBUG --------------------------------
         GlyphLayout layout = gameState.assets.layout;
         layout.setText(gameState.assets.font, controllerText.toString());
         gameState.assets.font.draw(batch, layout, 10, layout.height + 10);
+        // DEBUG --------------------------------
 
         batch.setColor(Color.WHITE);
     }
+
+    public void updateScores(Array<LeaderboardScore> scores) {
+        leaderboardUI.updateScores(scores);
+    }
+
 }

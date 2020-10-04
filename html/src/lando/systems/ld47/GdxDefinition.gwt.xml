@@ -8,6 +8,7 @@
 	<inherits name='regexodus' />
 
 	<extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld47.particles.Particle" />
+	<extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld47.leaderboard.LeaderboardScore" />
 
 	<inherits name='Game' />
 	<entry-point class='lando.systems.ld47.client.HtmlLauncher' />
