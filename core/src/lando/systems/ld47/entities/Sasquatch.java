@@ -51,7 +51,9 @@ public class Sasquatch {
             case stun:
                 animation = screen.assets.sasquatch_stun;
             default:
-                animation = screen.assets.sasquatch;
+                // animation = screen.assets.sasquatch;
+                size.set(new Vector2(128, 32));
+                animation = screen.assets.car;
         }
 
         animationTime = 0;

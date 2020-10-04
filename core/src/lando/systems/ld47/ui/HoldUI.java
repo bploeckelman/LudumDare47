@@ -19,7 +19,7 @@ public class HoldUI extends UserInterface {
         super(gameState);
         this.text = text;
 
-        size = Tetrad.POINT_WIDTH * 5;
+        size = Tetrad.POINT_WIDTH * 3.5f;
         bounds.set(x, y - size, size, size);
         center = new Vector2(x + size / 2, y - size / 2);
     }

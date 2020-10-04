@@ -14,9 +14,9 @@ public class GameInfoUI extends UserInterface {
 
     public GameInfoUI(GameState gameState) {
         super(gameState);
-        nextUI = new NextUI(gameState, gameState.gameScreen.hudCamera.viewportWidth / 4 * 3 +50f, gameState.gameScreen.hudCamera.viewportHeight - 150f, "NEXT");
+        nextUI = new NextUI(gameState, gameState.gameScreen.hudCamera.viewportWidth / 8 * 6 - 35f, gameState.gameScreen.hudCamera.viewportHeight - 180f, "NEXT");
         scoreUI = new ScoreUI(gameState, gameState.gameScreen.hudCamera.viewportWidth / 4 * 3 -30f, gameState.gameScreen.hudCamera.viewportHeight - 470f);
-        holdUI = new HoldUI(gameState, gameState.gameScreen.hudCamera.viewportWidth / 4 * 3 +50f, gameState.gameScreen.hudCamera.viewportHeight - 310f, "HOLD");
+        holdUI = new HoldUI(gameState, gameState.gameScreen.hudCamera.viewportWidth / 8 * 7 - 45f, gameState.gameScreen.hudCamera.viewportHeight - 180f, "HOLD");
     }
 
     public void update(float dt) {
@@ -32,12 +32,14 @@ public class GameInfoUI extends UserInterface {
         scoreUI.draw(batch, bounds);
     }
     private void renderPanel(SpriteBatch batch){
-        String title = "Tetris";
+        String title = "Tetrad Runner";
         batch.setColor(Color.WHITE);
         assets.screws.draw(batch, gameState.gameScreen.hudCamera.viewportWidth / 4 * 3 - 50f, 50f, gameState.gameScreen.hudCamera.viewportWidth / 4, gameState.gameScreen.hudCamera.viewportHeight - 100f);
-        assets.font.getData().setScale(1.2f);
+        assets.font.getData().setScale(1f);
         layout.setText(assets.font, title, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.center, false);
         assets.font.draw(batch, layout, gameState.gameScreen.hudCamera.viewportWidth / 4 * 3 - 40f, gameState.gameScreen.hudCamera.viewportHeight - 60f);
+        layout.setText(assets.font, "2020", Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.center, false);
+        assets.font.draw(batch, layout, gameState.gameScreen.hudCamera.viewportWidth / 4 * 3 - 40f, gameState.gameScreen.hudCamera.viewportHeight - 100f);
         assets.font.getData().setScale(.7f);
 
     }

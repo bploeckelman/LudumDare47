@@ -52,6 +52,7 @@ public class Assets implements Disposable {
     public Animation<TextureRegion> sasquatch_jump;
     public Animation<TextureRegion> sasquatch_throw;
     public Animation<TextureRegion> sasquatch_stun;
+    public Animation<TextureRegion> car;
 
     public NinePatch border;
     public NinePatch inset;
@@ -141,6 +142,7 @@ public class Assets implements Disposable {
         sasquatch_stun = new Animation<>(0.1f, atlas.findRegions("dime_stun"), Animation.PlayMode.LOOP);
         sasquatch_throw = new Animation<>(0.1f, atlas.findRegions("dime_dead"), Animation.PlayMode.LOOP);
 
+        car = new Animation<>(0.1f, atlas.findRegions("car-test"), Animation.PlayMode.LOOP);
 
         border = new NinePatch(atlas.findRegion("ninepatches/border"), 9, 9, 9, 9);
         inset  = new NinePatch(atlas.findRegion("ninepatches/inset"), 9, 9, 9, 9);
