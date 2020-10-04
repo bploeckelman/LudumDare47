@@ -14,6 +14,7 @@ public class GameState {
     private Tetrad next;
     private MutableInteger mutScore = new MutableInteger(0);
     private MutableInteger mutLineCleared = new MutableInteger(0);
+    private MutableInteger comboScore = new MutableInteger(0);
 
 
     public GameState(GameScreen gameScreen) {
@@ -46,8 +47,19 @@ public class GameState {
         return mutLineCleared.intValue();
     }
 
+    public int getCombo() {
+        return comboScore.intValue();
+    }
+
     public void addScore(int amount, int lineCleared) {
         mutScore.setValue(mutScore.intValue() + amount);
         mutLineCleared.setValue(mutLineCleared.intValue() + lineCleared);
+    }
+    public void addCombo() {
+        comboScore.setValue(comboScore.intValue() + 1);
+    }
+
+    public void breakCombo() {
+        comboScore.setValue(0);
     }
 }

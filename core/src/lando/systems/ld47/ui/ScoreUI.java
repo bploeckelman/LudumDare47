@@ -11,6 +11,7 @@ public class ScoreUI extends UserInterface {
 
     private int score = 0;
     private int lineCleared = 0;
+    private int combo = 0;
     private float scoreLabel;
     private float lineClearedLabel;
     private float x;
@@ -27,6 +28,7 @@ public class ScoreUI extends UserInterface {
         scoreLabel = MathUtils.lerp(scoreLabel, score, 0.1f);
         lineCleared = gameState.getLineCleared();
         lineClearedLabel = MathUtils.lerp(lineClearedLabel, lineCleared, 0.5f);
+        combo = gameState.getCombo();
     }
 
     public void draw(SpriteBatch batch, Rectangle bounds) {
@@ -36,6 +38,9 @@ public class ScoreUI extends UserInterface {
         String lineClearText = "Line Cleared: " + Math.round(lineClearedLabel);
         layout.setText(assets.font, lineClearText, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.left, false);
         assets.font.draw(batch, layout, x, y - 50f);
+        String currentComboText = "Current Combo: " + combo;
+        layout.setText(assets.font, currentComboText, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.left, false);
+        assets.font.draw(batch, layout, x, y - 100f);
 
     }
 

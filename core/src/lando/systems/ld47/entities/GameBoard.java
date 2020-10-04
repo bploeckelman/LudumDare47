@@ -28,6 +28,7 @@ public class GameBoard {
     float timeToFall;
 
     int blocksToFallTilRemove;
+    private boolean previousBlockCleared = false;
 
     public GameBoard(GameState gameState) {
         this.gameState = gameState;
@@ -328,6 +329,15 @@ public class GameBoard {
             case 4:
                 gameState.addScore(800, 4); break;
         }
+        if (rowsCleared > 0) {
+            gameState.addCombo();
+        }
+        else {
+            gameState.breakCombo();
+        }
+
+        previousBlockCleared = rowsCleared > 0 ? true : false;
+
     }
 
     private void deleteRow(int y) {
