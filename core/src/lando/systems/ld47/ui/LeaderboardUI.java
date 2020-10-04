@@ -13,15 +13,17 @@ import lando.systems.ld47.leaderboard.LeaderboardScore;
 
 public class LeaderboardUI extends UserInterface {
 
-    private int currentScore = 0;
-    private float currentScoreLabel;
-    private Array<LeaderboardScore> allScores;
-    private MutableFloat pulse;
-    private int currentRank;
+    private static final float RANK_CHANGE_TIMER = 5f;
+
+    private final Array<LeaderboardScore> allScores;
+    private final MutableFloat pulse;
+
     private LeaderboardScore currentLeaderboardScore;
-    private boolean rankChanged = false;
+    private int currentScore;
+    private int currentRank;
+    private float currentScoreLabel;
     private float rankChangeCountdown;
-    private static float RANK_CHANGE_TIMER = 5f;
+    private boolean rankChanged;
 
     public LeaderboardUI(GameState gameState) {
         super(gameState);
@@ -31,6 +33,8 @@ public class LeaderboardUI extends UserInterface {
         this.currentLeaderboardScore = new LeaderboardScore("YOU", currentScore, true);
         this.allScores.add(currentLeaderboardScore);
         this.currentRank = 1;
+        this.currentScore = 0;
+        this.rankChanged = false;
 
         Tween.to(pulse, -1, 0.66f)
                 .target(.3f)
@@ -78,11 +82,14 @@ public class LeaderboardUI extends UserInterface {
         assets.font.draw(batch, layout, 60, gameState.gameScreen.hudCamera.viewportHeight - 60);
 
         float scoreScale = 0.4f;
+        float rankColumnX = 80;
+        float nameColumnX = 110;
+        float scoreColumnX = 280;
         assets.font.getData().setScale(scoreScale);
         for (int i = 0; i < Math.min(scores.size, leaderboardCount); i++){
             LeaderboardScore score = scores.get(i);
             layout.setText(assets.font, (i+1) + ": ", Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
-            assets.font.draw(batch, layout, 80, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*i));
+            assets.font.draw(batch, layout, rankColumnX, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*i));
 
             assets.font.getData().setScale(scoreScale);
             if (score.isCurrentUser()) {
@@ -90,27 +97,27 @@ public class LeaderboardUI extends UserInterface {
                     assets.font.getData().setScale(scoreScale + pulse.floatValue());
                 }
                 layout.setText(assets.font, score.getName(), Color.RED, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
-                assets.font.draw(batch, layout, 110, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*i));
+                assets.font.draw(batch, layout, nameColumnX, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*i));
             }
             else {
                 layout.setText(assets.font, score.getName(), Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
-                assets.font.draw(batch, layout, 110, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*i));
+                assets.font.draw(batch, layout, nameColumnX, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*i));
             }
 
             assets.font.getData().setScale(scoreScale);
             layout.setText(assets.font, String.valueOf(score.getScore()), Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
-            assets.font.draw(batch, layout, 260, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*i));
+            assets.font.draw(batch, layout, scoreColumnX, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*i));
         }
 
         if (currentRank >= 19) {
             layout.setText(assets.font, currentRank + ": ", Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
-            assets.font.draw(batch, layout, 80, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*17));
+            assets.font.draw(batch, layout, rankColumnX, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*17));
 
             layout.setText(assets.font, currentLeaderboardScore.getName(), Color.RED, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
-            assets.font.draw(batch, layout, 110, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*17));
+            assets.font.draw(batch, layout, nameColumnX, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*17));
 
             layout.setText(assets.font, String.valueOf(currentLeaderboardScore.getScore()), Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
-            assets.font.draw(batch, layout, 260, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*17));
+            assets.font.draw(batch, layout, scoreColumnX, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*17));
         }
     }
 
