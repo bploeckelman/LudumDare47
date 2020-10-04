@@ -3,6 +3,7 @@ package lando.systems.ld47.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld47.Audio;
 import lando.systems.ld47.Game;
@@ -22,6 +23,7 @@ public class GameScreen extends BaseScreen{
 
     public Sasquatch sasquatch;
     float accum;
+    ShaderProgram shader;
 
     public GameScreen(Game game) {
         super(game);
@@ -33,7 +35,7 @@ public class GameScreen extends BaseScreen{
         leaderboardService.getScores();
 
         sasquatch = new Sasquatch(this);
-
+        shader = game.assets.cityShader;
         playMusic(Audio.Musics.blade_runner);
     }
 
@@ -61,11 +63,11 @@ public class GameScreen extends BaseScreen{
     @Override
     public void render(SpriteBatch batch) {
         batch.setProjectionMatrix(shaker.getCombinedMatrix());
-        batch.setShader(assets.cityShader);
+        batch.setShader(shader);
         batch.begin();
         {
-            assets.cityShader.setUniformf("iTime", accum);
-            assets.cityShader.setUniformf("iResolution", worldCamera.viewportWidth, worldCamera.viewportHeight);
+            shader.setUniformf("iTime", accum);
+            shader.setUniformf("iResolution", worldCamera.viewportWidth, worldCamera.viewportHeight);
             batch.draw(assets.pixel, 0, 0, worldCamera.viewportWidth, worldCamera.viewportHeight, -.5f, -.5f, worldCamera.viewportWidth-.5f, worldCamera.viewportHeight - .5f);
         }
         batch.end();
