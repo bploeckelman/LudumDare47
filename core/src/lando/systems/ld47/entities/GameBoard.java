@@ -106,16 +106,10 @@ public class GameBoard {
                 }
 
                 if (playerInput.isRotateRight()) {
-                    activeTetrad.rotate(-1);
-                    if (invalidMove(activeTetrad, Vector2.Zero)) {
-                        activeTetrad.rotate(1);
-                    }
+                    handleRotate(-1);
                 }
                 if (playerInput.isRotateLeft()) {
-                    activeTetrad.rotate(1);
-                    if (invalidMove(activeTetrad, Vector2.Zero)) {
-                        activeTetrad.rotate(-1);
-                    }
+                    handleRotate(1);
                 }
 
                 if (playerInput.isDownPressed()) {
@@ -139,8 +133,6 @@ public class GameBoard {
                 activeTetrad.update(dt);
             }
         }
-
-
     }
 
 
@@ -158,6 +150,28 @@ public class GameBoard {
         }
     }
 
+
+    private void handleRotate(int dir) {
+        activeTetrad.rotate(dir);
+        if (invalidMove(activeTetrad, Vector2.Zero)) {
+            if (collidesWithWalls(activeTetrad, Vector2.Zero)){
+                //Test one away first
+                if (!invalidMove(activeTetrad, new Vector2(-1, 0))) {
+                    activeTetrad.origin.x -= 1;
+                } else if (!invalidMove(activeTetrad, new Vector2(1, 0))) {
+                    activeTetrad.origin.x += 1;
+                } else if (!invalidMove(activeTetrad, new Vector2(-2, 0))) {
+                    activeTetrad.origin.x -= 2;
+                } else if (!invalidMove(activeTetrad, new Vector2(2, 0))) {
+                    activeTetrad.origin.x += 2;
+                } else {
+                    activeTetrad.rotate(-dir);
+                }
+            } else {
+                activeTetrad.rotate(-dir);
+            }
+        }
+    }
 
     public boolean invalidMove(Tetrad tetrad, Vector2 dir) {
         return collidesWithBlocks(tetrad, dir) || collidesWithWalls(tetrad, dir);
@@ -191,7 +205,7 @@ public class GameBoard {
         testOrigin.set(tetrad.origin.x + dir.x, tetrad.origin.y + dir.y);
         for (TetradPiece point : tetrad.points){
             if (point.x + testOrigin.x < 0 || point.x + testOrigin.x >= TILESWIDE) return true;
-            if (point.y + testOrigin.y < 0 || point.y + testOrigin.y >= TILESHIGH) return true;
+            if (point.y + testOrigin.y < 0 || point.y + testOrigin.y > TILESHIGH) return true;
         }
         return false;
     }

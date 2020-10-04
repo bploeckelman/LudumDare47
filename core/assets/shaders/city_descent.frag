@@ -1,3 +1,5 @@
+// Credit https://www.shadertoy.com/view/wdfGW4
+
 #ifdef GL_ES
 precision highp float;
 #endif
