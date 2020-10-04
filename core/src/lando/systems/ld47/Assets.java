@@ -122,7 +122,7 @@ public class Assets implements Disposable {
         screws = new NinePatch(atlas.findRegion("ninepatches/screws"), 7, 7, 7, 7);
         speech = new NinePatch(atlas.findRegion("ninepatches/speech-bubble"), 12, 9, 12, 9);
 
-        bigBangShader = loadShader("shaders/standard.vert", "shaders/big_bang.frag");
+//        bigBangShader = loadShader("shaders/standard.vert", "shaders/big_bang.frag");
         cityShader = loadShader("shaders/standard.vert", "shaders/city_descent.frag");
         loadAudio();
         return 1;
