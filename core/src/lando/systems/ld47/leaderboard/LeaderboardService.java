@@ -2,6 +2,7 @@ package lando.systems.ld47.leaderboard;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.net.HttpRequestBuilder;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
@@ -34,6 +35,11 @@ public class LeaderboardService {
                 .build();
         // TODO: the response listener should update the leaderboard hud when it receives a successful response
         Gdx.net.sendHttpRequest(request, new ResponseListener());
+    }
+
+    private String[] names = new String[] { "Brian", "Other Brian", "Doug", "Pete", "Matt", "Luke", "Jeffrey", "Cherry", "Asuka", "Tom Bombadil", "Fancy Lad", "Tenchu: Stealth Assassin"};
+    public String getRandomName() {
+        return names[MathUtils.random(0, names.length - 1)];
     }
 
     // ------------------------------------------------------------------------

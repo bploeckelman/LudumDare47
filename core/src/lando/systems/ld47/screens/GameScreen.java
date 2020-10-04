@@ -8,12 +8,10 @@ import lando.systems.ld47.Audio;
 import lando.systems.ld47.Game;
 import lando.systems.ld47.GameState;
 import lando.systems.ld47.entities.GameBoard;
+import lando.systems.ld47.entities.Sasquatch;
 import lando.systems.ld47.leaderboard.LeaderboardService;
 import lando.systems.ld47.particles.Particles;
-import lando.systems.ld47.entities.Sasquatch;
 import lando.systems.ld47.ui.GameHud;
-
-import java.util.UUID;
 
 public class GameScreen extends BaseScreen{
 
@@ -50,7 +48,7 @@ public class GameScreen extends BaseScreen{
             leaderboardService.getScores();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) {
-            leaderboardService.postScore(UUID.randomUUID().toString(), MathUtils.random(1000L, 50000L));
+            leaderboardService.postScore(leaderboardService.getRandomName(), MathUtils.random(1000L, 50000L));
         }
         // TESTING ---------------
         gameBoard.update(dt);
