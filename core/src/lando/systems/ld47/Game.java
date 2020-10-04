@@ -25,6 +25,7 @@ public class Game extends ApplicationAdapter {
 	public Audio audio;
 
 	public BaseScreen currentScreen;
+	public boolean idkfa;
 
 	@Override
 	public void create () {

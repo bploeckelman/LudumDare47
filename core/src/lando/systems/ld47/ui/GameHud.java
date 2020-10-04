@@ -9,14 +9,20 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.StringBuilder;
+import lando.systems.ld47.Config;
 import lando.systems.ld47.GameState;
 import lando.systems.ld47.leaderboard.LeaderboardScore;
+import javax.xml.bind.DatatypeConverter;
+
 
 public class GameHud {
 
     private final GameState gameState;
     private final OrthographicCamera camera;
     private final Rectangle bounds;
+
+    private final String mes1 = render("V2VhciBhIGZ1Y2tpbmcgbWFzaw==");
+    private final String mes2 = render("V2UgZG8gbm90IHN1cHBvcnQgV2hpdGUgU3VwcmVtYWNpc3Rz");
 
     private GameInfoUI gameInfoUI;
     private LeaderboardUI leaderboardUI;
@@ -78,11 +84,22 @@ public class GameHud {
         gameState.assets.font.draw(batch, layout, 10, layout.height + 10);
         // DEBUG --------------------------------
 
+        if (gameState.gameScreen.game.idkfa) {
+            layout.setText(gameState.assets.font, mes1);
+            gameState.assets.font.draw(batch, layout, (Config.windowWidth - layout.width)*3/4, Config.windowHeight - layout.height);
+            layout.setText(gameState.assets.font, mes2);
+            gameState.assets.font.draw(batch, layout, (Config.windowWidth - layout.width)/4, Config.windowHeight - layout.height);
+        };
+
         batch.setColor(Color.WHITE);
     }
 
     public void updateScores(Array<LeaderboardScore> scores) {
         leaderboardUI.updateScores(scores);
+    }
+
+    private String render(String message) {
+        return new String(DatatypeConverter.parseBase64Binary(message));
     }
 
 }

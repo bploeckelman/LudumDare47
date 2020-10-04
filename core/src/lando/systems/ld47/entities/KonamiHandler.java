@@ -21,7 +21,7 @@ public class KonamiHandler extends InputAdapter {
         if (sequence[index] == keyCode) {
             if (++index == sequence.length) {
                 game.audio.playSound(Audio.Sounds.cha_ching);
-                // insert magic here
+                game.idkfa = true;
                 index = 0;
             }
         } else {

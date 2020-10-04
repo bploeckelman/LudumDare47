@@ -35,7 +35,7 @@ public class GameScreen extends BaseScreen{
         leaderboardService.getScores();
 
         sasquatch = new Sasquatch(this);
-        shader = game.assets.cityShader;
+        shader = game.idkfa ? game.assets.cityShader2 : game.assets.cityShader;
         playMusic(Audio.Musics.blade_runner);
     }
 

@@ -44,6 +44,7 @@ public class Audio implements Disposable {
         this.tween = game.tween;
 
         putSound(Sounds.tet_land, assets.sampleSound);
+        putSound(Sounds.cha_ching, assets.chaChingSound);
         putSound(Sounds.tet_clearLine, assets.sampleSound);
 
         musics.put(Musics.mood_track, assets.moodTrack);
