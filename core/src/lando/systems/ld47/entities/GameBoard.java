@@ -1,9 +1,10 @@
 package lando.systems.ld47.entities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controllers;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -22,7 +23,10 @@ public class GameBoard {
 
     private final Array<Tetrad> tetrads;
 
-    private Tetrad activeTetrad;
+    FrameBuffer gameFB;
+    Texture gameTexture;
+
+    public Tetrad activeTetrad;
     private Tetrad tetradToRemove;
     public Rectangle gameBounds;
     float fallInterval;
@@ -30,6 +34,7 @@ public class GameBoard {
 
     int blocksToFallTilRemove;
     private boolean previousBlockCleared = false;
+    PerspectiveCamera boardCam;
 
     public GameBoard(GameState gameState) {
         this.gameState = gameState;
@@ -42,6 +47,20 @@ public class GameBoard {
         blocksToFallTilRemove = 3;
         fallInterval = 1f;
         timeToFall = fallInterval;
+
+
+
+        gameFB = new FrameBuffer(Pixmap.Format.RGBA8888, (int)gameBounds.width, (int)gameBounds.height, true);
+        gameTexture = gameFB.getColorBufferTexture();
+
+        boardCam = new PerspectiveCamera(60, 12, 20);
+//        boardCam.setToOrtho(false);
+        boardCam.up.set(0,0,1);
+        boardCam.position.set(5,0, 17);
+        boardCam.far = 400;
+        boardCam.lookAt(5f, 8, 0);
+        boardCam.update();
+
     }
 
     // this happens in an update loop, so it's cool
@@ -60,6 +79,11 @@ public class GameBoard {
         // figure out positioning
         tetrad.insertIntoBoard(this, origin);
         activeTetrad = tetrad;
+
+        // TODO: move this stuff up to BaseScreen or Game so we can use controllers on other screens
+        Controllers.clearListeners();
+        Controllers.addListener(playerInput);
+
 
         return current;
     }
@@ -90,6 +114,13 @@ public class GameBoard {
             }
         }
 
+        for (int i = tetrads.size -1; i >= 0; i--) {
+            Tetrad tetrad = tetrads.get(i);
+            if (tetrad.isEmpty()) {
+                tetrads.removeIndex(i);
+            }
+        }
+
         boolean boardResolving = false;
         for (Tetrad tetrad : tetrads) {
             if (tetrad.resolvingTetrad()) boardResolving = true;
@@ -110,6 +141,9 @@ public class GameBoard {
                 timeToFall = fallInterval;
             }
 
+            if (!tetrads.contains(tetradToRemove, true)) {
+                tetradToRemove = null;
+            }
             checkForPullOut();
 
             if (activeTetrad != null) {
@@ -156,16 +190,44 @@ public class GameBoard {
 
 
     public void render(SpriteBatch batch) {
-        batch.setColor(.3f, .3f, .3f, .8f);
-        batch.draw(gameState.assets.whitePixel, gameBounds.x, gameBounds.y, gameBounds.width, gameBounds.height);
+
+
+//        for (Tetrad tetrad : tetrads) {
+//            tetrad.render(batch);
+//        }
+        batch.end();
+
+        gameFB.begin();
+        Gdx.gl.glClearColor(0, 0, 0, 0);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+
+        batch.setProjectionMatrix(boardCam.combined);
+        batch.begin();
+        batch.setColor(1f, 1f, 1f, .8f);
+        batch.draw(gameState.assets.gameBoardTexture, 0, 0, TILESWIDE, TILESHIGH);
         batch.setColor(Color.WHITE);
+        batch.end();
+
+        Gdx.gl.glEnable(GL20.GL_BLEND);
 
         for (Tetrad tetrad : tetrads) {
-            tetrad.render(batch);
+            tetrad.renderModels(boardCam);
         }
         if (activeTetrad != null) {
-            activeTetrad.render(batch);
+            activeTetrad.renderModels(boardCam);
         }
+        gameFB.end();
+
+
+        batch.begin();
+        batch.setProjectionMatrix(gameState.gameScreen.shaker.getCombinedMatrix());
+//        if (activeTetrad != null) {
+//            activeTetrad.render(batch);
+//        }
+
+        batch.draw(gameTexture, gameBounds.x, gameBounds.y + gameBounds.height, gameBounds.width, -gameBounds.height);
     }
 
 
@@ -239,10 +301,10 @@ public class GameBoard {
         }
         Array<Tetrad> tetradArray = bottomPieces.orderedItems();
         tetradArray.shuffle();
-        for (Tetrad t : tetradArray) {
-            if (!collidesWithBlocks(t, new Vector2(0, -1))) {
-                return t;
-            }
+
+        if (tetradArray.size > 0) {
+            return tetradArray.first();
+
         }
         return null;
     }
@@ -260,6 +322,7 @@ public class GameBoard {
             checkForFullRows();
 
             blocksToFallTilRemove--;
+
 
             if (!tetrads.contains(tetradToRemove, true)) {
                 tetradToRemove = null;

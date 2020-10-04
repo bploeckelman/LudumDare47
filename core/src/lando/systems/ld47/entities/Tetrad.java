@@ -1,16 +1,26 @@
 package lando.systems.ld47.entities;
 
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.*;
+import com.badlogic.gdx.graphics.g3d.utils.MeshBuilder;
+import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.graphics.g3d.utils.shapebuilders.BoxShapeBuilder;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld47.Game;
 
 public class Tetrad {
-    public static float POINT_WIDTH = 25;
+
+    enum FACE {TOP, LEFT, RIGHT, FRONT}
+    public static float POINT_WIDTH = 40;
     private static float GLOBAL_HUE = 0;
     public static float GLOBAL_ANIM = 0;
 
@@ -22,18 +32,30 @@ public class Tetrad {
     public Vector2 position;
     public Vector2 origin;
     public Color color;
+    private int type;
     private int bounds;
     public boolean flashing;
     private float accum = 0;
     private float hue;
+
+    // Mesh things
+    private static final int NUM_COMPONENTS_POSITION = 3;
+    private static final int NUM_COMPONENTS_NORMAL = 3;
+    private static final int NUM_COMPONENTS_TEXTURE = 2;
+    private static final int NUM_COMPONENTS_COLOR = 4;
+    private static final int NUM_COMPONENTS_PER_VERTEX = NUM_COMPONENTS_POSITION + NUM_COMPONENTS_TEXTURE + NUM_COMPONENTS_COLOR + NUM_COMPONENTS_NORMAL;
+    private static final int MAX_TRIANGLES = 1000;
+    private static final int MAX_NUM_VERTICES = MAX_TRIANGLES * 3;
+    private Mesh mesh;
+    private float[] vertices;
+    private int verticesIndex;
+
 
     private Animation<TextureRegion> animation;
 
     public Tetrad(Game game) {
         this.game = game;
         position = new Vector2(0, 0);
-
-        // get your fucking shine block
 
 
         points = new Array<>();
@@ -42,17 +64,37 @@ public class Tetrad {
         GLOBAL_HUE += 137;
         hue = GLOBAL_HUE;
 //        color.fromHsv(hue, 1, 1);
+
+        this.mesh = new Mesh(false, MAX_NUM_VERTICES, 0,
+                new VertexAttribute(VertexAttributes.Usage.Position,           NUM_COMPONENTS_POSITION, "a_position"),
+                new VertexAttribute(VertexAttributes.Usage.Normal,        NUM_COMPONENTS_NORMAL, "a_normal"),
+                new VertexAttribute(VertexAttributes.Usage.ColorUnpacked,        NUM_COMPONENTS_COLOR, "a_color"),
+                new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, NUM_COMPONENTS_TEXTURE,  "a_texCoord0")
+        );
+
+        this.verticesIndex = 0;
+        this.vertices = new float[MAX_NUM_VERTICES * NUM_COMPONENTS_PER_VERTEX];
+
     }
 
     public void update(float dt) {
         accum += dt;
-        for (TetradPiece point : points) {
-            point.update(dt);
-        }
+
         // Allow tetrads to live outside of the gameboard
         if (origin != null) {
             position.set(gameBoard.gameBounds.x + origin.x * POINT_WIDTH, gameBoard.gameBounds.y + origin.y * POINT_WIDTH);
         }
+
+        for (TetradPiece point : points) {
+            point.update(dt);
+
+        }
+        if (flashing) {
+            color.a = (1f + MathUtils.sin(accum * 10f)) / 2f;
+        } else {
+            color.a = 1;
+        }
+        buildMesh();
     }
 
     public void render(SpriteBatch batch) {
@@ -69,6 +111,150 @@ public class Tetrad {
         }
         batch.setColor(Color.WHITE);
     }
+
+    private void buildMesh(){
+        float offset = gameBoard.activeTetrad == this ? .5f : 0;
+        verticesIndex = 0;
+        for (TetradPiece point : points) {
+            if (point.remove){
+                continue;
+            }
+            addFace(origin.x + point.x, origin.y + point.y, offset, color, FACE.TOP, type );
+            addFace(origin.x + point.x, origin.y + point.y, offset, color, FACE.LEFT, type );
+            addFace(origin.x + point.x, origin.y + point.y, offset, color, FACE.RIGHT, type );
+            addFace(origin.x + point.x, origin.y + point.y, offset, color, FACE.FRONT, type );
+
+
+        }
+    }
+
+    Vector3 LL = new Vector3();
+    Vector3 UL = new Vector3();
+    Vector3 LR = new Vector3();
+    Vector3 UR = new Vector3();
+    Vector3 NOR = new Vector3();
+    private void addFace(float x, float y, float z, Color color, FACE face, int type) {
+        switch (face) {
+            case TOP:
+                LL.set(x, y, z +1);
+                UL.set(x, y+1, z+1);
+                LR.set(x+1, y, z+1);
+                UR.set(x+1, y+1, z+1);
+                NOR.set(0,0, 1);
+                break;
+            case LEFT:
+                LL.set(x, y+1, z);
+                UL.set(x, y+1, z+1);
+                LR.set(x, y, z);
+                UR.set(x, y, z+1);
+                NOR.set(0,-1, 0);
+                break;
+            case RIGHT:
+                LL.set(x+1, y, z);
+                UL.set(x+1, y, z+1);
+                LR.set(x+1, y+1, z);
+                UR.set(x+1, y+1, z+1);
+                NOR.set(0,1, 0);
+                break;
+
+            case FRONT:
+                LL.set(x, y, z);
+                UL.set(x, y, z+1);
+                LR.set(x + 1, y, z);
+                UR.set(x + 1, y, z+1);
+                NOR.set(1,0, 0);
+                break;
+        }
+
+
+        vertices[verticesIndex++] = LL.x;
+        vertices[verticesIndex++] = LL.y;
+        vertices[verticesIndex++] = LL.z;
+        vertices[verticesIndex++] = NOR.x;
+        vertices[verticesIndex++] = NOR.y;
+        vertices[verticesIndex++] = NOR.z;
+        vertices[verticesIndex++] = color.r;
+        vertices[verticesIndex++] = color.g;
+        vertices[verticesIndex++] = color.b;
+        vertices[verticesIndex++] = color.a;
+        vertices[verticesIndex++] = 0;
+        vertices[verticesIndex++] = 0;
+
+        vertices[verticesIndex++] = UL.x;
+        vertices[verticesIndex++] = UL.y;
+        vertices[verticesIndex++] = UL.z;
+        vertices[verticesIndex++] = NOR.x;
+        vertices[verticesIndex++] = NOR.y;
+        vertices[verticesIndex++] = NOR.z;
+        vertices[verticesIndex++] = color.r;
+        vertices[verticesIndex++] = color.g;
+        vertices[verticesIndex++] = color.b;
+        vertices[verticesIndex++] = color.a;
+        vertices[verticesIndex++] = 0;
+        vertices[verticesIndex++] = 0;
+
+        vertices[verticesIndex++] = LR.x;
+        vertices[verticesIndex++] = LR.y;
+        vertices[verticesIndex++] = LR.z;
+        vertices[verticesIndex++] = NOR.x;
+        vertices[verticesIndex++] = NOR.y;
+        vertices[verticesIndex++] = NOR.z;
+        vertices[verticesIndex++] = color.r;
+        vertices[verticesIndex++] = color.g;
+        vertices[verticesIndex++] = color.b;
+        vertices[verticesIndex++] = color.a;
+        vertices[verticesIndex++] = 0;
+        vertices[verticesIndex++] = 0;
+
+        vertices[verticesIndex++] = LR.x;
+        vertices[verticesIndex++] = LR.y;
+        vertices[verticesIndex++] = LR.z;
+        vertices[verticesIndex++] = NOR.x;
+        vertices[verticesIndex++] = NOR.y;
+        vertices[verticesIndex++] = NOR.z;
+        vertices[verticesIndex++] = color.r;
+        vertices[verticesIndex++] = color.g;
+        vertices[verticesIndex++] = color.b;
+        vertices[verticesIndex++] = color.a;
+        vertices[verticesIndex++] = 0;
+        vertices[verticesIndex++] = 0;
+
+        vertices[verticesIndex++] = UL.x;
+        vertices[verticesIndex++] = UL.y;
+        vertices[verticesIndex++] = UL.z;
+        vertices[verticesIndex++] = NOR.x;
+        vertices[verticesIndex++] = NOR.y;
+        vertices[verticesIndex++] = NOR.z;
+        vertices[verticesIndex++] = color.r;
+        vertices[verticesIndex++] = color.g;
+        vertices[verticesIndex++] = color.b;
+        vertices[verticesIndex++] = color.a;
+        vertices[verticesIndex++] = 0;
+        vertices[verticesIndex++] = 0;
+
+        vertices[verticesIndex++] = UR.x;
+        vertices[verticesIndex++] = UR.y;
+        vertices[verticesIndex++] = UR.z;
+        vertices[verticesIndex++] = NOR.x;
+        vertices[verticesIndex++] = NOR.y;
+        vertices[verticesIndex++] = NOR.z;
+        vertices[verticesIndex++] = color.r;
+        vertices[verticesIndex++] = color.g;
+        vertices[verticesIndex++] = color.b;
+        vertices[verticesIndex++] = color.a;
+        vertices[verticesIndex++] = 0;
+        vertices[verticesIndex++] = 0;
+    }
+
+    public void renderModels(Camera camera) {
+        ShaderProgram shader = game.assets.redShader;
+        shader.bind();
+        shader.setUniformMatrix("u_projTrans", camera.combined);
+        mesh.setVertices(vertices);
+        mesh.render(shader, GL20.GL_TRIANGLES, 0, verticesIndex/ NUM_COMPONENTS_PER_VERTEX);
+
+    }
+
 
     public void rotate(int dir) {
         for (TetradPiece point : points) {
@@ -149,7 +335,7 @@ public class Tetrad {
     }
 
     private void buildNewPiece() {
-        int type = MathUtils.random(6);
+        type = MathUtils.random(6);
         switch (type) {
             case 0:
                 // I
@@ -232,4 +418,5 @@ public class Tetrad {
         // I
 
     }
+
 }

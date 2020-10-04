@@ -1,6 +1,9 @@
 package lando.systems.ld47.entities;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 
 public class TetradPiece {
     public int x;
@@ -10,6 +13,7 @@ public class TetradPiece {
     public boolean remove;
 
     public TetradPiece(int x, int y, Color color) {
+
         this.x = x;
         this.y = y;
         this.color = color;

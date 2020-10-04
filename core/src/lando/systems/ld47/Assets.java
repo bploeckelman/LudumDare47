@@ -5,8 +5,17 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.graphics.g3d.utils.shapebuilders.BoxShapeBuilder;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Disposable;
@@ -37,6 +46,7 @@ public class Assets implements Disposable {
 
     public TextureRegion whitePixel;
     public TextureRegion whiteCircle;
+    public TextureRegion gameBoardTexture;
     //public TextureRegion tetradSquare;
     public Animation<TextureRegion> orangeBlock;
     public Animation<TextureRegion> redBlock;
@@ -56,6 +66,8 @@ public class Assets implements Disposable {
 
     public ShaderProgram bigBangShader;
     public ShaderProgram cityShader;
+
+    public ShaderProgram redShader;
 
     // audio
     public Sound sampleSound;
@@ -103,6 +115,7 @@ public class Assets implements Disposable {
 
         whitePixel = atlas.findRegion("white-pixel");
         whiteCircle = atlas.findRegion("white-circle");
+        gameBoardTexture = atlas.findRegion("backpanel");
 
         //tetradSquare = atlas.findRegion("tetrad-square");
         blueBlock = new Animation<>(0.1f, atlas.findRegions("block-blue"), Animation.PlayMode.LOOP);
@@ -124,6 +137,8 @@ public class Assets implements Disposable {
 
 //        bigBangShader = loadShader("shaders/standard.vert", "shaders/big_bang.frag");
         cityShader = loadShader("shaders/standard.vert", "shaders/city_descent.frag");
+        redShader = loadShader("shaders/standard3d.vert", "shaders/cube.frag");
+
         loadAudio();
         return 1;
     }
