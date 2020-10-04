@@ -4,21 +4,31 @@ public class LeaderboardScore implements Comparable{
     public long id;
     public String name;
     public long score;
+    public boolean isCurrentUser;
 
     public LeaderboardScore(){
         name = "";
         score = 0;
+        this.isCurrentUser = false;
     }
 
     public LeaderboardScore(long score) {
         name = "";
         this.score = score;
+        this.isCurrentUser = false;
     }
 
     public LeaderboardScore(long id, String name, long score) {
         this.id = id;
         this.name = name;
         this.score = score;
+        this.isCurrentUser = false;
+    }
+
+    public LeaderboardScore(String name, long score, boolean isCurrentUser) {
+        this.name = name;
+        this.score = score;
+        this.isCurrentUser = isCurrentUser;
     }
 
     public boolean nameComplete() {
