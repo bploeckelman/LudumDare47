@@ -27,7 +27,7 @@ public class GameState {
     private MutableInteger comboScore = new MutableInteger(0);
 
     // Settings
-    boolean showGhost;
+    public boolean showGhost;
 
 
     public GameState(GameScreen gameScreen) {

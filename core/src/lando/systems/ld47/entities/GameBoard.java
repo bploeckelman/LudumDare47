@@ -17,7 +17,7 @@ public class GameBoard {
     public static int TILESWIDE = 10;
     public static int TILESHIGH = 20;
 
-    private final GameState gameState;
+    public final GameState gameState;
     private final PlayerInput playerInput;
     private final OrthographicCamera camera;
 
