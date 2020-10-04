@@ -66,6 +66,7 @@ public class Assets implements Disposable {
 
     // audio
     public Sound sampleSound;
+    public Sound chaChingSound;
     public Music moodTrack;
     public Music moodTrack2;
     public Music moodTrack3;
@@ -93,6 +94,7 @@ public class Assets implements Disposable {
 
         // audio
         mgr.load("audio/sample-sound.wav", Sound.class);
+        mgr.load("audio/chaching.mp3",Sound.class);
         mgr.load("audio/track-mood.mp3", Music.class);
         mgr.load("audio/track-mood-2.mp3", Music.class);
         mgr.load("audio/track-mood-3.mp3", Music.class);
@@ -157,6 +159,7 @@ public class Assets implements Disposable {
     private void loadAudio() {
         // sounds
         sampleSound = mgr.get("audio/sample-sound.wav", Sound.class);
+        chaChingSound = mgr.get("audio/chaching.mp3", Sound.class);
 
         // music
         moodTrack = mgr.get("audio/track-mood.mp3", Music.class);
