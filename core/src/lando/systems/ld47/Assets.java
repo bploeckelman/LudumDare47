@@ -5,17 +5,8 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.g3d.Material;
-import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
-import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
-import com.badlogic.gdx.graphics.g3d.utils.shapebuilders.BoxShapeBuilder;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Disposable;
@@ -25,6 +16,7 @@ public class Assets implements Disposable {
 
     private final AssetDescriptor<TextureAtlas> atlasAsset = new AssetDescriptor<>("images/sprites.atlas", TextureAtlas.class);
     private final AssetDescriptor<Texture> pixelTextureAsset = new AssetDescriptor<>("images/pixel.png", Texture.class);
+    private final AssetDescriptor<Texture> blockTextureAsset = new AssetDescriptor<>("images/blocks.png", Texture.class);
     private final AssetDescriptor<Texture> launchTextureAsset = new AssetDescriptor<>("images/launch.png", Texture.class);
     private final AssetDescriptor<Texture> titleTextureAsset = new AssetDescriptor<>("images/title.png", Texture.class);
     private final AssetDescriptor<BitmapFont> riseFont16Asset = new AssetDescriptor<>("fonts/chevyray-rise-16.fnt", BitmapFont.class);
@@ -41,6 +33,7 @@ public class Assets implements Disposable {
     public Texture launchImage;
     public Texture titleImage;
     public Texture pixel;
+    public Texture blockTextures;
 
     public TextureAtlas atlas;
 
@@ -67,7 +60,7 @@ public class Assets implements Disposable {
     public ShaderProgram bigBangShader;
     public ShaderProgram cityShader;
 
-    public ShaderProgram redShader;
+    public ShaderProgram blockShader;
 
     // audio
     public Sound sampleSound;
@@ -91,6 +84,7 @@ public class Assets implements Disposable {
 
         mgr.load(atlasAsset);
         mgr.load(pixelTextureAsset);
+        mgr.load(blockTextureAsset);
         mgr.load(titleTextureAsset);
         mgr.load(launchTextureAsset);
         mgr.load(riseFont16Asset);
@@ -116,6 +110,9 @@ public class Assets implements Disposable {
         launchImage = mgr.get(launchTextureAsset);
         titleImage = mgr.get(titleTextureAsset);
         font = mgr.get(riseFont16Asset);
+
+        blockTextures = mgr.get(blockTextureAsset);
+        blockTextures.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         atlas = mgr.get(atlasAsset);
 
@@ -143,7 +140,7 @@ public class Assets implements Disposable {
 
 //        bigBangShader = loadShader("shaders/standard.vert", "shaders/big_bang.frag");
         cityShader = loadShader("shaders/standard.vert", "shaders/city_descent.frag");
-        redShader = loadShader("shaders/standard3d.vert", "shaders/cube.frag");
+        blockShader = loadShader("shaders/standard3d.vert", "shaders/cube.frag");
 
         loadAudio();
         return 1;

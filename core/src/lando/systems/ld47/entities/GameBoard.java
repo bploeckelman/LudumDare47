@@ -211,6 +211,9 @@ public class GameBoard {
         batch.end();
 
         Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+        gameState.gameScreen.assets.blockShader.setUniformi("u_texture", 0);
+        gameState.gameScreen.assets.blockTextures.bind(0);
 
         for (Tetrad tetrad : tetrads) {
             tetrad.renderModels(boardCam);
@@ -218,6 +221,7 @@ public class GameBoard {
         if (activeTetrad != null) {
             activeTetrad.renderModels(boardCam);
         }
+        Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
         gameFB.end();
 
 

@@ -4,14 +4,8 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g3d.*;
-import com.badlogic.gdx.graphics.g3d.utils.MeshBuilder;
-import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
-import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
-import com.badlogic.gdx.graphics.g3d.utils.shapebuilders.BoxShapeBuilder;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
@@ -23,6 +17,8 @@ public class Tetrad {
     public static float POINT_WIDTH = 40;
     private static float GLOBAL_HUE = 0;
     public static float GLOBAL_ANIM = 0;
+
+    public static float blockHeight = 1f;
 
     private GameBoard gameBoard;
     private Game game;
@@ -113,7 +109,7 @@ public class Tetrad {
     }
 
     private void buildMesh(){
-        float offset = gameBoard.activeTetrad == this ? .5f : 0;
+        float offset = gameBoard.activeTetrad == this ? .4f : 0;
         verticesIndex = 0;
         for (TetradPiece point : points) {
             if (point.remove){
@@ -133,36 +129,46 @@ public class Tetrad {
     Vector3 LR = new Vector3();
     Vector3 UR = new Vector3();
     Vector3 NOR = new Vector3();
+    Vector2 UV1 = new Vector2();
+    Vector2 UV2 = new Vector2();
     private void addFace(float x, float y, float z, Color color, FACE face, int type) {
         switch (face) {
             case TOP:
-                LL.set(x, y, z +1);
-                UL.set(x, y+1, z+1);
-                LR.set(x+1, y, z+1);
-                UR.set(x+1, y+1, z+1);
+                LL.set(x, y, z + blockHeight);
+                UL.set(x, y+1, z+ blockHeight);
+                LR.set(x+1, y, z+ blockHeight);
+                UR.set(x+1, y+1, z+ blockHeight);
                 NOR.set(0,0, 1);
+                UV1.set((1 + 34f * type)/340f, 0);
+                UV2.set((34f * (type+1) - 1)/340f, 33f/68f);
                 break;
             case LEFT:
                 LL.set(x, y+1, z);
-                UL.set(x, y+1, z+1);
+                UL.set(x, y+1, z+blockHeight);
                 LR.set(x, y, z);
-                UR.set(x, y, z+1);
+                UR.set(x, y, z+blockHeight);
                 NOR.set(0,-1, 0);
+                UV1.set(1/340f, 33/68f);
+                UV2.set(33f/340f, 67/68f);
                 break;
             case RIGHT:
                 LL.set(x+1, y, z);
-                UL.set(x+1, y, z+1);
+                UL.set(x+1, y, z+blockHeight);
                 LR.set(x+1, y+1, z);
-                UR.set(x+1, y+1, z+1);
+                UR.set(x+1, y+1, z+blockHeight);
                 NOR.set(0,1, 0);
+                UV1.set(1/340f, 33/68f);
+                UV2.set(33f/340f, 67/68f);
                 break;
 
             case FRONT:
                 LL.set(x, y, z);
-                UL.set(x, y, z+1);
+                UL.set(x, y, z+blockHeight);
                 LR.set(x + 1, y, z);
-                UR.set(x + 1, y, z+1);
+                UR.set(x + 1, y, z+blockHeight);
                 NOR.set(1,0, 0);
+                UV1.set(1/340f, 33/68f);
+                UV2.set(33f/340f, 67/68f);
                 break;
         }
 
@@ -177,8 +183,8 @@ public class Tetrad {
         vertices[verticesIndex++] = color.g;
         vertices[verticesIndex++] = color.b;
         vertices[verticesIndex++] = color.a;
-        vertices[verticesIndex++] = 0;
-        vertices[verticesIndex++] = 0;
+        vertices[verticesIndex++] = UV1.x;
+        vertices[verticesIndex++] = UV2.y;
 
         vertices[verticesIndex++] = UL.x;
         vertices[verticesIndex++] = UL.y;
@@ -190,8 +196,8 @@ public class Tetrad {
         vertices[verticesIndex++] = color.g;
         vertices[verticesIndex++] = color.b;
         vertices[verticesIndex++] = color.a;
-        vertices[verticesIndex++] = 0;
-        vertices[verticesIndex++] = 0;
+        vertices[verticesIndex++] = UV1.x;
+        vertices[verticesIndex++] = UV1.y;
 
         vertices[verticesIndex++] = LR.x;
         vertices[verticesIndex++] = LR.y;
@@ -203,8 +209,8 @@ public class Tetrad {
         vertices[verticesIndex++] = color.g;
         vertices[verticesIndex++] = color.b;
         vertices[verticesIndex++] = color.a;
-        vertices[verticesIndex++] = 0;
-        vertices[verticesIndex++] = 0;
+        vertices[verticesIndex++] = UV2.x;
+        vertices[verticesIndex++] = UV2.y;
 
         vertices[verticesIndex++] = LR.x;
         vertices[verticesIndex++] = LR.y;
@@ -216,8 +222,8 @@ public class Tetrad {
         vertices[verticesIndex++] = color.g;
         vertices[verticesIndex++] = color.b;
         vertices[verticesIndex++] = color.a;
-        vertices[verticesIndex++] = 0;
-        vertices[verticesIndex++] = 0;
+        vertices[verticesIndex++] = UV2.x;
+        vertices[verticesIndex++] = UV2.y;
 
         vertices[verticesIndex++] = UL.x;
         vertices[verticesIndex++] = UL.y;
@@ -229,8 +235,8 @@ public class Tetrad {
         vertices[verticesIndex++] = color.g;
         vertices[verticesIndex++] = color.b;
         vertices[verticesIndex++] = color.a;
-        vertices[verticesIndex++] = 0;
-        vertices[verticesIndex++] = 0;
+        vertices[verticesIndex++] = UV1.x;
+        vertices[verticesIndex++] = UV1.y;
 
         vertices[verticesIndex++] = UR.x;
         vertices[verticesIndex++] = UR.y;
@@ -242,12 +248,12 @@ public class Tetrad {
         vertices[verticesIndex++] = color.g;
         vertices[verticesIndex++] = color.b;
         vertices[verticesIndex++] = color.a;
-        vertices[verticesIndex++] = 0;
-        vertices[verticesIndex++] = 0;
+        vertices[verticesIndex++] = UV2.x;
+        vertices[verticesIndex++] = UV1.y;
     }
 
     public void renderModels(Camera camera) {
-        ShaderProgram shader = game.assets.redShader;
+        ShaderProgram shader = game.assets.blockShader;
         shader.bind();
         shader.setUniformMatrix("u_projTrans", camera.combined);
         mesh.setVertices(vertices);
