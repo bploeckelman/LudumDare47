@@ -99,7 +99,7 @@ public class Tetrad {
         } else {
             batch.setColor(Color.WHITE);
         }
-        TextureRegion blockImage = animation.getKeyFrame(GLOBAL_ANIM);
+        TextureRegion blockImage = game.assets.blockFaces[type];
         for (TetradPiece point : points) {
             if (!point.remove) {
                 batch.draw(blockImage, position.x + (POINT_WIDTH * point.x), position.y + (POINT_WIDTH * point.y), POINT_WIDTH, POINT_WIDTH);

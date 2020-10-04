@@ -40,6 +40,7 @@ public class Assets implements Disposable {
     public TextureRegion whitePixel;
     public TextureRegion whiteCircle;
     public TextureRegion gameBoardTexture;
+    public TextureRegion[] blockFaces;
     //public TextureRegion tetradSquare;
     public Animation<TextureRegion> orangeBlock;
     public Animation<TextureRegion> redBlock;
@@ -113,6 +114,11 @@ public class Assets implements Disposable {
 
         blockTextures = mgr.get(blockTextureAsset);
         blockTextures.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
+        blockFaces = new TextureRegion[7];
+        for (int i = 0; i < 7; i++){
+            blockFaces[i] = new TextureRegion(blockTextures, (1 + 34f * i)/340f, 0, (34 * (i+1) -1 )/ 340f, 33/68f);
+        }
 
         atlas = mgr.get(atlasAsset);
 
