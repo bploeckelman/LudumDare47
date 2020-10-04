@@ -211,8 +211,6 @@ public class Tetrad implements Pool.Poolable {
                 LR.set(x, y, z);
                 UR.set(x, y, z+blockHeight);
                 NOR.set(0,-1, 0);
-                UV1.set(1/340f, 33/68f);
-                UV2.set(33f/340f, 67/68f);
                 break;
             case RIGHT:
                 LL.set(x+1, y, z);
@@ -220,8 +218,6 @@ public class Tetrad implements Pool.Poolable {
                 LR.set(x+1, y+1, z);
                 UR.set(x+1, y+1, z+blockHeight);
                 NOR.set(0,1, 0);
-                UV1.set(1/340f, 33/68f);
-                UV2.set(33f/340f, 67/68f);
                 break;
 
             case FRONT:
@@ -230,11 +226,9 @@ public class Tetrad implements Pool.Poolable {
                 LR.set(x + 1, y, z);
                 UR.set(x + 1, y, z+blockHeight);
                 NOR.set(1,0, 0);
-                UV1.set(1/340f, 33/68f);
-                UV2.set(33f/340f, 67/68f);
                 break;
         }
-        UV1.set((1 + 34f)/340f, 33/68f);
+        UV1.set((1 + 34f)/340f, 35/68f);
         UV2.set((34f * (2) - 1)/340f, 67/68f);
 
         addFaceVerts(color);
