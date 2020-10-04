@@ -13,16 +13,27 @@ import lando.systems.ld47.ui.GameHud;
 public class LeaderboardService {
 
     private static final String url = "https://lando.systems/ld47-leaderboard";
+    private static final float scoreRefreshInterval = 20f;
 
     private final Json json;
     private final HttpRequestBuilder requester;
     private final GameScreen gameScreen;
+    private float scoreRefreshTimer;
 
     public LeaderboardService(GameScreen gameScreen) {
         this.json = new Json();
         this.json.setOutputType(JsonWriter.OutputType.json);
         this.requester = new HttpRequestBuilder();
         this.gameScreen = gameScreen;
+        this.scoreRefreshTimer = scoreRefreshInterval;
+    }
+
+    public void update(float dt) {
+        scoreRefreshTimer -= dt;
+        if (scoreRefreshTimer <= 0f) {
+            scoreRefreshTimer = scoreRefreshInterval;
+            getScores();
+        }
     }
 
     public void postScore(String name, int score) {

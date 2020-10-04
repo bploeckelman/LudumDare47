@@ -42,15 +42,16 @@ public class GameScreen extends BaseScreen{
     @Override
     public void update(float dt) {
         super.update(dt);
+
         shader = game.idkfa ? game.assets.cityShader2 : game.assets.cityShader;
         accum += dt;
+
+        // TODO: remove
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)){
             game.setScreen(new EndScreen(game));
         }
+
         // TESTING ---------------
-        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
-            leaderboardService.getScores();
-        }
         if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) {
             leaderboardService.postScore(leaderboardService.getRandomName(), MathUtils.random(1000, 50000));
         }
@@ -59,6 +60,7 @@ public class GameScreen extends BaseScreen{
         gameBoard.update(dt);
         sasquatch.update(dt);
         gameHud.update(dt);
+        leaderboardService.update(dt);
     }
 
     @Override
