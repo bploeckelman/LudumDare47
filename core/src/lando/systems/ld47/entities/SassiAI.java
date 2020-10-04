@@ -152,7 +152,7 @@ public class SassiAI {
     private float randomY(boolean left) {
         Array<Integer> rows = screen.gameBoard.getRowEnds(left);
         if (rows.isEmpty()) { return -1; }
-        return bottom + (Tetrad.POINT_WIDTH * rows.random().intValue());
+         return bottom + (Tetrad.POINT_WIDTH * rows.random().intValue());
     }
     private void walk(float x, float y, Sasquatch.SasquatchState state) {
         this.walk(x, y, state, null);

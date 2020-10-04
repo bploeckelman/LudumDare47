@@ -25,7 +25,7 @@ public class Audio implements Disposable {
     }
 
     public enum Musics {
-        none, mood_track
+        none, mood_track, mood_track2, mood_track3, blade_runner
     }
 
     public ObjectMap<Sounds, SoundContainer> sounds = new ObjectMap<>();
@@ -47,6 +47,9 @@ public class Audio implements Disposable {
         putSound(Sounds.tet_clearLine, assets.sampleSound);
 
         musics.put(Musics.mood_track, assets.moodTrack);
+        musics.put(Musics.mood_track2, assets.moodTrack2);
+        musics.put(Musics.mood_track3, assets.moodTrack3);
+        musics.put(Musics.blade_runner, assets.bladeRunner);
 
         musicVolume = new MutableFloat(0);
         setMusicVolume(MUSIC_VOLUME, 2f);
@@ -135,8 +138,9 @@ public class Audio implements Disposable {
         if (playImmediately) {
             if (currentMusic != null && currentMusic.isPlaying()) {
                 currentMusic.stop();
-                currentMusic = startMusic(musicOptions, looping);
             }
+            // fade in out streams
+            currentMusic = startMusic(musicOptions, looping);
         } else {
             if (currentMusic == null || !currentMusic.isPlaying()) {
                 currentMusic = startMusic(musicOptions, looping);

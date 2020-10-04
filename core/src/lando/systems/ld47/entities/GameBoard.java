@@ -462,8 +462,8 @@ public class GameBoard {
         // if this is already checked on each update, include this there
         for (Tetrad tetrad : tetrads) {
             for (TetradPiece piece : tetrad.points) {
-                if (piece.x + tetrad.origin.y == column) {
-                    endblocks.add(new Integer(piece.y));
+                if (piece.x + tetrad.origin.x == column) {
+                    endblocks.add(new Integer(piece.y + (int)tetrad.origin.y));
                 }
             }
         }

@@ -33,7 +33,7 @@ public class GameScreen extends BaseScreen{
 
         sasquatch = new Sasquatch(this);
 
-        playMusic(Audio.Musics.mood_track);
+        playMusic(Audio.Musics.blade_runner);
     }
 
     @Override

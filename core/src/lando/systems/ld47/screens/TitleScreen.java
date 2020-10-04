@@ -4,11 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import lando.systems.ld47.Audio;
 import lando.systems.ld47.Game;
 
 public class TitleScreen extends BaseScreen {
     public TitleScreen(Game game) {
         super(game);
+        playMusic(Audio.Musics.mood_track2);
     }
 
     @Override

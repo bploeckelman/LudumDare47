@@ -60,7 +60,7 @@ public abstract class BaseScreen extends InputAdapter {
     }
 
     protected Music playMusic(Audio.Musics music) {
-        return this.game.audio.playMusic(music, false, true);
+        return this.game.audio.playMusic(music, true, true);
     }
 
 }
