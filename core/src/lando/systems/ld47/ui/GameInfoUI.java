@@ -14,9 +14,9 @@ public class GameInfoUI extends UserInterface {
 
     public GameInfoUI(GameState gameState) {
         super(gameState);
-        nextUI = new NextUI(gameState, gameState.gameScreen.hudCamera.viewportWidth / 4 * 3 +50f, gameState.gameScreen.hudCamera.viewportHeight - 150f);
+        nextUI = new NextUI(gameState, gameState.gameScreen.hudCamera.viewportWidth / 4 * 3 +50f, gameState.gameScreen.hudCamera.viewportHeight - 150f, "NEXT");
         scoreUI = new ScoreUI(gameState, gameState.gameScreen.hudCamera.viewportWidth / 4 * 3 -30f, gameState.gameScreen.hudCamera.viewportHeight - 470f);
-        holdUI = new HoldUI(gameState, gameState.gameScreen.hudCamera.viewportWidth / 4 * 3 +50f, gameState.gameScreen.hudCamera.viewportHeight - 310f);
+        holdUI = new HoldUI(gameState, gameState.gameScreen.hudCamera.viewportWidth / 4 * 3 +50f, gameState.gameScreen.hudCamera.viewportHeight - 310f, "HOLD");
     }
 
     public void update(float dt) {

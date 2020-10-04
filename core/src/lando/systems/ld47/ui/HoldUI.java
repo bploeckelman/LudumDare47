@@ -10,12 +10,14 @@ import lando.systems.ld47.entities.Tetrad;
 
 public class HoldUI extends UserInterface {
 
-    private Tetrad hold;
+    public Tetrad hold;
     private float size;
     private Vector2 center;
+    private String text;
 
-    public HoldUI(GameState gameState, float x, float y) {
+    public HoldUI(GameState gameState, float x, float y, String text) {
         super(gameState);
+        this.text = text;
 
         size = Tetrad.POINT_WIDTH * 5;
         bounds.set(x, y - size, size, size);
@@ -24,7 +26,9 @@ public class HoldUI extends UserInterface {
 
     @Override
     public void update(float dt) {
-
+        if (hold != null) {
+            hold.center(center);
+        }
     }
 
     @Override
@@ -32,8 +36,18 @@ public class HoldUI extends UserInterface {
         batch.setColor(Color.WHITE);
         assets.screws.draw(batch, bounds.x, bounds.y, bounds.width, bounds.height);
         assets.font.getData().setScale(.7f);
-        layout.setText(assets.font, "HOLD", Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.center, false);
+        layout.setText(assets.font, text, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.center, false);
         assets.font.draw(batch, layout, bounds.x - 85f, bounds.y + size + 20f);
+        //batch.draw(assets.whitePixel, bounds.x, bounds.y, bounds.width, bounds.height);
+        if (hold != null) {
+            hold.render(batch);
+        }
+    }
 
+    public void punchBox() {
+        // play sound and animate!
+        if (hold != null) {
+            hold = null;
+        }
     }
 }

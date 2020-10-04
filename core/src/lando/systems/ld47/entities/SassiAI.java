@@ -8,6 +8,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld47.screens.GameScreen;
+import lando.systems.ld47.ui.HoldUI;
+import lando.systems.ld47.ui.NextUI;
 import lando.systems.ld47.utils.accessors.Vector2Accessor;
 
 public class SassiAI {
@@ -31,8 +33,6 @@ public class SassiAI {
     private Sasquatch sasquatch;
     private GameScreen screen;
 
-    private Timeline timeline;
-
     public SassiAI(GameScreen screen, Sasquatch sasquatch) {
         this.screen = screen;
         this.sasquatch = sasquatch;
@@ -45,8 +45,11 @@ public class SassiAI {
         top = bounds.y + bounds.height;
         bottom = bounds.y;
 
-        nextPosition = new Vector2(screen.gameHud.getNextPosition()).sub(width, 0);
-        holdPosition = new Vector2(screen.gameHud.getHoldPosition()).sub(width, 0);
+        bounds = screen.gameHud.getNextBox().bounds;
+        nextPosition = new Vector2(bounds.x, bounds.y);
+
+        bounds = screen.gameHud.getHoldBox().bounds;
+        holdPosition = new Vector2(bounds.x, bounds.y);
 
         maxX = nextPosition.x - left;
         maxY = top - bottom;
@@ -121,11 +124,11 @@ public class SassiAI {
     }
 
     private void hitNext() {
-        walk(nextPosition.x, nextPosition.y, Sasquatch.SasquatchState.punch);
+        walk(nextPosition.x, nextPosition.y, Sasquatch.SasquatchState.punch, screen.gameHud.getNextBox());
     }
 
     private void hitHold() {
-        walk(holdPosition.x, holdPosition.y, Sasquatch.SasquatchState.punch);
+        walk(holdPosition.x, holdPosition.y, Sasquatch.SasquatchState.punch, screen.gameHud.getHoldBox());
     }
 
     private void hitRight() {
@@ -151,8 +154,11 @@ public class SassiAI {
         if (rows.isEmpty()) { return -1; }
         return bottom + (Tetrad.POINT_WIDTH * rows.random().intValue());
     }
-
     private void walk(float x, float y, Sasquatch.SasquatchState state) {
+        this.walk(x, y, state, null);
+    }
+
+    private void walk(float x, float y, Sasquatch.SasquatchState state, HoldUI punchBox) {
 
         Vector2 pos = sasquatch.position;
 
@@ -170,13 +176,16 @@ public class SassiAI {
         float time = 5f * Math.max(dx / maxX, dy / maxY);
 
         sasquatch.setState(Sasquatch.SasquatchState.walk);
-        timeline = Timeline.createSequence()
+        Timeline.createSequence()
                 .push(Tween.to(sasquatch.position, Vector2Accessor.XY, time).waypoint(wx, wy).target(x, y).ease(TweenEquations.easeInOutCubic))
                 .start(screen.game.tween)
                 .setCallback(new TweenCallback() {
                     @Override
                     public void onEvent(int type, BaseTween<?> source) {
                         sasquatch.setState(state);
+                        if (punchBox != null) {
+                            punchBox.punchBox();
+                        }
                         animating = false;
                     }
                 });
