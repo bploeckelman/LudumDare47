@@ -1,5 +1,6 @@
 package lando.systems.ld47.screens;
 
+import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.controllers.Controllers;
@@ -10,24 +11,28 @@ import lando.systems.ld47.Audio;
 import lando.systems.ld47.Config;
 import lando.systems.ld47.Game;
 import lando.systems.ld47.input.PlayerInput;
+import lando.systems.ld47.leaderboard.LeaderboardService;
 import lando.systems.ld47.particles.Particles;
 import lando.systems.ld47.utils.screenshake.ScreenShakeCameraController;
 
 public abstract class BaseScreen extends InputAdapter {
     public final Game game;
     public final Assets assets;
+    public final TweenManager tween;
     public final SpriteBatch batch;
     public final Particles particles;
 
     public OrthographicCamera worldCamera;
     public OrthographicCamera hudCamera;
     public ScreenShakeCameraController shaker;
+    public LeaderboardService leaderboardService;
 
     public final PlayerInput playerInput = new PlayerInput();
 
     public BaseScreen(Game game) {
         this.game = game;
         this.assets = game.assets;
+        this.tween = game.tween;
         this.batch = assets.batch;
         this.particles = new Particles(assets);
 
@@ -40,6 +45,11 @@ public abstract class BaseScreen extends InputAdapter {
         this.hudCamera.update();
         this.shaker = new ScreenShakeCameraController(worldCamera);
 
+        // NOTE: this is dumb and janky because its ludum dare and it just needs to work
+        GameScreen gameScreen = (this instanceof GameScreen) ? (GameScreen) this : null;
+        this.leaderboardService = new LeaderboardService(gameScreen);
+        this.leaderboardService.getScores();
+
         Controllers.clearListeners();
         Controllers.addListener(playerInput);
     }
@@ -47,6 +57,7 @@ public abstract class BaseScreen extends InputAdapter {
     public void update(float dt) {
         shaker.update(dt);
         particles.update(dt);
+        leaderboardService.update(dt);
     }
 
 

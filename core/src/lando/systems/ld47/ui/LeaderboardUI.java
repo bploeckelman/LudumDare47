@@ -26,7 +26,7 @@ public class LeaderboardUI extends UserInterface {
     private boolean rankChanged;
 
     public LeaderboardUI(GameState gameState) {
-        super(gameState);
+        super(gameState.gameScreen);
         this.allScores = new Array<>();
         this.pulse = new MutableFloat(0f);
         this.rankChangeCountdown = RANK_CHANGE_TIMER;

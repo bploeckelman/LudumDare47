@@ -19,7 +19,7 @@ public class HoldUI extends UserInterface {
     private String text;
 
     public HoldUI(GameState gameState, float x, float y, String text) {
-        super(gameState);
+        super(gameState.gameScreen);
         this.text = text;
 
         size = Tetrad.POINT_WIDTH * 3.5f;

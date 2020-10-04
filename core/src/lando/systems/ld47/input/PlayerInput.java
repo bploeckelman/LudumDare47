@@ -114,20 +114,16 @@ public class PlayerInput extends ControllerAdapter {
             controllerState.plungeButtonJustPressed = (plungeButtonDown && !controllerState.plungeButtonPressed);
             controllerState.plungeButtonPressed = plungeButtonDown;
 
-            boolean lBumperDown = controllerState.controller.getButton(Xbox.L_BUMPER);
-            boolean xButtonDown = controllerState.controller.getButton(Xbox.X);
-            boolean rotateLeftDown = xButtonDown;
+            boolean rotateLeftDown = controllerState.controller.getButton(Xbox.X);
             controllerState.rotateLeftButtonJustPressed = (rotateLeftDown && !controllerState.rotateLeftButtonPressed);
             controllerState.rotateLeftButtonPressed = rotateLeftDown;
 
-            boolean rBumperDown = controllerState.controller.getButton(Xbox.R_BUMPER);
-            boolean bButtonDown = controllerState.controller.getButton(Xbox.B);
-            boolean rotateRightDown = bButtonDown;
-
+            boolean rotateRightDown = controllerState.controller.getButton(Xbox.B);
             controllerState.rotateRightButtonJustPressed = (rotateRightDown && !controllerState.rotateRightButtonPressed);
             controllerState.rotateRightButtonPressed = rotateRightDown;
 
-            // hope this works
+            boolean rBumperDown = controllerState.controller.getButton(Xbox.R_BUMPER);
+            boolean lBumperDown = controllerState.controller.getButton(Xbox.L_BUMPER);
             boolean holdButtonDown = lBumperDown || rBumperDown;
             controllerState.holdButtonJustPressed = holdButtonDown && !controllerState.holdButtonPressed;
             controllerState.holdButtonPressed = holdButtonDown;

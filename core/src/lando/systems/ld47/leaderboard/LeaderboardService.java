@@ -53,7 +53,8 @@ public class LeaderboardService {
                 .method(Net.HttpMethods.GET)
                 .url(url)
                 .build();
-        Gdx.net.sendHttpRequest(request, new GetScoreResponseListener(json, gameScreen.gameHud));
+        GameHud hud = (gameScreen == null) ? null : gameScreen.gameHud;
+        Gdx.net.sendHttpRequest(request, new GetScoreResponseListener(json, hud));
     }
 
     // ------------------------------------------------------------------------
@@ -109,7 +110,9 @@ public class LeaderboardService {
         public void handleHttpResponse(Net.HttpResponse httpResponse) {
             int responseStatus = httpResponse.getStatus().getStatusCode();
             if (responseStatus != 200) {
-                hud.updateScores(LeaderboardService.placeholderScores);
+                if (hud != null) {
+                    hud.updateScores(LeaderboardService.placeholderScores);
+                }
                 return;
             }
 
@@ -117,7 +120,7 @@ public class LeaderboardService {
             if (responseBody.isEmpty()) return;
 
             Array<LeaderboardScore> scores = json.fromJson(Array.class, LeaderboardScore.class, responseBody);
-            if (scores != null) {
+            if (scores != null && hud != null) {
 //                Gdx.app.log("leaderboard-json", "deserialized scoes:\n" + scores.toString("\n"));
                 hud.updateScores(scores);
             }
@@ -126,7 +129,9 @@ public class LeaderboardService {
         @Override
         public void failed(Throwable t) {
             // TODO: pop up a message box or toast saying we couldn't fetch scores?
-            hud.updateScores(LeaderboardService.placeholderScores);
+            if (hud != null) {
+                hud.updateScores(LeaderboardService.placeholderScores);
+            }
         }
 
         @Override

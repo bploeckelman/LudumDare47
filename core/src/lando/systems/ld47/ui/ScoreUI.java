@@ -18,7 +18,7 @@ public class ScoreUI extends UserInterface {
     private float y;
 
     public ScoreUI(GameState gameState, float x, float y) {
-        super(gameState);
+        super(gameState.gameScreen);
         this.x = x;
         this.y = y;
     }

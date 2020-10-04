@@ -7,9 +7,12 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import lando.systems.ld47.Assets;
 import lando.systems.ld47.GameState;
+import lando.systems.ld47.screens.BaseScreen;
+import lando.systems.ld47.screens.GameScreen;
 
 public abstract class UserInterface {
 
+    protected final BaseScreen screen;
     protected final GameState gameState;
     protected final Assets assets;
     protected final TweenManager tween;
@@ -19,10 +22,11 @@ public abstract class UserInterface {
 
     private boolean visible;
 
-    public UserInterface(GameState gameState) {
-        this.gameState = gameState;
-        this.assets = gameState.assets;
-        this.tween = gameState.tween;
+    public UserInterface(BaseScreen screen) {
+        this.screen = screen;
+        this.gameState = (screen instanceof GameScreen) ? ((GameScreen) screen).gameState : null;
+        this.assets = screen.assets;
+        this.tween = screen.tween;
 
         this.layout = new GlyphLayout();
         this.bounds = new Rectangle();

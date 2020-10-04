@@ -19,7 +19,6 @@ public class GameScreen extends BaseScreen{
     public final GameState gameState;
     public final GameBoard gameBoard;
     public final GameHud gameHud;
-    public final LeaderboardService leaderboardService;
 
     public Opponent opponent;
     float accum;
@@ -31,12 +30,12 @@ public class GameScreen extends BaseScreen{
         gameState = new GameState(this);
         gameBoard = new GameBoard(gameState);
         gameHud = new GameHud(gameState);
-        leaderboardService = new LeaderboardService(this);
-        leaderboardService.getScores();
 
         opponent = new Opponent(this);
         shader = game.idkfa ? game.assets.cityShader2 : game.assets.cityShader;
         playMusic(Audio.Musics.blade_runner);
+
+        leaderboardService.getScores();
     }
 
     @Override
@@ -60,7 +59,6 @@ public class GameScreen extends BaseScreen{
         gameBoard.update(dt);
         opponent.update(dt);
         gameHud.update(dt);
-        leaderboardService.update(dt);
     }
 
     @Override
