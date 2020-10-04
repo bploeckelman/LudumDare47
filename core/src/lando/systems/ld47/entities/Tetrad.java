@@ -132,8 +132,10 @@ public class Tetrad implements Pool.Poolable {
             computeFace(origin.x + point.x, origin.y + point.y, offset, color, FACE.LEFT, type );
             computeFace(origin.x + point.x, origin.y + point.y, offset, color, FACE.RIGHT, type );
             computeFace(origin.x + point.x, origin.y + point.y, offset, color, FACE.FRONT, type );
+        }
 
-            if (isActive && gameBoard.gameState.showGhost){
+        if (isActive && gameBoard.gameState.showGhost ) {
+            for (TetradPiece point : points) {
                 computeGhostFace(origin.x + point.x, downDist + origin.y + point.y, offset, ghostColor, FACE.TOP );
                 computeGhostFace(origin.x + point.x, downDist + origin.y + point.y, offset, ghostColor, FACE.LEFT );
                 computeGhostFace(origin.x + point.x, downDist + origin.y + point.y, offset, ghostColor, FACE.RIGHT );
