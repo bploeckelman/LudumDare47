@@ -38,6 +38,9 @@ public class PlayerInput extends ControllerAdapter {
         public boolean rotateRightButtonPressed;
         public boolean rotateRightButtonJustPressed;
 
+        public boolean holdButtonPressed;
+        public boolean holdButtonJustPressed;
+
         public ControllerState() {
             reset();
         }
@@ -54,6 +57,8 @@ public class PlayerInput extends ControllerAdapter {
             rotateLeftButtonJustPressed  = false;
             rotateRightButtonPressed     = false;
             rotateRightButtonJustPressed = false;
+            holdButtonPressed            = false;
+            holdButtonJustPressed        = false;
         }
     }
     private ControllerState controllerState = new ControllerState();
@@ -110,15 +115,21 @@ public class PlayerInput extends ControllerAdapter {
 
             boolean lBumperDown = controllerState.controller.getButton(Xbox.L_BUMPER);
             boolean xButtonDown = controllerState.controller.getButton(Xbox.X);
-            boolean rotateLeftDown = (lBumperDown || xButtonDown);
+            boolean rotateLeftDown = xButtonDown;
             controllerState.rotateLeftButtonJustPressed = (rotateLeftDown && !controllerState.rotateLeftButtonPressed);
             controllerState.rotateLeftButtonPressed = rotateLeftDown;
 
             boolean rBumperDown = controllerState.controller.getButton(Xbox.R_BUMPER);
             boolean bButtonDown = controllerState.controller.getButton(Xbox.B);
-            boolean rotateRightDown = (rBumperDown || bButtonDown);
+            boolean rotateRightDown = bButtonDown;
+
             controllerState.rotateRightButtonJustPressed = (rotateRightDown && !controllerState.rotateRightButtonPressed);
             controllerState.rotateRightButtonPressed = rotateRightDown;
+
+            // hope this works
+            boolean holdButtonDown = lBumperDown || rBumperDown;
+            controllerState.holdButtonJustPressed = holdButtonDown && !controllerState.holdButtonPressed;
+            controllerState.holdButtonPressed = holdButtonDown;
         } else {
             controllerState.reset();
         }
@@ -174,6 +185,12 @@ public class PlayerInput extends ControllerAdapter {
             || Gdx.input.isKeyJustPressed(Input.Keys.W)
             || controllerState.plungeButtonJustPressed
             || controllerState.moveUpJustPressed;
+    }
+
+    public boolean isHoldPressed() {
+        return Gdx.input.isKeyJustPressed(Input.Keys.K)
+                || Gdx.input.isKeyJustPressed(Input.Keys.TAB)
+                || controllerState.holdButtonJustPressed;
     }
 
     // ------------------------------------------------------------------------------

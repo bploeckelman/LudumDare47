@@ -121,17 +121,27 @@ public class Tetrad {
     }
 
     public void insertIntoBoard(GameBoard gameBoard) {
-        this.gameBoard = gameBoard;
-        int height = 0;
-        for (TetradPiece point : points) {
-            if (point.y > height) height = point.y;
-        }
-        origin = new Vector2(4, 19 - height);
+        insertIntoBoard(gameBoard, null);
     }
 
-    public void setAbsolutePosition(float x, float y) {
+    public void insertIntoBoard(GameBoard gameBoard, Vector2 curOrigin) {
+        this.gameBoard = gameBoard;
+        if (curOrigin != null) {
+            this.origin = curOrigin;
+        } else {
+            int height = 0;
+            for (TetradPiece point : points) {
+                if (point.y > height) height = point.y;
+            }
+            this.origin = new Vector2(4, 19 - height);
+        }
+    }
+
+    public Vector2 removeFromBoard() {
+        Vector2 pos = origin;
         origin = null;
-        position.set(x, y);
+        gameBoard = null;
+        return pos;
     }
 
     public void center(Vector2 center) {

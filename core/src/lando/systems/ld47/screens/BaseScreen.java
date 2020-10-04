@@ -2,12 +2,14 @@ package lando.systems.ld47.screens;
 
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import lando.systems.ld47.Assets;
 import lando.systems.ld47.Audio;
 import lando.systems.ld47.Config;
 import lando.systems.ld47.Game;
+import lando.systems.ld47.input.PlayerInput;
 import lando.systems.ld47.particles.Particles;
 import lando.systems.ld47.utils.screenshake.ScreenShakeCameraController;
 
@@ -20,6 +22,8 @@ public abstract class BaseScreen extends InputAdapter {
     public OrthographicCamera worldCamera;
     public OrthographicCamera hudCamera;
     public ScreenShakeCameraController shaker;
+
+    public final PlayerInput playerInput = new PlayerInput();
 
     public BaseScreen(Game game) {
         this.game = game;
@@ -35,6 +39,9 @@ public abstract class BaseScreen extends InputAdapter {
         this.hudCamera.setToOrtho(false, Config.windowWidth, Config.windowHeight);
         this.hudCamera.update();
         this.shaker = new ScreenShakeCameraController(worldCamera);
+
+        Controllers.clearListeners();
+        Controllers.addListener(playerInput);
     }
 
     public void update(float dt) {

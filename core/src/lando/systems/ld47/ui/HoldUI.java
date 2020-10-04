@@ -12,7 +12,7 @@ public class HoldUI extends UserInterface {
 
     public Tetrad hold;
     private float size;
-    private Vector2 center;
+    protected final Vector2 center;
     private String text;
 
     public HoldUI(GameState gameState, float x, float y, String text) {
@@ -26,6 +26,10 @@ public class HoldUI extends UserInterface {
 
     @Override
     public void update(float dt) {
+        if (gameState.gameScreen.playerInput.isHoldPressed()) {
+            hold = gameState.gameScreen.gameBoard.swapActiveTetrad(hold);
+        }
+
         if (hold != null) {
             hold.center(center);
         }

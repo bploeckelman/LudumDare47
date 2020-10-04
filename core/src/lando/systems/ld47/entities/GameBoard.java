@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.OrderedSet;
 import lando.systems.ld47.Audio;
@@ -18,8 +17,9 @@ public class GameBoard {
     public static int TILESHIGH = 20;
 
     private final GameState gameState;
+    private final PlayerInput playerInput;
     private final OrthographicCamera camera;
-    private final PlayerInput playerInput = new PlayerInput();
+
     private final Array<Tetrad> tetrads;
 
     private Tetrad activeTetrad;
@@ -33,6 +33,7 @@ public class GameBoard {
 
     public GameBoard(GameState gameState) {
         this.gameState = gameState;
+        this.playerInput = gameState.gameScreen.playerInput;
         this.camera = gameState.gameScreen.worldCamera;
         this.tetrads = new Array<>();
         float width = TILESWIDE * Tetrad.POINT_WIDTH;
@@ -41,10 +42,26 @@ public class GameBoard {
         blocksToFallTilRemove = 3;
         fallInterval = 1f;
         timeToFall = fallInterval;
+    }
 
-        // TODO: move this stuff up to BaseScreen or Game so we can use controllers on other screens
-        Controllers.clearListeners();
-        Controllers.addListener(playerInput);
+    // this happens in an update loop, so it's cool
+    public Tetrad swapActiveTetrad(Tetrad tetrad) {
+        Tetrad current = activeTetrad;
+        Vector2 origin = null;
+        if (current != null) {
+            origin = current.removeFromBoard();
+        }
+
+        if (tetrad == null) {
+            origin = null;
+            tetrad = gameState.popNext();
+        }
+
+        // figure out positioning
+        tetrad.insertIntoBoard(this, origin);
+        activeTetrad = tetrad;
+
+        return current;
     }
 
     public void update(float dt) {
@@ -81,7 +98,7 @@ public class GameBoard {
         if (!boardResolving) {
 
             playerInput.update(dt);
-            if (activeTetrad == null) {
+                if (activeTetrad == null) {
                 activeTetrad = gameState.popNext();
 
                 activeTetrad.insertIntoBoard(this);
@@ -232,6 +249,7 @@ public class GameBoard {
 
     public boolean moveDown(Tetrad tetrad) {
         boolean valid = false;
+
         if (invalidMove(tetrad, new Vector2(0, -1))) {
             tetrads.add(activeTetrad);
             playSound(Audio.Sounds.tet_land);
@@ -381,7 +399,7 @@ public class GameBoard {
         // if this is already checked on each update, include this there
         for (Tetrad tetrad : tetrads) {
             for (TetradPiece piece : tetrad.points) {
-                if (piece.x == column) {
+                if (piece.x + tetrad.origin.y == column) {
                     endblocks.add(new Integer(piece.y));
                 }
             }

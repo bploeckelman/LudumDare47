@@ -11,7 +11,8 @@ public class NextUI extends HoldUI {
     @Override
     public void update(float dt) {
         hold = gameState.viewNext();
-        super.update(dt);
+        // DO NOT CALL SUPER - or you will pop this as well on Hold pressed
+        hold.center(center);
     }
 
     public void punchBox() {

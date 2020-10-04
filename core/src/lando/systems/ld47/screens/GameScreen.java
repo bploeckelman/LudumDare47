@@ -44,13 +44,14 @@ public class GameScreen extends BaseScreen{
             game.setScreen(new EndScreen(game));
         }
         // TESTING ---------------
-        if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
             leaderboardService.getScores();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) {
             leaderboardService.postScore(leaderboardService.getRandomName(), MathUtils.random(1000L, 50000L));
         }
         // TESTING ---------------
+
         gameBoard.update(dt);
         sasquatch.update(dt);
         gameHud.update(dt);
