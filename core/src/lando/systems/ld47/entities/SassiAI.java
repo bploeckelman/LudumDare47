@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import lando.systems.ld47.screens.GameScreen;
 import lando.systems.ld47.utils.accessors.Vector2Accessor;
 
@@ -17,11 +18,11 @@ public class SassiAI {
     float actionDuration = 5f;
     float actionTime = 1f;
     boolean animating = false;
-    int lastAction = -1;
+    int lastAction = 3; // walk left
 
-    float left, right, top, bottom;
+    float left, right, top, bottom, maxX, maxY;
 
-    private Vector2 scorePosition;
+    private Vector2 holdPosition;
     private Vector2 nextPosition;
 
     // right
@@ -36,7 +37,7 @@ public class SassiAI {
         this.screen = screen;
         this.sasquatch = sasquatch;
 
-        float width = this.sasquatch.size.x;
+        float width = this.sasquatch.size.x / 2;
 
         Rectangle bounds = screen.gameBoard.gameBounds;
         left = bounds.x - width;
@@ -45,7 +46,10 @@ public class SassiAI {
         bottom = bounds.y;
 
         nextPosition = new Vector2(screen.gameHud.getNextPosition()).sub(width, 0);
+        holdPosition = new Vector2(screen.gameHud.getHoldPosition()).sub(width, 0);
 
+        maxX = nextPosition.x - left;
+        maxY = top - bottom;
         sasquatch.position.set(left, top);
     }
 
@@ -90,6 +94,9 @@ public class SassiAI {
             case 4:
                 walkRight();
                 break;
+            case 5:
+                hitHold();
+                break;
         }
     }
 
@@ -117,16 +124,32 @@ public class SassiAI {
         walk(nextPosition.x, nextPosition.y, Sasquatch.SasquatchState.punch);
     }
 
+    private void hitHold() {
+        walk(holdPosition.x, holdPosition.y, Sasquatch.SasquatchState.punch);
+    }
+
     private void hitRight() {
-        walk(right, randomY(), Sasquatch.SasquatchState.punch);
+        float pos = randomY(false);
+        if (pos == -1) {
+            animating = false;
+            return;
+        }
+        walk(right, pos, Sasquatch.SasquatchState.punch);
     }
 
     private void hitLeft() {
-        walk(left, randomY(), Sasquatch.SasquatchState.punch);
+        float pos = randomY(true);
+        if (pos == -1) {
+            animating = false;
+            return;
+        }
+        walk(left, pos, Sasquatch.SasquatchState.punch);
     }
 
-    private float randomY() {
-        return bottom + (Tetrad.POINT_WIDTH * MathUtils.random(GameBoard.TILESHIGH));
+    private float randomY(boolean left) {
+        Array<Integer> rows = screen.gameBoard.getRowEnds(left);
+        if (rows.isEmpty()) { return -1; }
+        return bottom + (Tetrad.POINT_WIDTH * rows.random().intValue());
     }
 
     private void walk(float x, float y, Sasquatch.SasquatchState state) {
@@ -140,12 +163,9 @@ public class SassiAI {
         float wx = Math.min(x, pos.x) + dx;
 
         if (pos.x == x) {
-            wy = dy;
+            wy = Math.min(y, pos.y) + dy;
             wx = x + ((x == left) ? -10 : 10);
         }
-
-        float maxX = nextPosition.x - left;
-        float maxY = nextPosition.y - bottom;
 
         float time = 5f * Math.max(dx / maxX, dy / maxY);
 
@@ -163,7 +183,8 @@ public class SassiAI {
 
     }
 
-    private void stun() {
+    // for tetris
+    public void stun() {
         sasquatch.setState(Sasquatch.SasquatchState.stun);
         stunTime = 5;
     }

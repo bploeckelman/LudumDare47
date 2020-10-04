@@ -72,7 +72,7 @@ public class GameScreen extends BaseScreen{
         batch.begin();
         {
             gameBoard.render(batch);
-            sasquatch.render(batch);
+            //sasquatch.render(batch);
             particles.draw(batch, Particles.Layer.front);
         }
         batch.end();
@@ -81,6 +81,8 @@ public class GameScreen extends BaseScreen{
         batch.begin();
         {
             gameHud.render(batch);
+            // render dude over the hud - so he can punch em
+            sasquatch.render(batch);
         }
         batch.end();
     }

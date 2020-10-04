@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.OrderedSet;
 import lando.systems.ld47.Audio;
@@ -49,7 +50,7 @@ public class GameBoard {
     public void update(float dt) {
         Tetrad.GLOBAL_ANIM += dt;
 
-        for (int i = tetrads.size -1; i >= 0; i--) {
+        for (int i = tetrads.size - 1; i >= 0; i--) {
             Tetrad tetrad = tetrads.get(i);
             tetrad.update(dt);
             if (tetrad.isEmpty()) {
@@ -57,13 +58,13 @@ public class GameBoard {
             }
         }
 
-        for (int y = TILESHIGH - 1; y >= 0 ; y--){
+        for (int y = TILESHIGH - 1; y >= 0; y--) {
             int cellsReady = 0;
-            for (int x = 0; x < TILESWIDE; x++){
+            for (int x = 0; x < TILESWIDE; x++) {
                 for (Tetrad tetrad : tetrads) {
                     TetradPiece piece = tetrad.getPieceAt(x, y);
-                    if ( piece != null && piece.remove){
-                        cellsReady ++;
+                    if (piece != null && piece.remove) {
+                        cellsReady++;
                     }
                 }
             }
@@ -137,7 +138,6 @@ public class GameBoard {
     }
 
 
-
     public void render(SpriteBatch batch) {
         batch.setColor(.3f, .3f, .3f, .8f);
         batch.draw(gameState.assets.whitePixel, gameBounds.x, gameBounds.y, gameBounds.width, gameBounds.height);
@@ -155,7 +155,7 @@ public class GameBoard {
     private void handleRotate(int dir) {
         activeTetrad.rotate(dir);
         if (invalidMove(activeTetrad, Vector2.Zero)) {
-            if (collidesWithWalls(activeTetrad, Vector2.Zero)){
+            if (collidesWithWalls(activeTetrad, Vector2.Zero)) {
                 //Test one away first
                 if (!invalidMove(activeTetrad, new Vector2(-1, 0))) {
                     activeTetrad.origin.x -= 1;
@@ -204,26 +204,26 @@ public class GameBoard {
     public boolean collidesWithWalls(Tetrad tetrad, Vector2 dir) {
         if (tetrad.origin == null) return false;
         testOrigin.set(tetrad.origin.x + dir.x, tetrad.origin.y + dir.y);
-        for (TetradPiece point : tetrad.points){
+        for (TetradPiece point : tetrad.points) {
             if (point.x + testOrigin.x < 0 || point.x + testOrigin.x >= TILESWIDE) return true;
             if (point.y + testOrigin.y < 0 || point.y + testOrigin.y > TILESHIGH) return true;
         }
         return false;
     }
 
-    public Tetrad getFreeBottomPiece(){
+    public Tetrad getFreeBottomPiece() {
         OrderedSet<Tetrad> bottomPieces = new OrderedSet<>();
         for (int x = 0; x < TILESWIDE; x++) {
             for (Tetrad tetrad : tetrads) {
-                if (tetrad.containsPoint(x, 0)){
+                if (tetrad.containsPoint(x, 0)) {
                     bottomPieces.add(tetrad);
                 }
             }
         }
         Array<Tetrad> tetradArray = bottomPieces.orderedItems();
         tetradArray.shuffle();
-        for (Tetrad t : tetradArray){
-            if (!collidesWithBlocks(t, new Vector2(0, -1))){
+        for (Tetrad t : tetradArray) {
+            if (!collidesWithBlocks(t, new Vector2(0, -1))) {
                 return t;
             }
         }
@@ -241,12 +241,11 @@ public class GameBoard {
             // TODO make this more async
             checkForFullRows();
 
-            blocksToFallTilRemove --;
+            blocksToFallTilRemove--;
 
             if (!tetrads.contains(tetradToRemove, true)) {
                 tetradToRemove = null;
             }
-
 
 
         } else {
@@ -258,12 +257,12 @@ public class GameBoard {
     }
 
     private void checkForPullOut() {
-        if (blocksToFallTilRemove <= 0){
-            if (tetradToRemove != null){
+        if (blocksToFallTilRemove <= 0) {
+            if (tetradToRemove != null) {
                 tetradToRemove.flashing = false;
                 gameState.setNext(tetradToRemove);
                 tetrads.removeValue(tetradToRemove, true);
-                if (tetrads.size > 0){
+                if (tetrads.size > 0) {
                     boolean removedLine = true;
                     float volume = 0.5f;
                     while (removedLine) {
@@ -277,7 +276,7 @@ public class GameBoard {
                         }
                         if (clearLine) {
                             deleteRow(0);
-                            playSound(Audio.Sounds.tet_clearLine, volume+= 0.1f);
+                            playSound(Audio.Sounds.tet_clearLine, volume += 0.1f);
                             removedLine = true;
                         } else {
                             removedLine = false;
@@ -316,18 +315,22 @@ public class GameBoard {
 
         }
 
-        gameState.gameScreen.shaker.addDamage(.2f*rowsCleared);
+        gameState.gameScreen.shaker.addDamage(.2f * rowsCleared);
 
 
-        switch (rowsCleared){
+        switch (rowsCleared) {
             case 1:
-                gameState.addScore(100, 1); break;
+                gameState.addScore(100, 1);
+                break;
             case 2:
-                gameState.addScore(300, 2); break;
+                gameState.addScore(300, 2);
+                break;
             case 3:
-                gameState.addScore(500, 3); break;
+                gameState.addScore(500, 3);
+                break;
             case 4:
-                gameState.addScore(800, 4); break;
+                gameState.addScore(800, 4);
+                break;
         }
         if (rowsCleared > 0) {
             gameState.addCombo();
@@ -366,5 +369,24 @@ public class GameBoard {
             }
         }
 
+    }
+
+    private final Array<Integer> endblocks = new Array<Integer>(TILESHIGH);
+    // gets the number of blocks on the ends for punching
+    public Array<Integer> getRowEnds(boolean left) {
+        int column = left ? 0 : TILESWIDE - 1;
+
+        endblocks.clear();
+
+        // if this is already checked on each update, include this there
+        for (Tetrad tetrad : tetrads) {
+            for (TetradPiece piece : tetrad.points) {
+                if (piece.x == column) {
+                    endblocks.add(new Integer(piece.y));
+                }
+            }
+        }
+
+        return endblocks;
     }
 }

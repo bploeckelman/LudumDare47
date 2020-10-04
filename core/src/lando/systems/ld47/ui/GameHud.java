@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.StringBuilder;
 import lando.systems.ld47.GameState;
+import lando.systems.ld47.utils.accessors.Vector2Accessor;
 
 public class GameHud {
 
@@ -40,6 +41,10 @@ public class GameHud {
 
     public Vector2 getNextPosition() {
         return new Vector2(gameInfoUI.nextUI.bounds.x, gameInfoUI.nextUI.bounds.y);
+    }
+
+    public Vector2 getHoldPosition() {
+        return new Vector2(gameInfoUI.holdUI.bounds.x, gameInfoUI.holdUI.bounds.y);
     }
 
     public void update(float dt) {
