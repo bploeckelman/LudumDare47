@@ -89,14 +89,14 @@ public class LeaderboardUI extends UserInterface {
     }
     private void renderPanel(ArrayList<LeaderboardScore> scores, SpriteBatch batch){
         String title = "High Score";
-
+        int leaderboardCount = currentRank < 19 ? 18 : 17;
         batch.setColor(Color.WHITE);
         assets.screws.draw(batch, 50, 50, gameState.gameScreen.hudCamera.viewportWidth / 4, gameState.gameScreen.hudCamera.viewportHeight - 100f);
         assets.font.getData().setScale(1.2f);
         layout.setText(assets.font, title, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.center, false);
         assets.font.draw(batch, layout, 60, gameState.gameScreen.hudCamera.viewportHeight - 60);
         assets.font.getData().setScale(.7f);
-        for (int i = 0; i < Math.min(scores.size(), 18); i++){
+        for (int i = 0; i < Math.min(scores.size(), leaderboardCount); i++){
             LeaderboardScore score = scores.get(i);
             layout.setText(assets.font, (i+1) + ": ", Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
             assets.font.draw(batch, layout, 80, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*i));
@@ -115,6 +115,14 @@ public class LeaderboardUI extends UserInterface {
             assets.font.getData().setScale(.7f);
             layout.setText(assets.font, String.valueOf(score.score), Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
             assets.font.draw(batch, layout, 240, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*i));
+        }
+        if (currentRank >= 19) {
+            layout.setText(assets.font, currentRank + ": ", Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
+            assets.font.draw(batch, layout, 80, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*17));
+            layout.setText(assets.font, currentLeaderboardScore.name, Color.RED, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
+            assets.font.draw(batch, layout, 140, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*17));
+            layout.setText(assets.font, String.valueOf(currentLeaderboardScore.score), Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
+            assets.font.draw(batch, layout, 240, gameState.gameScreen.hudCamera.viewportHeight - 120 - (30*17));
         }
     }
 }

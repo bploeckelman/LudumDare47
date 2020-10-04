@@ -40,7 +40,12 @@ public class LeaderboardScore implements Comparable{
         if (o instanceof LeaderboardScore){
             LeaderboardScore other = (LeaderboardScore)o;
             if (other.score < score) return -1;
-            if (other.score == score) return 0;
+            if (other.score == score) {
+                if (isCurrentUser) {
+                    return -1;
+                }
+                return 0;
+            }
             return 1;
         }
         return 0;
