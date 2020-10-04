@@ -149,7 +149,7 @@ public class Assets implements Disposable {
 
 //        bigBangShader = loadShader("shaders/standard.vert", "shaders/big_bang.frag");
         cityShader = loadShader("shaders/standard.vert", "shaders/city_descent.frag");
-        cityShader2 = loadShader("shaders/standard.vert", "shaders/city2.frag");
+        cityShader2 = loadShader("shaders/standard.vert", "shaders/city3.frag");
         blockShader = loadShader("shaders/standard3d.vert", "shaders/cube.frag");
 
         loadAudio();
