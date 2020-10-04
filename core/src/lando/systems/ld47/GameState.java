@@ -13,6 +13,8 @@ public class GameState {
 
     private Tetrad next;
     private MutableInteger mutScore = new MutableInteger(0);
+    private MutableInteger mutLineCleared = new MutableInteger(0);
+
 
     public GameState(GameScreen gameScreen) {
         this.gameScreen = gameScreen;
@@ -40,7 +42,12 @@ public class GameState {
         return mutScore.intValue();
     }
 
-    public void addScore(int amount) {
+    public int getLineCleared() {
+        return mutLineCleared.intValue();
+    }
+
+    public void addScore(int amount, int lineCleared) {
         mutScore.setValue(mutScore.intValue() + amount);
+        mutLineCleared.setValue(mutLineCleared.intValue() + lineCleared);
     }
 }

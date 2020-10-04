@@ -320,13 +320,13 @@ public class GameBoard {
 
         switch (rowsCleared){
             case 1:
-                gameState.addScore(100); break;
+                gameState.addScore(100, 1); break;
             case 2:
-                gameState.addScore(300); break;
+                gameState.addScore(300, 2); break;
             case 3:
-                gameState.addScore(500); break;
+                gameState.addScore(500, 3); break;
             case 4:
-                gameState.addScore(800); break;
+                gameState.addScore(800, 4); break;
         }
     }
 

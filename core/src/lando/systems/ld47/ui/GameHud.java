@@ -19,6 +19,7 @@ public class GameHud {
     private final Rectangle bounds;
 
     private NextUI nextUI;
+    private GameInfoUI gameInfoUI;
 
     private final Array<UserInterface> uiElements = new Array<>();
 
@@ -29,15 +30,16 @@ public class GameHud {
         this.camera = gameState.gameScreen.hudCamera;
         this.bounds = new Rectangle(0, 0, this.camera.viewportWidth, this.camera.viewportHeight);
 
-        uiElements.add(new ScoreUI(gameState));
-        uiElements.add(nextUI = new NextUI(gameState, this.camera.viewportWidth - 130, bounds.height - 50));
+//        uiElements.add(new ScoreUI(gameState));
+//        uiElements.add(nextUI = new NextUI(gameState, this.camera.viewportWidth - 130, bounds.height - 50));
         uiElements.add(new LeaderboardUI(gameState));
+        uiElements.add(gameInfoUI = new GameInfoUI(gameState));
 
         controllerText = new StringBuilder();
     }
 
     public Vector2 getNextPosition() {
-        return new Vector2(nextUI.bounds.x, nextUI.bounds.y);
+        return new Vector2(gameInfoUI.nextUI.bounds.x, gameInfoUI.nextUI.bounds.y);
     }
 
     public void update(float dt) {
