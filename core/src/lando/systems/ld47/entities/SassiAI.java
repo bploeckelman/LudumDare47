@@ -36,14 +36,14 @@ public class SassiAI {
     // right
     private int direction = 1;
 
-    private Sasquatch sasquatch;
+    private Opponent opponent;
     private GameScreen screen;
 
-    public SassiAI(GameScreen screen, Sasquatch sasquatch) {
+    public SassiAI(GameScreen screen, Opponent opponent) {
         this.screen = screen;
-        this.sasquatch = sasquatch;
+        this.opponent = opponent;
 
-        float width = this.sasquatch.size.x;
+        float width = this.opponent.size.x;
 
         tleft = leftDiff.y - width;
         tright = rightDiff.x;
@@ -61,7 +61,7 @@ public class SassiAI {
 
         maxX = nextPosition.x - bleft;
         maxY = top - bottom;
-        sasquatch.position.set(tleft, top);
+        opponent.position.set(tleft, top);
     }
 
     public void update(float dt) {
@@ -128,16 +128,16 @@ public class SassiAI {
         walk(tleft, top, getTopState());
     }
 
-    private Sasquatch.SasquatchState getTopState() {
-        return (MathUtils.random(10) < 3) ? Sasquatch.SasquatchState.throwing : Sasquatch.SasquatchState.idle;
+    private Opponent.State getTopState() {
+        return (MathUtils.random(10) < 3) ? Opponent.State.throwing : Opponent.State.idle;
     }
 
     private void hitNext() {
-        walk(nextPosition.x, nextPosition.y, Sasquatch.SasquatchState.punch, screen.gameHud.getNextBox(), false);
+        walk(nextPosition.x, nextPosition.y, Opponent.State.punch, screen.gameHud.getNextBox(), false);
     }
 
     private void hitHold() {
-        walk(holdPosition.x, holdPosition.y, Sasquatch.SasquatchState.punch, screen.gameHud.getHoldBox(), false);
+        walk(holdPosition.x, holdPosition.y, Opponent.State.punch, screen.gameHud.getHoldBox(), false);
     }
 
     private void hitRight(boolean drop) {
@@ -146,7 +146,7 @@ public class SassiAI {
             animating = false;
             return;
         }
-        walk(pos.x, pos.y, Sasquatch.SasquatchState.punch, null, drop);
+        walk(pos.x, pos.y, Opponent.State.punch, null, drop);
     }
 
     private void hitLeft(boolean drop) {
@@ -155,7 +155,7 @@ public class SassiAI {
             animating = false;
             return;
         }
-        walk(pos.x, pos.y, Sasquatch.SasquatchState.punch, null, drop);
+        walk(pos.x, pos.y, Opponent.State.punch, null, drop);
     }
 
     Vector2 sidePos = new Vector2();
@@ -180,13 +180,13 @@ public class SassiAI {
         return rightDiff.y - (leftDiff.y - leftDiff.x) / 20 * index;
     }
 
-    private void walk(float x, float y, Sasquatch.SasquatchState state) {
+    private void walk(float x, float y, Opponent.State state) {
         this.walk(x, y, state, null, false);
     }
 
-    private void walk(float x, float y, Sasquatch.SasquatchState state, HoldUI punchBox, boolean drop) {
+    private void walk(float x, float y, Opponent.State state, HoldUI punchBox, boolean drop) {
 
-        Vector2 pos = sasquatch.position;
+        Vector2 pos = opponent.position;
 
         float dy = Math.abs(y - pos.y) / 2;
         float dx = Math.abs(x - pos.x) / 2;
@@ -200,14 +200,14 @@ public class SassiAI {
 
         float time = 5f * Math.max(dx / maxX, dy / maxY);
 
-        sasquatch.setState(Sasquatch.SasquatchState.idle);
+        opponent.setState(Opponent.State.idle);
         Timeline.createSequence()
-                .push(Tween.to(sasquatch.position, Vector2Accessor.XY, time).waypoint(wx, wy).target(x, y).ease(TweenEquations.easeInOutCubic))
+                .push(Tween.to(opponent.position, Vector2Accessor.XY, time).waypoint(wx, wy).target(x, y).ease(TweenEquations.easeInOutCubic))
                 .start(screen.game.tween)
                 .setCallback(new TweenCallback() {
                     @Override
                     public void onEvent(int type, BaseTween<?> source) {
-                        sasquatch.setState(state);
+                        opponent.setState(state);
                         if (punchBox != null) {
                             punchBox.punchBox();
                         }
@@ -219,7 +219,7 @@ public class SassiAI {
 
     // for tetris
     public void stun() {
-        sasquatch.setState(Sasquatch.SasquatchState.stun);
+        opponent.setState(Opponent.State.stun);
         stunTime = 5;
     }
 }

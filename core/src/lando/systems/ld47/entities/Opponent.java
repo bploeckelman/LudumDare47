@@ -7,14 +7,18 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld47.screens.GameScreen;
 
-public class Sasquatch {
+public class Opponent {
 
-    public enum SasquatchState {
+    public enum State {
         idle, throwing, stun, punch
     }
 
     public enum Direction {
         right, left
+    }
+
+    public enum AnimDirection {
+        up, level, down
     }
 
     public GameScreen screen;
@@ -25,19 +29,19 @@ public class Sasquatch {
     public Vector2 size = new Vector2();
     private Direction direction = Direction.right;
 
-    private SasquatchState state = SasquatchState.idle;
+    private State state = State.idle;
 
     private Animation<TextureRegion> animation = null;
     private final SassiAI ai;
 
-    public Sasquatch(GameScreen screen) {
+    public Opponent(GameScreen screen) {
         this.screen = screen;
-        setState(SasquatchState.idle);
+        setState(State.idle);
         size.set(new Vector2(128, 32));
         this.ai = new SassiAI(screen, this);
     }
 
-    public void setState(SasquatchState state) {
+    public void setState(State state) {
         this.state = state;
 
         switch (state) {

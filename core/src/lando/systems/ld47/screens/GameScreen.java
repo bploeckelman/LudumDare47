@@ -9,7 +9,7 @@ import lando.systems.ld47.Audio;
 import lando.systems.ld47.Game;
 import lando.systems.ld47.GameState;
 import lando.systems.ld47.entities.GameBoard;
-import lando.systems.ld47.entities.Sasquatch;
+import lando.systems.ld47.entities.Opponent;
 import lando.systems.ld47.leaderboard.LeaderboardService;
 import lando.systems.ld47.particles.Particles;
 import lando.systems.ld47.ui.GameHud;
@@ -21,7 +21,7 @@ public class GameScreen extends BaseScreen{
     public final GameHud gameHud;
     public final LeaderboardService leaderboardService;
 
-    public Sasquatch sasquatch;
+    public Opponent opponent;
     float accum;
     ShaderProgram shader;
 
@@ -34,7 +34,7 @@ public class GameScreen extends BaseScreen{
         leaderboardService = new LeaderboardService(this);
         leaderboardService.getScores();
 
-        sasquatch = new Sasquatch(this);
+        opponent = new Opponent(this);
         shader = game.idkfa ? game.assets.cityShader2 : game.assets.cityShader;
         playMusic(Audio.Musics.blade_runner);
     }
@@ -58,7 +58,7 @@ public class GameScreen extends BaseScreen{
         // TESTING ---------------
 
         gameBoard.update(dt);
-        sasquatch.update(dt);
+        opponent.update(dt);
         gameHud.update(dt);
         leaderboardService.update(dt);
     }
@@ -89,7 +89,7 @@ public class GameScreen extends BaseScreen{
         {
             gameHud.render(batch);
             // render dude over the hud - so he can punch em
-            sasquatch.render(batch);
+            opponent.render(batch);
         }
         batch.end();
     }
