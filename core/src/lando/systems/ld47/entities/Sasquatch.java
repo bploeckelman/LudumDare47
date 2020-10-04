@@ -1,34 +1,39 @@
 package lando.systems.ld47.entities;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld47.screens.GameScreen;
 
 public class Sasquatch {
 
     public enum SasquatchState {
-        idle, throwing, jump, land, stun
+        idle, walk, throwing, jump, land, stun, punch
     }
 
-    private float time = 0;
+    public enum Direction {
+        right, left
+    }
 
-    public Vector2 position = new Vector2();
     public GameScreen screen;
-    public SasquatchState state = SasquatchState.idle;
 
-    private Rectangle imageBounds = new Rectangle();
-    private Rectangle collisionBounds = new Rectangle();
+    private float animationTime = 0;
+
+    public final Vector2 position = new Vector2();
+    public Vector2 size = new Vector2(50, 100);
+    private Direction direction = Direction.right;
+
+    private SasquatchState state;
 
     private Animation<TextureRegion> animation = null;
+    private final SassiAI ai;
 
     public Sasquatch(GameScreen screen) {
         this.screen = screen;
         setState(SasquatchState.idle);
-        position.set(490, 620);
+        this.ai = new SassiAI(screen, this);
     }
 
     public void setState(SasquatchState state) {
@@ -39,32 +44,35 @@ public class Sasquatch {
                 animation = screen.assets.sasquatch_throw;
                 break;
             case jump:
-                animation = screen.assets.sasquatch_jump;
-                break;
             case land:
                 animation = screen.assets.sasquatch_jump;
                 break;
+            case punch:
             case stun:
                 animation = screen.assets.sasquatch_stun;
             default:
                 animation = screen.assets.sasquatch;
         }
 
-        time = 0;
+        animationTime = 0;
     }
 
     public void update(float dt) {
-        time += dt;
+        animationTime += dt;
+
+        ai.update(dt);
     }
 
     public void render(SpriteBatch batch) {
 
-        imageBounds.setPosition(position.x - imageBounds.width / 2f, position.y - collisionBounds.height / 2f);
-        collisionBounds.setPosition(position.x - collisionBounds.width/2f, position.y - collisionBounds.height/2f);
-
         if (animation != null) {
-            TextureRegion texture = animation.getKeyFrame(time);
-            batch.draw(texture, position.x, position.y);
+            //batch.setColor(Color.RED);
+            //batch.draw(screen.assets.whitePixel, position.x, position.y, size.x, size.y);
+            batch.setColor(Color.WHITE);
+            TextureRegion texture = animation.getKeyFrame((state == SasquatchState.idle) ? 0 : animationTime);
+            batch.draw(texture, position.x, position.y, size.x / 2, size.y / 2, size.x, size.y,
+                    (direction == Direction.left) ? -1 : 1, 1,0);
+
         }
     }
 }

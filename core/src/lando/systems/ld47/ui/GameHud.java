@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.StringBuilder;
 import lando.systems.ld47.GameState;
@@ -16,6 +17,8 @@ public class GameHud {
     private final GameState gameState;
     private final OrthographicCamera camera;
     private final Rectangle bounds;
+
+    private NextUI nextUI;
 
     private final Array<UserInterface> uiElements = new Array<>();
 
@@ -27,10 +30,14 @@ public class GameHud {
         this.bounds = new Rectangle(0, 0, this.camera.viewportWidth, this.camera.viewportHeight);
 
         uiElements.add(new ScoreUI(gameState));
-        uiElements.add(new NextUI(gameState, this.camera.viewportWidth - 130, bounds.height - 50));
+        uiElements.add(nextUI = new NextUI(gameState, this.camera.viewportWidth - 130, bounds.height - 50));
         uiElements.add(new LeaderboardUI(gameState));
 
         controllerText = new StringBuilder();
+    }
+
+    public Vector2 getNextPosition() {
+        return new Vector2(nextUI.bounds.x, nextUI.bounds.y);
     }
 
     public void update(float dt) {

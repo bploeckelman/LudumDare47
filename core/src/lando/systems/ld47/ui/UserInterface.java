@@ -14,7 +14,7 @@ public abstract class UserInterface {
     protected final Assets assets;
     protected final TweenManager tween;
     protected final GlyphLayout layout;
-    protected final Rectangle bounds;
+    public final Rectangle bounds;
     protected final Vector3 touchPos;
 
     private boolean visible;
