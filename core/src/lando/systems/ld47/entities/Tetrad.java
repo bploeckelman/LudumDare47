@@ -9,9 +9,10 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pool;
 import lando.systems.ld47.Game;
 
-public class Tetrad {
+public class Tetrad implements Pool.Poolable {
 
     enum FACE {TOP, LEFT, RIGHT, FRONT}
     public static float POINT_WIDTH = 40;
@@ -32,7 +33,6 @@ public class Tetrad {
     private int bounds;
     public boolean flashing;
     private float accum = 0;
-    private float hue;
 
     // Mesh things
     private static final int NUM_COMPONENTS_POSITION = 3;
@@ -47,7 +47,6 @@ public class Tetrad {
     private int verticesIndex;
 
 
-    private Animation<TextureRegion> animation;
 
     public Tetrad(Game game) {
         this.game = game;
@@ -55,11 +54,7 @@ public class Tetrad {
 
 
         points = new Array<>();
-        buildNewPiece();
 
-        GLOBAL_HUE += 137;
-        hue = GLOBAL_HUE;
-//        color.fromHsv(hue, 1, 1);
 
         this.mesh = new Mesh(false, MAX_NUM_VERTICES, 0,
                 new VertexAttribute(VertexAttributes.Usage.Position,           NUM_COMPONENTS_POSITION, "a_position"),
@@ -68,8 +63,16 @@ public class Tetrad {
                 new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, NUM_COMPONENTS_TEXTURE,  "a_texCoord0")
         );
 
-        this.verticesIndex = 0;
         this.vertices = new float[MAX_NUM_VERTICES * NUM_COMPONENTS_PER_VERTEX];
+
+        reset();
+    }
+
+    @Override
+    public void reset() {
+        position.set(0,0);
+        buildNewPiece();
+        this.verticesIndex = 0;
 
     }
 
@@ -351,7 +354,6 @@ public class Tetrad {
                 points.add(new TetradPiece(3, 2, color));
                 center.set(2, 2.5f);
                 bounds = 3;
-                animation = game.assets.blueBlock;
                 color = new Color(Color.BLUE);
                 break;
             case 1:
@@ -362,7 +364,6 @@ public class Tetrad {
                 points.add(new TetradPiece(2, 1, color));
                 center.set(1.5f, 2f);
                 bounds = 2;
-                animation = game.assets.greenBlock;
                 color = new Color(Color.GREEN);
                 break;
             case 2:
@@ -373,7 +374,6 @@ public class Tetrad {
                 points.add(new TetradPiece(2, 2, color));
                 center.set(1.5f, 2f);
                 bounds = 2;
-                animation = game.assets.orangeBlock;
                 color = new Color(Color.ORANGE);
                 break;
             case 3:
@@ -384,7 +384,6 @@ public class Tetrad {
                 points.add(new TetradPiece(1, 1, color));
                 center.set(1f, 1f);
                 bounds = 1;
-                animation = game.assets.redBlock;
                 color = new Color(Color.RED);
                 break;
             case 4:
@@ -395,7 +394,6 @@ public class Tetrad {
                 points.add(new TetradPiece(2, 2, color));
                 center.set(1.5f, 2f);
                 bounds = 2;
-                animation = game.assets.redBlock;
                 color = new Color(Color.RED);
                 break;
             case 5:
@@ -406,7 +404,6 @@ public class Tetrad {
                 points.add(new TetradPiece(2, 1, color));
                 center.set(1.5f, 2f);
                 bounds = 2;
-                animation = game.assets.blueBlock;
                 color = new Color(Color.BLUE);
                 break;
             case 6:
@@ -417,7 +414,6 @@ public class Tetrad {
                 points.add(new TetradPiece(2, 1, color));
                 center.set(1.5f, 2f);
                 bounds = 2;
-                animation = game.assets.redBlock;
                 color = new Color(Color.RED);
                 break;
         }

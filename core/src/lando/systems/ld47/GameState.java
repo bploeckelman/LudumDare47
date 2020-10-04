@@ -2,10 +2,20 @@ package lando.systems.ld47;
 
 import aurelienribon.tweenengine.TweenManager;
 import aurelienribon.tweenengine.primitives.MutableInteger;
+import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Pools;
 import lando.systems.ld47.entities.Tetrad;
+import lando.systems.ld47.particles.Particle;
 import lando.systems.ld47.screens.GameScreen;
 
 public class GameState {
+
+    private final Pool<Tetrad> tetradPool = new Pool<Tetrad>() {
+        @Override
+        protected Tetrad newObject() {
+            return new Tetrad(gameScreen.game);
+        }
+    };
 
     public GameScreen gameScreen;
     public Assets assets;
@@ -26,8 +36,12 @@ public class GameState {
 
     public Tetrad popNext() {
         Tetrad tetrad = next;
-        next = new Tetrad(gameScreen.game);
+        next = tetradPool.obtain();
         return tetrad;
+    }
+
+    public void freeTetrad(Tetrad tetrad) {
+        tetradPool.free(tetrad);
     }
 
     public void setNext(Tetrad tetrad){

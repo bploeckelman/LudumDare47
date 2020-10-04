@@ -118,6 +118,7 @@ public class GameBoard {
             Tetrad tetrad = tetrads.get(i);
             if (tetrad.isEmpty()) {
                 tetrads.removeIndex(i);
+                gameState.freeTetrad(tetrad);
             }
         }
 

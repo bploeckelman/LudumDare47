@@ -7,7 +7,7 @@ import lando.systems.ld47.Game;
 
 public class KonamiHandler extends InputAdapter {
 
-    private int[] sequence = new int[]{Input.Keys.UP, Input.Keys.UP, Input.Keys.DOWN, Input.Keys.DOWN, Input.Keys.LEFT, Input.Keys.RIGHT, Input.Keys.LEFT, Input.Keys.RIGHT, Input.Keys.B, Input.Keys.A, Input.Keys.B, Input.Keys.A};
+    private int[] sequence = new int[]{Input.Keys.UP, Input.Keys.UP, Input.Keys.DOWN, Input.Keys.DOWN, Input.Keys.LEFT, Input.Keys.RIGHT, Input.Keys.LEFT, Input.Keys.RIGHT, Input.Keys.B, Input.Keys.A};
     private int index = 0;
 
     private Game game;
