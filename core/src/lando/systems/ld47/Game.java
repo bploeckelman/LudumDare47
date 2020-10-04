@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import lando.systems.ld47.entities.KonamiHandler;
 import lando.systems.ld47.screens.BaseScreen;
 import lando.systems.ld47.screens.LaunchScreen;
 import lando.systems.ld47.screens.TitleScreen;
@@ -51,6 +52,7 @@ public class Game extends ApplicationAdapter {
 		} else {
 			setScreen(new TitleScreen(this));
 		}
+		Gdx.input.setInputProcessor(new KonamiHandler(this));
 	}
 
 	@Override

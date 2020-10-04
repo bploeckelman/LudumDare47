@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld47.screens.GameScreen;
 import lando.systems.ld47.ui.HoldUI;
-import lando.systems.ld47.ui.NextUI;
 import lando.systems.ld47.utils.accessors.Vector2Accessor;
 
 public class SassiAI {
@@ -24,8 +23,8 @@ public class SassiAI {
 
     float left, right, top, bottom, maxX, maxY;
 
-    private Vector2 holdPosition;
-    private Vector2 nextPosition;
+    private final Vector2 holdPosition;
+    private final Vector2 nextPosition;
 
     // right
     private int direction = 1;
@@ -152,7 +151,7 @@ public class SassiAI {
     private float randomY(boolean left) {
         Array<Integer> rows = screen.gameBoard.getRowEnds(left);
         if (rows.isEmpty()) { return -1; }
-         return bottom + (Tetrad.POINT_WIDTH * rows.random().intValue());
+         return bottom + (Tetrad.POINT_WIDTH * rows.random());
     }
     private void walk(float x, float y, Sasquatch.SasquatchState state) {
         this.walk(x, y, state, null);
