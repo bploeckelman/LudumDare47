@@ -146,7 +146,7 @@ public class GameBoard {
 
 
     public void render(SpriteBatch batch) {
-        batch.setColor(Color.DARK_GRAY);
+        batch.setColor(.3f, .3f, .3f, .8f);
         batch.draw(gameState.assets.whitePixel, gameBounds.x, gameBounds.y, gameBounds.width, gameBounds.height);
         batch.setColor(Color.WHITE);
 

@@ -18,6 +18,7 @@ public class GameScreen extends BaseScreen{
     public final GameHud gameHud;
 
     public Sasquatch sasquatch;
+    float accum;
 
     public GameScreen(Game game) {
         super(game);
@@ -34,7 +35,7 @@ public class GameScreen extends BaseScreen{
     @Override
     public void update(float dt) {
         super.update(dt);
-
+        accum += dt;
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)){
             game.setScreen(new EndScreen(game));
         }
@@ -46,6 +47,16 @@ public class GameScreen extends BaseScreen{
     @Override
     public void render(SpriteBatch batch) {
         batch.setProjectionMatrix(shaker.getCombinedMatrix());
+        batch.setShader(assets.cityShader);
+        batch.begin();
+        {
+            assets.cityShader.setUniformf("iTime", accum);
+            assets.cityShader.setUniformf("iResolution", worldCamera.viewportWidth, worldCamera.viewportHeight);
+            batch.draw(assets.pixel, 0, 0, worldCamera.viewportWidth, worldCamera.viewportHeight, -.5f, -.5f, worldCamera.viewportWidth-.5f, worldCamera.viewportHeight - .5f);
+        }
+        batch.end();
+        batch.setShader(null);
+
         batch.begin();
         {
             gameBoard.render(batch);
