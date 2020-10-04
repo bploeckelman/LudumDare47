@@ -41,7 +41,7 @@ public class SassiAI {
 
         Rectangle bounds = screen.gameBoard.gameBounds;
         left = bounds.x - width;
-        right = bounds.x + bounds.width;
+        right = bounds.x + bounds.width - width;
         top = bounds.y + bounds.height;
         bottom = bounds.y;
 
