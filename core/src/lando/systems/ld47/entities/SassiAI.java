@@ -1,7 +1,8 @@
 package lando.systems.ld47.entities;
 
 import aurelienribon.tweenengine.*;
-import aurelienribon.tweenengine.equations.Linear;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -11,6 +12,7 @@ import lando.systems.ld47.utils.accessors.Vector2Accessor;
 public class SassiAI {
 
     float time = 5f;
+    float stunTime = 0;
 
     float actionDuration = 5f;
     float actionTime = 1f;
@@ -27,6 +29,8 @@ public class SassiAI {
 
     private Sasquatch sasquatch;
     private GameScreen screen;
+
+    private Timeline timeline;
 
     public SassiAI(GameScreen screen, Sasquatch sasquatch) {
         this.screen = screen;
@@ -48,14 +52,23 @@ public class SassiAI {
     public void update(float dt) {
         time -= dt;
 
-        if (!animating) {
-            actionTime -= dt;
-            if (actionTime < 0) {
-                actionTime -= dt;
-                actionTime = MathUtils.random(1f, Math.max(actionTime, 1f));
-                animating = true;
-                randomAction();
-            }
+        if (animating) { return; }
+
+        if (stunTime > 0) {
+            stunTime -= dt;
+            return;
+        }
+
+        actionTime -= dt;
+        if (actionTime < 0) {
+            actionDuration -= dt;
+            actionTime = MathUtils.random(1f, Math.max(actionDuration, 1f));
+            animating = true;
+            randomAction();
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.K)) {
+            stun();
         }
     }
 
@@ -118,10 +131,27 @@ public class SassiAI {
 
     private void walk(float x, float y, Sasquatch.SasquatchState state) {
 
+        Vector2 pos = sasquatch.position;
+
+        float dy = Math.abs(y - pos.y) / 2;
+        float dx = Math.abs(x - pos.x) / 2;
+
+        float wy = Math.max(y, pos.y) + 25;
+        float wx = Math.min(x, pos.x) + dx;
+
+        if (pos.x == x) {
+            wy = dy;
+            wx = x + ((x == left) ? -10 : 10);
+        }
+
+        float maxX = nextPosition.x - left;
+        float maxY = nextPosition.y - bottom;
+
+        float time = 5f * Math.max(dx / maxX, dy / maxY);
+
         sasquatch.setState(Sasquatch.SasquatchState.walk);
-        Timeline.createSequence()
-                .push(Tween.to(sasquatch.position, Vector2Accessor.XY, MathUtils.random(2, 5)).target(x, y)
-                        .ease(Linear.INOUT))
+        timeline = Timeline.createSequence()
+                .push(Tween.to(sasquatch.position, Vector2Accessor.XY, time).waypoint(wx, wy).target(x, y).ease(TweenEquations.easeInOutCubic))
                 .start(screen.game.tween)
                 .setCallback(new TweenCallback() {
                     @Override
@@ -130,5 +160,11 @@ public class SassiAI {
                         animating = false;
                     }
                 });
+
+    }
+
+    private void stun() {
+        sasquatch.setState(Sasquatch.SasquatchState.stun);
+        stunTime = 5;
     }
 }
