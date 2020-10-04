@@ -12,17 +12,12 @@ import com.badlogic.gdx.utils.StringBuilder;
 import lando.systems.ld47.Config;
 import lando.systems.ld47.GameState;
 import lando.systems.ld47.leaderboard.LeaderboardScore;
-import javax.xml.bind.DatatypeConverter;
-
 
 public class GameHud {
 
     private final GameState gameState;
     private final OrthographicCamera camera;
     private final Rectangle bounds;
-
-    private final String mes1 = render("V2VhciBhIGZ1Y2tpbmcgbWFzaw==");
-    private final String mes2 = render("V2UgZG8gbm90IHN1cHBvcnQgV2hpdGUgU3VwcmVtYWNpc3Rz");
 
     private GameInfoUI gameInfoUI;
     private LeaderboardUI leaderboardUI;
@@ -85,9 +80,9 @@ public class GameHud {
         // DEBUG --------------------------------
 
         if (gameState.gameScreen.game.idkfa) {
-            layout.setText(gameState.assets.font, mes1);
+            layout.setText(gameState.assets.font, "Wear a fucking mask");
             gameState.assets.font.draw(batch, layout, (Config.windowWidth - layout.width)*3/4, Config.windowHeight - layout.height);
-            layout.setText(gameState.assets.font, mes2);
+            layout.setText(gameState.assets.font, "We do not support White Supremacists");
             gameState.assets.font.draw(batch, layout, (Config.windowWidth - layout.width)/4, Config.windowHeight - layout.height);
         };
 
@@ -97,9 +92,4 @@ public class GameHud {
     public void updateScores(Array<LeaderboardScore> scores) {
         leaderboardUI.updateScores(scores);
     }
-
-    private String render(String message) {
-        return new String(DatatypeConverter.parseBase64Binary(message));
-    }
-
 }
