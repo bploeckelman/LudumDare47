@@ -26,11 +26,15 @@ public class GameState {
     private MutableInteger mutLineCleared = new MutableInteger(0);
     private MutableInteger comboScore = new MutableInteger(0);
 
+    // Settings
+    boolean showGhost;
+
 
     public GameState(GameScreen gameScreen) {
         this.gameScreen = gameScreen;
         this.assets = gameScreen.assets;
         this.tween = gameScreen.game.tween;
+        showGhost = true;
         popNext();
     }
 
