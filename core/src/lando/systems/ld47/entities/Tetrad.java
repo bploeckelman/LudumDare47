@@ -224,8 +224,14 @@ public class Tetrad implements Pool.Poolable, IShootable {
                 break;
 
         }
+        if (gameBoard.tetradToRemove == this){
+            tempColor.b = 1.0f;
+        } else {
+            tempColor.b = 0;
+        }
         if (point.maxDestroyTimer != 0){
             tempColor.r = 1.f - (point.getDestroyTimer() / point.maxDestroyTimer);
+            tempColor.b = 0;
         }
         addFaceVerts(tempColor);
     }

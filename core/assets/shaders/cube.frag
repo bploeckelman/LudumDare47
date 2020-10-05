@@ -61,7 +61,10 @@ void main() {
     vec4 noisecol = mix(vec4(1.,1.,1.,0.), plasmaColor, smoothstep(v_color.r - .1, v_color.r - .05, noisetex.r));
     finalColor = mix(noisecol, finalColor, smoothstep(v_color.r - .05, v_color.r-.001, noisetex.r));
 
+    float grey = 0.21 * finalColor.r + 0.71 * finalColor.g + 0.07 * finalColor.b;
 
+    // b channel is holding if it should be grey
+    finalColor.rgb = finalColor.rgb * (1. - v_color.b)  + vec3(grey) * v_color.b;
 
     finalColor.a *= v_color.a;
     gl_FragColor = finalColor;
