@@ -12,6 +12,7 @@ public class NextUI extends HoldUI {
     public void update(float dt) {
         hold = gameState.viewNext();
         // DO NOT CALL SUPER - or you will pop this as well on Hold pressed
+        hold.scale = .7f;
         hold.center(center);
     }
 

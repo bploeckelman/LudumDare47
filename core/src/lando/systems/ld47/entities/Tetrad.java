@@ -33,6 +33,7 @@ public class Tetrad implements Pool.Poolable {
     private int bounds;
     public boolean flashing;
     private float accum = 0;
+    public float scale = 1;
 
     // Mesh things
     private static final int NUM_COMPONENTS_POSITION = 3;
@@ -105,7 +106,7 @@ public class Tetrad implements Pool.Poolable {
         TextureRegion blockImage = game.assets.blockFaces[type];
         for (TetradPiece point : points) {
             if (!point.remove) {
-                batch.draw(blockImage, position.x + (POINT_WIDTH * point.x), position.y + (POINT_WIDTH * point.y), POINT_WIDTH, POINT_WIDTH);
+                batch.draw(blockImage, position.x + (POINT_WIDTH * scale * point.x), position.y + (POINT_WIDTH * scale * point.y), POINT_WIDTH * scale, POINT_WIDTH * scale);
             }
         }
         batch.setColor(Color.WHITE);
@@ -399,7 +400,7 @@ public class Tetrad implements Pool.Poolable {
     }
 
     public void center(Vector2 center) {
-        position.set(center.x - this.center.x * POINT_WIDTH, center.y - this.center.y * POINT_WIDTH);
+        position.set(center.x - this.center.x * POINT_WIDTH * scale, center.y - this.center.y * POINT_WIDTH * scale);
     }
 
     private void buildNewPiece() {

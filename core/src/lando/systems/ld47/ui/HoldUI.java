@@ -34,6 +34,7 @@ public class HoldUI extends UserInterface {
         }
 
         if (hold != null) {
+            hold.scale = .7f;
             hold.center(center);
         }
 
