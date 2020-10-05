@@ -40,9 +40,9 @@ public class GameBoard {
     int blocksToFallTilRemove;
     private boolean previousBlockCleared = false;
     PerspectiveCamera boardCam;
-    private Color ambientColor = new Color(.3f, .3f, .3f, 1f);
+    private Color ambientColor = new Color(.4f, .4f, .4f, 1f);
     private Color directionColor = new Color(.6f, .3f, .6f, 1f);
-    private Vector3 directionLight = new Vector3(.1f, -.5f, .5f).nor();
+    private Vector3 directionLight = new Vector3(.1f, -.5f, .8f).nor();
 
     public PointLight[] pointLights;
     private GameBackPlate backPlate;
