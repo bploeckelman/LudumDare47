@@ -24,6 +24,10 @@ public class SassiAI {
     float actionTime = 1f;
     boolean animating = false;
 
+    float teleportDuration = 5f;
+    boolean teleporting = false;
+    float teleportTime = 0;
+
     Actions lastAction = Actions.none;
 
     // if the location of the board or it gets moved, this will need to change
@@ -80,12 +84,20 @@ public class SassiAI {
     }
 
     public void update(float dt) {
-        if (animating) { return; }
 
         if (stunTime > 0) {
             stunTime -= dt;
             return;
         }
+
+        if (teleporting) {
+            teleportTime -= dt;
+            if (teleportTime < 0) {
+                teleportBlock();
+            }
+        }
+
+        if (animating) { return; }
 
         actionTime -= dt;
         if (actionTime < 0) {
@@ -288,7 +300,8 @@ public class SassiAI {
                 .start(screen.tween)
                 .setCallback((s, i) -> {
                         gameBoard.crash();
-                        animating = false;
+                        teleporting = true;
+                        teleportTime = teleportDuration;
                     });
     }
 
@@ -332,6 +345,13 @@ public class SassiAI {
         }
 
         return emptyWayPoints;
+    }
+
+    private void teleportBlock() {
+        teleporting = false;
+        // move to pullout piece and trigger this
+        gameBoard.pulloutEnabled = true;
+        animating = false;
     }
 
     // for tetris

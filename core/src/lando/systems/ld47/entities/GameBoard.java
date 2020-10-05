@@ -46,7 +46,7 @@ public class GameBoard {
     float fallInterval;
     float timeToFall;
 
-    private boolean pulloutEnabled = false;
+    public boolean pulloutEnabled = false;
     private boolean previousBlockCleared = false;
     PerspectiveCamera boardCam;
     private Color ambientColor = new Color(.4f, .4f, .4f, 1f);
