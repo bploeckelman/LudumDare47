@@ -10,14 +10,14 @@ import lando.systems.ld47.ui.typinglabel.TypingLabel;
 
 public class LaunchScreen extends BaseScreen {
     private TypingLabel titleLabel;
-    static String title = "{JUMP=.2}{WAVE=0.9;1.1;1.25}{RAINBOW}click to launch{ENDRAINBOW}{ENDWAVE}{ENDJUMP}";
+    static String title = "{JUMP=.2}{GRADIENT=purple;cyan}click to launch{ENDGRADIENT}{ENDJUMP}";
     private final ShaderProgram shader;
     private float accum = 0f;
     public LaunchScreen(Game game) {
         super(game);
         titleLabel = new TypingLabel(assets.bladeFont64, title, 0f, Config.windowHeight / 2f + 50f);
         titleLabel.setWidth(Config.windowWidth);
-        titleLabel.setFontScale(2.5f);
+        titleLabel.setFontScale(2f);
         shader = game.assets.cityShader;
     }
 
