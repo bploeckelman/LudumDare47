@@ -34,6 +34,8 @@ public class GameState {
         this.assets = gameScreen.assets;
         this.tween = gameScreen.game.tween;
         this.showGhost = true;
+        this.playMusic = true;
+        this.playSounds = true;
         popNext();
 
     }

@@ -32,11 +32,8 @@ public class GameScreen extends BaseScreen{
         opponent = new Opponent(this);
         shader = game.idkfa ? game.assets.cityShader2 : game.assets.cityShader;
 //        playMusic(Audio.Musics.blade_runner);
-        // HACK to get settings to work first time
-        gameState.stopMusic();
         gameState.startMusic();
-        gameState.disableSounds();
-        gameState.enableSounds();
+
 
         leaderboardService.getScores();
 
