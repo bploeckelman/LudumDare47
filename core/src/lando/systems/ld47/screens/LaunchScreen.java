@@ -15,19 +15,23 @@ public class LaunchScreen extends BaseScreen {
     static String title = "{JUMP=.2}{GRADIENT=purple;cyan}click to launch{ENDGRADIENT}{ENDJUMP}";
     private final ShaderProgram shader;
     private float accum = 0f;
+    private float debounce;
     public LaunchScreen(Game game) {
         super(game);
         titleLabel = new TypingLabel(assets.bladeFont64, title, 0f, Config.windowHeight / 2f + 50f);
         titleLabel.setWidth(Config.windowWidth);
         titleLabel.setFontScale(2f);
         shader = game.assets.cityShader;
+        debounce = 1f;
     }
 
     @Override
     public void update(float dt) {
         super.update(dt);
-        if (Gdx.input.justTouched()){
+        debounce -= dt;
+        if (Gdx.input.justTouched()&& debounce < 0){
             game.setScreen(new TitleScreen(game));
+            debounce = 3f;
         }
         titleLabel.update(dt);
         accum += dt;

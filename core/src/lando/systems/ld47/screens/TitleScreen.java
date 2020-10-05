@@ -17,9 +17,11 @@ import lando.systems.ld47.utils.accessors.Vector2Accessor;
 public class TitleScreen extends BaseScreen {
 
     private TitleCar car;
+    float debounce;
 
     public TitleScreen(Game game) {
         super(game);
+        debounce = 1f;
         playMusic(Audio.Musics.intro_track);
         playerInput.recheckController();
 
@@ -39,13 +41,14 @@ public class TitleScreen extends BaseScreen {
     @Override
     public void update(float dt) {
         super.update(dt);
-
+        debounce -= dt;
         car.update(dt);
 
-        if (Gdx.input.justTouched()
+        if (debounce <= 0 &&Gdx.input.justTouched()
          || Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)
          || playerInput.isAnyButtonPressed()){
             game.setScreen(new StoryScreen(game), assets.blindsShader, 2f);
+            debounce = 3f;
         }
     }
 
