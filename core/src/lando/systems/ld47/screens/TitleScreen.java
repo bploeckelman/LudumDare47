@@ -21,7 +21,7 @@ public class TitleScreen extends BaseScreen {
         if (Gdx.input.justTouched()
          || Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)
          || playerInput.isAnyButtonPressed()){
-            game.setScreen(new GameScreen(game));
+            game.setScreen(new StoryScreen(game));
         }
     }
 

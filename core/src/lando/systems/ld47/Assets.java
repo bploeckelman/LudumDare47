@@ -20,6 +20,7 @@ public class Assets implements Disposable {
     private final AssetDescriptor<Texture> blockTextureAsset = new AssetDescriptor<>("images/blocks.png", Texture.class);
     private final AssetDescriptor<Texture> launchTextureAsset = new AssetDescriptor<>("images/launch.png", Texture.class);
     private final AssetDescriptor<Texture> titleTextureAsset = new AssetDescriptor<>("images/title.png", Texture.class);
+    private final AssetDescriptor<Texture> titleSillyTextureAsset = new AssetDescriptor<>("images/title-block-and-deckard.png", Texture.class);
     private final AssetDescriptor<Texture> noiseTextureAsset = new AssetDescriptor<>("images/noise.png", Texture.class);
     private final AssetDescriptor<BitmapFont> riseFont16Asset = new AssetDescriptor<>("fonts/chevyray-rise-16.fnt", BitmapFont.class);
     private final AssetDescriptor<BitmapFont> bladeFont16Asset = new AssetDescriptor<>("fonts/blade-runner-16.fnt", BitmapFont.class);
@@ -40,6 +41,7 @@ public class Assets implements Disposable {
 
     public Texture launchImage;
     public Texture titleImage;
+    public Texture titleSillyImage;
     public Texture pixel;
     public Texture blockTextures;
     public Texture noiseTexture;
@@ -110,6 +112,7 @@ public class Assets implements Disposable {
         mgr.load(pixelTextureAsset);
         mgr.load(blockTextureAsset);
         mgr.load(titleTextureAsset);
+        mgr.load(titleSillyTextureAsset);
         mgr.load(noiseTextureAsset);
         mgr.load(launchTextureAsset);
         mgr.load(riseFont16Asset);
@@ -139,6 +142,7 @@ public class Assets implements Disposable {
         pixel = mgr.get(pixelTextureAsset);
         launchImage = mgr.get(launchTextureAsset);
         titleImage = mgr.get(titleTextureAsset);
+        titleSillyImage = mgr.get(titleSillyTextureAsset);
         font = mgr.get(riseFont16Asset);
         bladeFont16 = mgr.get(bladeFont16Asset);
         bladeFont32 = mgr.get(bladeFont32Asset);
