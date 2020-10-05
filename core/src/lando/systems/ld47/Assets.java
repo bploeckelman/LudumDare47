@@ -122,6 +122,8 @@ public class Assets implements Disposable {
     public Music moodTrack3;
     public Music bladeRunner;
 
+    public String playerName;
+
     public Assets() {
         this(Loading.SYNC);
     }
@@ -130,6 +132,8 @@ public class Assets implements Disposable {
         initialized = false;
 
         prefs = Gdx.app.getPreferences("BlockRunner");
+
+        this.playerName = prefs.getString("name", "anonymous");
 
         batch = new SpriteBatch();
         shapes = new ShapeRenderer();
@@ -299,6 +303,14 @@ public class Assets implements Disposable {
         }
 
         return shaderProgram;
+    }
+
+    public void savePlayerName(String name) {
+        if (name != null){
+            playerName = name;
+            prefs.putString("name", name);
+            prefs.flush();
+        }
     }
 
     @Override

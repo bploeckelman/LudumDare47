@@ -77,7 +77,7 @@ public class ScoreEntryUI extends UserInterface implements InputProcessor {
         this.scoreSubmitted = false;
         this.transitionComplete = false;
 
-        this.name = "anonymous";
+        this.name = screen.assets.playerName;
 
         this.bounds.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0f, 0f);
 
@@ -125,6 +125,7 @@ public class ScoreEntryUI extends UserInterface implements InputProcessor {
             } else if (!scoreSubmitted && boundsButtonSubmit.contains(touchPos.x, touchPos.y)) {
                 screen.leaderboardService.postScore(name, score);
                 scoreSubmitted = true;
+                screen.assets.savePlayerName(name);
                 // disable this class as an input processor
                 Gdx.input.setInputProcessor(null);
                 hide();
@@ -284,14 +285,14 @@ public class ScoreEntryUI extends UserInterface implements InputProcessor {
         if (character == (char) 8 && !name.isEmpty()) {
             name = name.substring(0, name.length() - 1);
             if (name.isEmpty()) {
-                name = "Anonymous";
+                name = "anonymous";
             }
             return true;
         }
 
         // handle delete
         if (character == (char) 127) {
-            name = "Anonymous";
+            name = "anonymous";
             return true;
         }
 
