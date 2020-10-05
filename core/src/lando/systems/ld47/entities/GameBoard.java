@@ -26,6 +26,11 @@ public class GameBoard {
     public static int TILESHIGH = 20;
     public static int MAX_POINT_LIGHTS = 5;
 
+    // number of tetrads on the board before the guy will shoot one
+    public final int minTetradsToShoot = 5;
+    // number of tetrads on the board before the guy will transport one
+    public final int minTetradsToTransport = 3;
+
     public final GameState gameState;
     private final PlayerInput playerInput;
     private final OrthographicCamera camera;
@@ -41,7 +46,7 @@ public class GameBoard {
     float fallInterval;
     float timeToFall;
 
-    int blocksToFallTilRemove;
+    private boolean pulloutEnabled = false;
     private boolean previousBlockCleared = false;
     PerspectiveCamera boardCam;
     private Color ambientColor = new Color(.4f, .4f, .4f, 1f);
@@ -62,7 +67,6 @@ public class GameBoard {
         float width = TILESWIDE * Tetrad.POINT_WIDTH;
         float height = TILESHIGH * Tetrad.POINT_WIDTH;
         gameBounds = new Rectangle((camera.viewportWidth - width) / 2f, (camera.viewportHeight - height) / 2f, width, height);
-        blocksToFallTilRemove = 3;
         fallInterval = 1f;
         timeToFall = fallInterval;
 
@@ -191,7 +195,7 @@ public class GameBoard {
             if (!tetrads.contains(tetradToRemove, true)) {
                 tetradToRemove = null;
             }
-            // checkForPullOut();
+            checkForPullOut();
 
             if (activeTetrad != null) {
                 PlayerInput.TriggerState state = playerInput.isRightPressed();
@@ -407,9 +411,6 @@ public class GameBoard {
             // TODO make this more async
             checkForFullRows();
 
-            blocksToFallTilRemove--;
-
-
             if (!tetrads.contains(tetradToRemove, true)) {
                 tetradToRemove = null;
             }
@@ -424,7 +425,7 @@ public class GameBoard {
     }
 
     private void checkForPullOut() {
-        if (blocksToFallTilRemove <= 0) {
+        if (pulloutEnabled) {
             if (tetradToRemove != null) {
                 tetradToRemove.flashing = false;
                 gameState.setNext(tetradToRemove);
@@ -455,7 +456,7 @@ public class GameBoard {
             if (tetradToRemove != null) {
                 tetradToRemove.flashing = true;
             }
-            blocksToFallTilRemove = 3;
+            pulloutEnabled = false;
         }
     }
 
@@ -536,26 +537,35 @@ public class GameBoard {
                 }
             }
         }
-
     }
 
-    private final Array<Integer> endblocks = new Array<Integer>(TILESHIGH);
-    // gets the number of blocks on the ends for punching
-    public Array<Integer> getRowEnds(boolean left) {
-        int column = left ? 0 : TILESWIDE - 1;
+    public boolean canTransportTetrad() {
+        return tetrads.size >= minTetradsToTransport;
+    }
 
-        endblocks.clear();
+    public Tetrad getRandomTetrad() {
+        if (!canTransportTetrad()) { return null; }
 
-        // if this is already checked on each update, include this there
-        for (Tetrad tetrad : tetrads) {
-            for (TetradPiece piece : tetrad.points) {
-                if (piece.x + tetrad.origin.x == column) {
-                    endblocks.add(new Integer(piece.y + (int)tetrad.origin.y));
-                }
-            }
-        }
+        return tetrads.random();
+    }
 
-        return endblocks;
+    public boolean canShootBlock() {
+        return tetrads.size >= minTetradsToShoot;
+    }
+
+    public Vector2 getRandomBlock() {
+        if (!canShootBlock()) { return null; }
+
+        Tetrad selected = tetrads.random();
+        TetradPiece piece = selected.points.random();
+        return new Vector2(selected.origin.x + piece.x, selected.origin.y + piece.y);
+    }
+
+    public void crash() {
+        gameState.gameScreen.shaker.addDamage(100);
+        gameState.gameScreen.playSound(Audio.Sounds.crash);
+        pulloutEnabled = true;
+
     }
 
     public void togglePause() {

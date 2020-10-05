@@ -11,7 +11,7 @@ import lando.systems.ld47.screens.GameScreen;
 public class Opponent {
 
     public enum State {
-        idle, moving, stun, punch
+        idle, moving, stun, ramming, shooting
     }
 
     public enum Direction {
@@ -31,6 +31,7 @@ public class Opponent {
     public final Vector2 position = new Vector2();
     public Vector2 size = new Vector2();
     public Direction direction = Direction.right;
+    public boolean fixDirection = false;
 
     private State state = State.idle;
 
@@ -48,9 +49,9 @@ public class Opponent {
 
     public void setState(State state) {
         this.state = state;
-
+        fixDirection = false;
         switch (state) {
-            case punch:
+            case shooting:
                 animation = screen.assets.sasquatch_punch;
                 break;
             case stun:
@@ -76,7 +77,7 @@ public class Opponent {
             idleTime += dt;
             offsetY = MathUtils.sin(idleTime * 2f) * 5;
         } else if (state == State.moving) {
-            if (position.x != lastX) {
+            if (!fixDirection && position.x != lastX) {
                 direction = (position.x > lastX) ? Direction.right : Direction.left;
             }
             setAnimState();

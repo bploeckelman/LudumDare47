@@ -1,6 +1,7 @@
 package lando.systems.ld47.entities;
 
 import aurelienribon.tweenengine.*;
+import aurelienribon.tweenengine.equations.Quad;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
@@ -8,12 +9,15 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld47.screens.GameScreen;
+import lando.systems.ld47.ui.HoldUI;
 import lando.systems.ld47.utils.accessors.Vector2Accessor;
 
 public class SassiAI {
 
     enum Actions { none, boardLeft, boardRight, shootLeft, shootRight,
         ramLeft, ramRight, shootNext, shootHold, teleportPiece, dropPiece };
+
+    enum BoardSide { left, right };
 
     float stunTime = 0;
 
@@ -40,6 +44,7 @@ public class SassiAI {
     private Opponent opponent;
     private float speed = 250f;
     private GameScreen screen;
+    private final HoldUI holdBox;
 
     // known way points
     private Vector2 topLeft;
@@ -47,9 +52,13 @@ public class SassiAI {
     private Vector2 hold;
     private Vector2 next;
 
+    private final GameBoard gameBoard;
+
     public SassiAI(GameScreen screen, Opponent opponent) {
         this.screen = screen;
+        this.gameBoard = screen.gameBoard;
         this.opponent = opponent;
+        this.holdBox = screen.gameHud.getHoldBox();
 
         turnWidth = opponent.size.x * 0.6f;
 
@@ -63,7 +72,7 @@ public class SassiAI {
         Rectangle bounds = screen.gameHud.getNextBox().bounds;
         next = new Vector2(bounds.x - width, bounds.y + (bounds.y - height)/2);
 
-        bounds = screen.gameHud.getHoldBox().bounds;
+        bounds = holdBox.bounds;
         hold = new Vector2(bounds.x - width, bounds.y + (bounds.y - height)/2);
 
         // place opponent at the top right
@@ -104,60 +113,73 @@ public class SassiAI {
                 move(topRight, action);
                 break;
             case shootLeft:
-                Vector2 pos = getSidePos(true);
-                if (pos == null) {
-                    // nothing to shoot
-                    return;
-                }
-                move(pos, action);
+                moveSide(BoardSide.left, true, action);
                 break;
             case shootRight:
-                pos = getSidePos(false);
-                if (pos == null) {
-                    // nothing to shoot
-                    return;
-                }
-                move(pos, action);
+                moveSide(BoardSide.right, true, action);
                 break;
             case ramLeft:
+                moveSide(BoardSide.left, false, action);
                 break;
             case ramRight:
+                moveSide(BoardSide.right, false, action);
                 break;
             case shootNext:
+                move(next, action);
                 break;
             case shootHold:
+                move(hold, action);
                 break;
             case teleportPiece:
-                break;
             case dropPiece:
-                break;
+                return; // todo: implement
         }
 
         animating = true;
     }
 
+    Array<Actions> actions = new Array<>(Actions.values().length);
     private Actions getNextAction(Actions lastAction) {
-//        // 20% chance of doing nothing
-//        if (MathUtils.random(4) < 1) { return Actions.none; }
-//
-//        Actions[] actions = Actions.values();
-        Actions[] actions = new Actions[] { Actions.none, Actions.boardLeft, Actions.shootLeft, Actions.boardRight, Actions.shootRight };
+        // 20% chance of doing nothing
+        // if (MathUtils.random(4) < 1) { return Actions.none; }
+
+        actions.clear();
+        actions.add(Actions.boardLeft, Actions.shootNext);
+//        actions.add(Actions.boardLeft, Actions.boardRight, Actions.shootNext);
+        if (gameBoard.canShootBlock()) {
+            actions.add(Actions.shootLeft, Actions.shootRight);
+        }
+//        if (gameBoard.canTransportTetrad()) {
+//            actions.add(Actions.ramLeft, Actions.ramRight);
+//        }
+//        if (holdBox.hold != null) {
+//            actions.add(Actions.shootHold);
+//        }
 
         Actions next = lastAction;
         while (next == lastAction) {
-            next = actions[MathUtils.random(1, actions.length - 1)];
+            next = actions.random();
         }
         return next;
+
+    }
+
+    private void moveSide(BoardSide side, boolean isShooting, Actions action) {
+        Vector2 pos = getSidePos(side, isShooting);
+        if (pos == null) { return; } // nothing to do
+        move(pos, action);
     }
 
     private final Vector2 sidePos = new Vector2();
-    private Vector2 getSidePos(boolean left) {
-        Array<Integer> rows = screen.gameBoard.getRowEnds(left);
-        if (rows.isEmpty()) { return null; }
+    private Vector2 getSidePos(BoardSide side, boolean isShooting) {
+        int yIndex = yPosCoords.length / 2;
+        if (isShooting) {
+            Vector2 block = gameBoard.getRandomBlock();
+            if (block == null) { return null; }
+            yIndex = (int)block.y;
+        }
 
-        int yIndex = rows.random();
-
-        float x = (left)
+        float x = (side == BoardSide.left)
                 ? boardXBottomLeft - opponent.size.x + (boardXTopLeft - boardXBottomLeft) / 20 * yIndex
                 : boardXBottomRight - (boardXBottomRight -boardXTopRight) / 20 * yIndex;
 
@@ -178,7 +200,6 @@ public class SassiAI {
 
         float moveTime = (float)Math.sqrt(dx*dx + dy*dy) / speed;
 
-
         Tween moveTween = Tween.to(pos, Vector2Accessor.XY, moveTime);
         for (Vector2 wp : wayPoints) {
             moveTween.waypoint(wp.x, wp.y);
@@ -187,8 +208,7 @@ public class SassiAI {
 
         opponent.setState(Opponent.State.moving);
 
-        Timeline.createSequence()
-                .push(moveTween)
+        Timeline.createSequence().push(moveTween)
                 .start(screen.game.tween)
                 .setCallback(new TweenCallback() {
                     @Override
@@ -202,32 +222,32 @@ public class SassiAI {
 
         Opponent.State state = Opponent.State.idle;
         Opponent.Direction direction = Opponent.Direction.right;
+        boolean endAnimation = true;
+
         switch (action) {
-            case none:
-                // won't happen
-                break;
-            case boardLeft:
-                break;
             case boardRight:
                 direction = Opponent.Direction.left;
                 break;
             case shootLeft:
-                state = Opponent.State.punch;
-                break;
             case shootRight:
-                direction = Opponent.Direction.left;
-                state = Opponent.State.punch;
+                // gameBoard.shootBlock()
+                state = Opponent.State.shooting;
                 break;
             case ramLeft:
-                break;
             case ramRight:
-                direction = Opponent.Direction.left;
+                if (action == Actions.ramRight) {
+                    direction = Opponent.Direction.left;
+                }
+                endAnimation = false;
+                ramBoard(action);
                 break;
             case shootNext:
-                state = Opponent.State.punch;
+                screen.gameHud.getNextBox().punchBox();
+                state = Opponent.State.shooting;
                 break;
             case shootHold:
-                state = Opponent.State.punch;
+                holdBox.punchBox();
+                state = Opponent.State.shooting;
                 break;
             case teleportPiece:
                 break;
@@ -235,17 +255,15 @@ public class SassiAI {
                 break;
         }
 
-        //opponent.setState(state);
-        opponent.setState(Opponent.State.idle);
-        opponent.animState = Opponent.AnimDirection.level;
+        opponent.setState(state);
         opponent.direction = direction;
 
         lastAction = action;
-        animating = false;
+        animating = !endAnimation;
     }
 
     private void setOrientation(float dy) {
-        if (dy > 0){
+        if (dy > 0) {
             opponent.animState = Opponent.AnimDirection.up;
         } else if (dy < 0) {
             opponent.animState = Opponent.AnimDirection.down;
@@ -254,11 +272,33 @@ public class SassiAI {
         }
     }
 
+    private void ramBoard(Actions action) {
+
+        Vector2 pos = opponent.position;
+        int modifier = (action == Actions.ramRight) ? -1 : 1;
+        float xOffset = -turnWidth * modifier;
+        float xHit = 10f * modifier;
+
+        Timeline.createSequence()
+                .pushPause(1f)
+                .push(Tween.to(pos, Vector2Accessor.X, 0.3f).target(pos.x + xOffset).ease(Quad.OUT))
+                .push(Tween.to(pos, Vector2Accessor.X, 0.2f).target(pos.x + xHit))
+                .push(Tween.to(pos, Vector2Accessor.X, 0.2f).target(pos.x - xHit))
+                .start(screen.tween)
+                .setCallback(new TweenCallback() {
+                    @Override
+                    public void onEvent(int type, BaseTween<?> source) {
+                        gameBoard.crash();
+                        animating = false;
+                    }
+                });
+    }
+
     private final Vector2[] emptyWayPoints = new Vector2[] {};
     private Vector2[] getWayPoints(Vector2 pos, Vector2 movePos, Actions action) {
 
         float dy = Math.abs(pos.y - movePos.y);
-        if (dy < minTurnHeight) { return emptyWayPoints; };
+        if (dy < minTurnHeight || action == Actions.shootHold || action == Actions.shootNext) { return emptyWayPoints; };
 
         boolean up = pos.y < movePos.y;
         boolean right = pos.x < movePos.x;
