@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -258,8 +259,12 @@ public class GameBoard {
         shader.setUniformf("u_ambient", ambientColor);
         shader.setUniformf("u_direction_dir", directionLight);
         shader.setUniformf("u_direction_color", directionColor);
+        shader.setUniformi("u_texture1", 1);
+        gameState.gameScreen.assets.noiseTexture.bind(1);
         shader.setUniformi("u_texture", 0);
         gameState.gameScreen.assets.blockTextures.bind(0);
+
+
         for(PointLight light : pointLights){
             light.addToShader(shader);
         }
@@ -270,6 +275,8 @@ public class GameBoard {
         if (activeTetrad != null) {
             activeTetrad.renderModels(shader);
         }
+        // without this the fonts break for some reason?
+//        gameState.gameScreen.assets.noiseTexture.bind(0);
         Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
         gameFB.end();
 
@@ -495,10 +502,11 @@ public class GameBoard {
         for (Tetrad tetrad : tetrads) {
             for (TetradPiece piece : tetrad.points) {
                 if (tetrad.origin.y + piece.y == y) {
-                    piece.destroyTimer = delay + (tetrad.origin.x + piece.x) * .05f;
-                    gameState.gameScreen.particles.addPieceDeleteParticles(gameBounds.x + (tetrad.origin.x + piece.x + .5f) * Tetrad.POINT_WIDTH,
-                            gameBounds.y + (tetrad.origin.y + piece.y + .5f) * Tetrad.POINT_WIDTH,
-                            tetrad.color);
+//                    piece.setDestroyTimer(delay, (tetrad.origin.x + piece.x) * .1f, TetradPiece.RemoveReason.CLEARED);
+                    piece.setDestroyTimer(MathUtils.random(.1f, .5f), MathUtils.random(.6f, 1f), TetradPiece.RemoveReason.CLEARED);
+//                    gameState.gameScreen.particles.addPieceDeleteParticles(gameBounds.x + (tetrad.origin.x + piece.x + .5f) * Tetrad.POINT_WIDTH,
+//                            gameBounds.y + (tetrad.origin.y + piece.y + .5f) * Tetrad.POINT_WIDTH,
+//                            tetrad.color);
                 }
             }
         }

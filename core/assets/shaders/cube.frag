@@ -12,6 +12,7 @@ struct PointLight {
 uniform PointLight u_pointLights[NR_POINT_LIGHTS];
 
 uniform sampler2D u_texture;
+uniform sampler2D u_texture1;
 uniform vec4 u_ambient;
 uniform vec4 u_direction_color;
 uniform vec3 u_direction_dir;
@@ -50,7 +51,17 @@ void main() {
     }
 
     vec4 finalColor = texSample * max((directionIntensity * u_direction_color) + pointLightColor, u_ambient);
-//    finalColor.rgb = normalize(u_viewPos);
+
+
+    // fuck it we'll do it live
+    float noiseU = mod(v_texCoords.x - 1./340., 34./340.) * 340./32.;
+    float noiseV = mod(v_texCoords.y - 1./68., 34./68.) * 68./32.;
+    vec4 noisetex =  texture2D(u_texture1, vec2(noiseU, noiseV));
+    vec4 plasmaColor = mix(vec4(0., 8., 1.,1.), vec4(1., 0, .8, 1.), v_color.g);
+    vec4 noisecol = mix(vec4(1.,1.,1.,0.), plasmaColor, smoothstep(v_color.r - .1, v_color.r - .05, noisetex.r));
+    finalColor = mix(noisecol, finalColor, smoothstep(v_color.r - .05, v_color.r-.001, noisetex.r));
+
+
 
     finalColor.a *= v_color.a;
     gl_FragColor = finalColor;

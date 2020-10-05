@@ -145,10 +145,10 @@ public class Tetrad implements Pool.Poolable {
             if (point.remove){
                 continue;
             }
-            computeFace(origin.x + point.x, origin.y + point.y, offset, color, FACE.TOP, type );
-            computeFace(origin.x + point.x, origin.y + point.y, offset, color, FACE.LEFT, type );
-            computeFace(origin.x + point.x, origin.y + point.y, offset, color, FACE.RIGHT, type );
-            computeFace(origin.x + point.x, origin.y + point.y, offset, color, FACE.FRONT, type );
+            computeFace(origin.x + point.x, origin.y + point.y, offset, color, FACE.TOP, type, point );
+            computeFace(origin.x + point.x, origin.y + point.y, offset, color, FACE.LEFT, type, point );
+            computeFace(origin.x + point.x, origin.y + point.y, offset, color, FACE.RIGHT, type, point );
+            computeFace(origin.x + point.x, origin.y + point.y, offset, color, FACE.FRONT, type, point );
         }
 
         if (isActive && gameBoard.gameState.showGhost ) {
@@ -168,7 +168,8 @@ public class Tetrad implements Pool.Poolable {
     Vector3 NOR = new Vector3();
     Vector2 UV1 = new Vector2();
     Vector2 UV2 = new Vector2();
-    private void computeFace(float x, float y, float z, Color color, FACE face, int type) {
+    Color tempColor = new Color();
+    private void computeFace(float x, float y, float z, Color color, FACE face, int type, TetradPiece point) {
         switch (face) {
             case TOP:
                 LL.set(x, y, z + blockHeight);
@@ -208,8 +209,17 @@ public class Tetrad implements Pool.Poolable {
                 UV2.set(33f/340f, 67/68f);
                 break;
         }
-
-        addFaceVerts(color);
+        tempColor.set(0,0,0, color.a);
+        switch (point.removeReason){
+            case CLEARED:
+            case NOT_REMOVED:
+                tempColor.g = 0; break;
+            case STOLEN: tempColor.g = 1f; break;
+        }
+        if (point.maxDestroyTimer != 0){
+            tempColor.r = 1.f - (point.getDestroyTimer() / point.maxDestroyTimer);
+        }
+        addFaceVerts(tempColor);
     }
 
     private void computeGhostFace(float x, float y, float z, Color color, FACE face) {
@@ -248,7 +258,8 @@ public class Tetrad implements Pool.Poolable {
         UV1.set((1 + 34f)/340f, 35/68f);
         UV2.set((34f * (2) - 1)/340f, 67/68f);
 
-        addFaceVerts(color);
+        tempColor.set(0,0,0, color.a);
+        addFaceVerts(tempColor);
     }
 
     private void addFaceVerts(Color color ) {
@@ -363,7 +374,7 @@ public class Tetrad implements Pool.Poolable {
 
     public boolean resolvingTetrad() {
         for (TetradPiece piece : points) {
-            if (piece.destroyTimer != null && piece.destroyTimer > 0) return true;
+            if (piece.getDestroyTimer() != null && piece.getDestroyTimer() > 0) return true;
         }
         return false;
     }
