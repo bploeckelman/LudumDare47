@@ -15,6 +15,7 @@ uniform sampler2D u_texture;
 uniform vec4 u_ambient;
 uniform vec4 u_direction_color;
 uniform vec3 u_direction_dir;
+uniform float u_time;
 
 //input from vertex shader
 varying vec2 v_texCoords;
@@ -22,9 +23,21 @@ varying vec4 v_color;
 varying vec3 v_normal;
 varying vec3 v_pos;
 
-
 void main() {
-    vec4 texSample = texture2D(u_texture, v_texCoords);
+
+    float divisions = 10.0;
+    float thickness = 0.06;
+    float delta = 0.1 / 2.0;
+    float x = fract(v_pos.x);
+    x = min(x, 1.0 - x);
+    float xdelta = fwidth(x);
+    x = smoothstep(x - xdelta, x + xdelta, thickness);
+    float y = fract(v_pos.y);
+    y = min(y, 1.0 - y);
+    float ydelta = fwidth(y);
+    y = smoothstep(y - ydelta, y + ydelta, thickness);
+    float grid =clamp(x + y, 0.0, 1.0);
+
 
     vec3 n = normalize (v_normal);
 
@@ -41,8 +54,16 @@ void main() {
         pointLightColor.rgb = max(pointLightColor.rgb, light.color.rgb * diff * atten);
     }
 
-    vec4 finalColor = texSample * max(directionIntensity * u_direction_color + pointLightColor, u_ambient);
+    vec4 diffuseColor = max(directionIntensity * (u_direction_color + pointLightColor), u_ambient);
 
-    finalColor.a *= v_color.a;
+    vec4 baseDif = vec4(1., 1., 1., .6);
+
+    vec4 lineDif = vec4(1., 0, 1., 1.);
+    lineDif.a *= 1. - (v_pos.y / 60.);
+
+    vec4 combineColor = mix(baseDif, lineDif, grid);
+
+    vec4 finalColor = combineColor * diffuseColor;
     gl_FragColor = finalColor;
+
 }

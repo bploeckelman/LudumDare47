@@ -63,6 +63,7 @@ public class Assets implements Disposable {
     public ShaderProgram cityShader2;
 
     public ShaderProgram blockShader;
+    public ShaderProgram boardShader;
 
     // audio
     public Sound sampleSound;
@@ -150,6 +151,8 @@ public class Assets implements Disposable {
         cityShader = loadShader("shaders/standard.vert", "shaders/city_descent.frag");
         cityShader2 = loadShader("shaders/standard.vert", "shaders/city3.frag");
         blockShader = loadShader("shaders/standard3d.vert", "shaders/cube.frag");
+        boardShader = loadShader("shaders/board.vert", "shaders/board.frag");
+
 
         loadAudio();
         return 1;

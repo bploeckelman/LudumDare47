@@ -168,7 +168,7 @@ public class Tetrad implements Pool.Poolable {
                 UL.set(x, y+1, z+blockHeight);
                 LR.set(x, y, z);
                 UR.set(x, y, z+blockHeight);
-                NOR.set(0,-1, 0);
+                NOR.set(-1,0, 0);
                 UV1.set(1/340f, 33/68f);
                 UV2.set(33f/340f, 67/68f);
                 break;
@@ -177,7 +177,7 @@ public class Tetrad implements Pool.Poolable {
                 UL.set(x+1, y, z+blockHeight);
                 LR.set(x+1, y+1, z);
                 UR.set(x+1, y+1, z+blockHeight);
-                NOR.set(0,1, 0);
+                NOR.set(1,0, 0);
                 UV1.set(1/340f, 33/68f);
                 UV2.set(33f/340f, 67/68f);
                 break;
@@ -187,7 +187,7 @@ public class Tetrad implements Pool.Poolable {
                 UL.set(x, y, z+blockHeight);
                 LR.set(x +1, y, z);
                 UR.set(x +1, y, z+blockHeight);
-                NOR.set(1,0, 0);
+                NOR.set(0,-1, 0);
                 UV1.set(1/340f, 33/68f);
                 UV2.set(33f/340f, 67/68f);
                 break;
@@ -211,14 +211,14 @@ public class Tetrad implements Pool.Poolable {
                 UL.set(x, y+1, z+blockHeight);
                 LR.set(x, y, z);
                 UR.set(x, y, z+blockHeight);
-                NOR.set(0,-1, 0);
+                NOR.set(-1,0, 0);
                 break;
             case RIGHT:
                 LL.set(x+1, y, z);
                 UL.set(x+1, y, z+blockHeight);
                 LR.set(x+1, y+1, z);
                 UR.set(x+1, y+1, z+blockHeight);
-                NOR.set(0,1, 0);
+                NOR.set(1,0, 0);
                 break;
 
             case FRONT:
@@ -226,7 +226,7 @@ public class Tetrad implements Pool.Poolable {
                 UL.set(x, y, z+blockHeight);
                 LR.set(x + 1, y, z);
                 UR.set(x + 1, y, z+blockHeight);
-                NOR.set(1,0, 0);
+                NOR.set(0,-1, 0);
                 break;
         }
         UV1.set((1 + 34f)/340f, 35/68f);
@@ -317,11 +317,8 @@ public class Tetrad implements Pool.Poolable {
 
     public void renderModels(Camera camera) {
         ShaderProgram shader = game.assets.blockShader;
-        shader.bind();
-        shader.setUniformMatrix("u_projTrans", camera.combined);
         mesh.setVertices(vertices);
         mesh.render(shader, GL20.GL_TRIANGLES, 0, verticesIndex/ NUM_COMPONENTS_PER_VERTEX);
-
     }
 
 

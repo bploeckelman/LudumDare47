@@ -5,17 +5,22 @@ import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.OrderedSet;
 import lando.systems.ld47.Audio;
 import lando.systems.ld47.GameState;
 import lando.systems.ld47.input.PlayerInput;
+import lando.systems.ld47.utils.OrbitPointLight;
+import lando.systems.ld47.utils.PointLight;
 
 public class GameBoard {
     public static int TILESWIDE = 10;
     public static int TILESHIGH = 20;
+    public static int MAX_POINT_LIGHTS = 5;
 
     public final GameState gameState;
     private final PlayerInput playerInput;
@@ -35,6 +40,12 @@ public class GameBoard {
     int blocksToFallTilRemove;
     private boolean previousBlockCleared = false;
     PerspectiveCamera boardCam;
+    private Color ambientColor = new Color(.3f, .3f, .3f, 1f);
+    private Color directionColor = new Color(.6f, .6f, .6f, 1f);
+    private Vector3 directionLight = new Vector3(.1f, -.5f, .5f).nor();
+
+    public PointLight[] pointLights;
+    private GameBackPlate backPlate;
 
     public GameBoard(GameState gameState) {
         this.gameState = gameState;
@@ -61,6 +72,14 @@ public class GameBoard {
         boardCam.lookAt(5f, 8, 0);
         boardCam.update();
 
+        backPlate = new GameBackPlate();
+
+        pointLights = new PointLight[MAX_POINT_LIGHTS];
+        pointLights[0] = new OrbitPointLight(0, new Vector3(0, 0, 15), new Color(.6f, 0, .6f, 1f), new Vector3(.5f, .5f, 0));
+        pointLights[1] = new OrbitPointLight(1, new Vector3(0, 0, -15), new Color(0f, .6f, .6f, 1f), new Vector3(-.5f, .5f, 0f));
+        pointLights[2] = new OrbitPointLight(2, new Vector3(-15, 0, 0), new Color(.6f, .6f, 0f, 1f), new Vector3(0, 1, 0));
+        pointLights[3] = new PointLight(3, new Vector3(-30, 10, 20), new Color(.3f, .3f, .3f, 1f));
+        pointLights[4] = new PointLight(4, new Vector3(-30, 10, 20), new Color(.3f, .3f, .3f, 1f));
     }
 
     // this happens in an update loop, so it's cool
@@ -90,6 +109,11 @@ public class GameBoard {
 
     public void update(float dt) {
         Tetrad.GLOBAL_ANIM += dt;
+
+        for (PointLight light : pointLights) {
+            light.update(dt);
+        }
+        backPlate.update(dt);
 
         for (int i = tetrads.size - 1; i >= 0; i--) {
             Tetrad tetrad = tetrads.get(i);
@@ -190,6 +214,7 @@ public class GameBoard {
     }
 
 
+
     public void render(SpriteBatch batch) {
 
 
@@ -200,21 +225,35 @@ public class GameBoard {
 
         gameFB.begin();
         Gdx.gl.glClearColor(0, 0, 0, 0);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-
-        batch.setProjectionMatrix(boardCam.combined);
-        batch.begin();
-        batch.setColor(1f, 1f, 1f, .8f);
-        batch.draw(gameState.assets.gameBoardTexture, 0, 0, TILESWIDE, TILESHIGH);
-        batch.setColor(Color.WHITE);
-        batch.end();
-
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+
+        ShaderProgram shader = gameState.gameScreen.assets.boardShader;
+        shader.bind();
+        shader.setUniformMatrix("u_projTrans", boardCam.combined);
+        shader.setUniformf("u_ambient", ambientColor);
+        shader.setUniformf("u_direction_dir", directionLight);
+        shader.setUniformf("u_direction_color", directionColor);
+        for(PointLight light : pointLights){
+            light.addToShader(shader);
+        }
+        backPlate.renderMesh(shader);
+
+
+
+        gameState.gameScreen.assets.blockShader.bind();
+        gameState.gameScreen.assets.blockShader.setUniformMatrix("u_projTrans", boardCam.combined);
         gameState.gameScreen.assets.blockShader.setUniformi("u_texture", 0);
         gameState.gameScreen.assets.blockTextures.bind(0);
+
+
+        gameState.gameScreen.assets.blockShader.setUniformf("u_ambient", ambientColor);
+        gameState.gameScreen.assets.blockShader.setUniformf("u_direction_dir", directionLight);
+        gameState.gameScreen.assets.blockShader.setUniformf("u_direction_color", directionColor);
+        for(PointLight light : pointLights){
+            light.addToShader(gameState.gameScreen.assets.blockShader);
+        }
 
         for (Tetrad tetrad : tetrads) {
             tetrad.renderModels(boardCam);

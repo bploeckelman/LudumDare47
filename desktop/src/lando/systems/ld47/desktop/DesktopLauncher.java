@@ -11,7 +11,7 @@ public class DesktopLauncher {
 		config.setTitle(Config.title);
 		config.setWindowedMode(Config.windowWidth, Config.windowHeight);
 		config.setResizable(Config.resizable);
-		config.setBackBufferConfig(8,8,8,8,16,0,2);
+		config.setBackBufferConfig(8,8,8,8,16,0,16);
 		new Lwjgl3Application(new Game(), config);
 	}
 }
