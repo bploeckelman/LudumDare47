@@ -313,11 +313,18 @@ public class GameBoard {
 
         batch.begin();
         batch.setProjectionMatrix(gameState.gameScreen.shaker.getCombinedMatrix());
-//        if (activeTetrad != null) {
-//            activeTetrad.render(batch);
-//        }
+
 
         batch.draw(gameTexture, gameBounds.x, gameBounds.y + gameBounds.height, gameBounds.width, -gameBounds.height);
+        // Draw anything else in screen space here
+
+//        if (activeTetrad != null) {
+//            for (TetradPiece piece : activeTetrad.points) {
+//                Vector2 p = getScreenCoordOfTetradPiece(piece);
+//                batch.draw(gameState.assets.whiteCircle, p.x, p.y, 4, 4);
+//            }
+//        }
+
     }
 
 
@@ -537,6 +544,23 @@ public class GameBoard {
                 }
             }
         }
+    }
+
+    Vector3 tempVec3 = new Vector3();
+    public Vector2 getScreenCoordsOfTetrad(Tetrad tetrad) {
+        tempVec3.set(tetrad.getCenter().x + tetrad.origin.x, tetrad.getCenter().y + tetrad.origin.y, 1);
+        return getScreenCoordFromGameCoord(tempVec3);
+    }
+
+    public Vector2 getScreenCoordOfTetradPiece(TetradPiece piece) {
+        tempVec3.set(piece.owner.origin.x + piece.x + .5f, piece.owner.origin.y + piece.y + .5f, .5f);
+        return getScreenCoordFromGameCoord(tempVec3);
+    }
+
+    Vector2 tempVec2 = new Vector2();
+    public Vector2 getScreenCoordFromGameCoord(Vector3 gameCoord) {
+        boardCam.project(gameCoord, gameBounds.x, gameBounds.y, gameBounds.width, gameBounds.height);
+        return tempVec2.set(gameCoord.x, gameCoord.y);
     }
 
     public boolean canTransportTetrad() {

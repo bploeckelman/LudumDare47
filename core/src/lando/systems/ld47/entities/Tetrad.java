@@ -443,70 +443,70 @@ public class Tetrad implements Pool.Poolable, IShootable {
         switch (type) {
             case 0:
                 // I
-                points.add(new TetradPiece(0, 2, color));
-                points.add(new TetradPiece(1, 2, color));
-                points.add(new TetradPiece(2, 2, color));
-                points.add(new TetradPiece(3, 2, color));
+                points.add(new TetradPiece(this, 0, 2, color));
+                points.add(new TetradPiece(this, 1, 2, color));
+                points.add(new TetradPiece(this, 2, 2, color));
+                points.add(new TetradPiece(this, 3, 2, color));
                 center.set(2, 2.5f);
                 bounds = 3;
                 color = new Color(Color.BLUE);
                 break;
             case 1:
                 // L
-                points.add(new TetradPiece(0, 2, color));
-                points.add(new TetradPiece(0, 1, color));
-                points.add(new TetradPiece(1, 1, color));
-                points.add(new TetradPiece(2, 1, color));
+                points.add(new TetradPiece(this, 0, 2, color));
+                points.add(new TetradPiece(this, 0, 1, color));
+                points.add(new TetradPiece(this, 1, 1, color));
+                points.add(new TetradPiece(this, 2, 1, color));
                 center.set(1.5f, 2f);
                 bounds = 2;
                 color = new Color(Color.GREEN);
                 break;
             case 2:
                 // Other L
-                points.add(new TetradPiece(0, 1, color));
-                points.add(new TetradPiece(1, 1, color));
-                points.add(new TetradPiece(2, 1, color));
-                points.add(new TetradPiece(2, 2, color));
+                points.add(new TetradPiece(this, 0, 1, color));
+                points.add(new TetradPiece(this, 1, 1, color));
+                points.add(new TetradPiece(this, 2, 1, color));
+                points.add(new TetradPiece(this, 2, 2, color));
                 center.set(1.5f, 2f);
                 bounds = 2;
                 color = new Color(Color.ORANGE);
                 break;
             case 3:
                 // square
-                points.add(new TetradPiece(0, 0, color));
-                points.add(new TetradPiece(0, 1, color));
-                points.add(new TetradPiece(1, 0, color));
-                points.add(new TetradPiece(1, 1, color));
+                points.add(new TetradPiece(this, 0, 0, color));
+                points.add(new TetradPiece(this, 0, 1, color));
+                points.add(new TetradPiece(this, 1, 0, color));
+                points.add(new TetradPiece(this, 1, 1, color));
                 center.set(1f, 1f);
                 bounds = 1;
                 color = new Color(Color.RED);
                 break;
             case 4:
                 // S
-                points.add(new TetradPiece(0, 1, color));
-                points.add(new TetradPiece(1, 1, color));
-                points.add(new TetradPiece(1, 2, color));
-                points.add(new TetradPiece(2, 2, color));
+                points.add(new TetradPiece(this, 0, 1, color));
+                points.add(new TetradPiece(this, 1, 1, color));
+                points.add(new TetradPiece(this, 1, 2, color));
+                points.add(new TetradPiece(this, 2, 2, color));
                 center.set(1.5f, 2f);
                 bounds = 2;
                 color = new Color(Color.RED);
                 break;
             case 5:
                 // other S
-                points.add(new TetradPiece(0, 2, color));
-                points.add(new TetradPiece(1, 2, color));
-                points.add(new TetradPiece(1, 1, color));
-                points.add(new TetradPiece(2, 1, color));
+                points.add(new TetradPiece(this, 0, 2, color));
+                points.add(new TetradPiece(this, 1, 2, color));
+                points.add(new TetradPiece(this, 1, 1, color));
+                points.add(new TetradPiece(this, 2, 1, color));
                 center.set(1.5f, 2f);
                 bounds = 2;
                 color = new Color(Color.BLUE);
                 break;
             case 6:
                 // T
-                points.add(new TetradPiece(0, 1, color));
-                points.add(new TetradPiece(1, 1, color));
-                points.add(new TetradPiece(1, 2, color));
-                points.add(new TetradPiece(2, 1, color));
+                points.add(new TetradPiece(this, 0, 1, color));
+                points.add(new TetradPiece(this, 1, 1, color));
+                points.add(new TetradPiece(this, 1, 2, color));
+                points.add(new TetradPiece(this, 2, 1, color));
                 center.set(1.5f, 2f);
                 bounds = 2;
                 color = new Color(Color.RED);

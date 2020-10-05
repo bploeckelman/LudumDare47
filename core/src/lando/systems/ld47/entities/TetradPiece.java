@@ -13,9 +13,10 @@ public class TetradPiece {
     private float destroyDelay;
     public boolean remove;
     public RemoveReason removeReason;
+    public Tetrad owner;
 
-    public TetradPiece(int x, int y, Color color) {
-
+    public TetradPiece(Tetrad owner, int x, int y, Color color) {
+        this.owner = owner;
         this.x = x;
         this.y = y;
         this.color = color;
