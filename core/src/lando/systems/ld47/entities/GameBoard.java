@@ -136,17 +136,19 @@ public class GameBoard {
             }
         }
 
+        boolean foundTiles = false;
         for (int y = TILESHIGH - 1; y >= 0; y--) {
-            int cellsReady = 0;
+            int cellsInRow = 0;
             for (int x = 0; x < TILESWIDE; x++) {
                 for (Tetrad tetrad : tetrads) {
                     TetradPiece piece = tetrad.getPieceAt(x, y);
-                    if (piece != null && piece.remove) {
-                        cellsReady++;
+                    if (piece != null) {
+                        cellsInRow++;
+                        foundTiles = true;
                     }
                 }
             }
-            if (cellsReady == TILESWIDE) {
+            if (cellsInRow == 0 && foundTiles) {
                 deleteRow(y);
             }
         }

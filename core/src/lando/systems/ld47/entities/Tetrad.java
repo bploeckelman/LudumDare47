@@ -85,8 +85,12 @@ public class Tetrad implements Pool.Poolable {
             position.set(gameBoard.gameBounds.x + origin.x * POINT_WIDTH, gameBoard.gameBounds.y + origin.y * POINT_WIDTH);
         }
 
-        for (TetradPiece point : points) {
+        for (int i = points.size -1; i >= 0; i--) {
+            TetradPiece point = points.get(i);
             point.update(dt);
+            if (point.remove){
+                points.removeIndex(i);
+            }
         }
 
         int minX = 4;
