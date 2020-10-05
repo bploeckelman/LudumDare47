@@ -31,8 +31,8 @@ public class GameScreen extends BaseScreen{
 
         opponent = new Opponent(this);
         shader = game.idkfa ? game.assets.cityShader2 : game.assets.cityShader;
-//        playMusic(Audio.Musics.blade_runner);
-        gameState.startMusic();
+        playMusic(Audio.Musics.blade_runner);
+//        gameState.startMusic();
 
 
         leaderboardService.getScores();
@@ -89,6 +89,12 @@ public class GameScreen extends BaseScreen{
             particles.draw(batch, Particles.Layer.overlay);
         }
         batch.end();
+    }
+
+    @Override
+    public void renderFrameBuffers(SpriteBatch batch) {
+        super.renderFrameBuffers(batch);
+        gameBoard.renderFrameBuffer(batch);
     }
 
     public void gameOver() {

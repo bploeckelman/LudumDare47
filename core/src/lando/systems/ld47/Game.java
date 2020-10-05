@@ -1,14 +1,17 @@
 package lando.systems.ld47;
 
+import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;
+import aurelienribon.tweenengine.primitives.MutableFloat;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -25,10 +28,28 @@ public class Game extends ApplicationAdapter {
 	public Audio audio;
 
 	public BaseScreen currentScreen;
+	private BaseScreen nextScreen;
+	private MutableFloat transitionPercent;
+	private FrameBuffer transitionFBO;
+	private FrameBuffer originalFBO;
+	Texture originalTexture;
+	Texture transitionTexture;
+	ShaderProgram transitionShader;
+	boolean transitioning;
 	public boolean idkfa;
 
 	@Override
 	public void create () {
+		transitionPercent = new MutableFloat(0);
+		transitionFBO = new FrameBuffer(Pixmap.Format.RGBA8888, Config.windowWidth, Config.windowHeight, false);
+		transitionTexture = transitionFBO.getColorBufferTexture();
+
+
+		originalFBO = new FrameBuffer(Pixmap.Format.RGBA8888, Config.windowWidth, Config.windowHeight, false);
+		originalTexture = originalFBO.getColorBufferTexture();
+
+		transitioning = false;
+
 		if (tween == null) {
 			tween = new TweenManager();
 			Tween.setWaypointsLimit(4);
@@ -70,12 +91,69 @@ public class Game extends ApplicationAdapter {
 		tween.update(dt);
 		audio.update(dt);
 		currentScreen.update(dt);
+		currentScreen.renderFrameBuffers(assets.batch);
 
-		currentScreen.render(assets.batch);
+		if (nextScreen != null) {
+			nextScreen.update(dt);
+			nextScreen.renderFrameBuffers(assets.batch);
+			transitionFBO.begin();
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			nextScreen.render(assets.batch);
+			transitionFBO.end();
+
+			originalFBO.begin();
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			currentScreen.render(assets.batch);
+			originalFBO.end();
+
+			assets.batch.setShader(transitionShader);
+			assets.batch.begin();
+			originalTexture.bind(1);
+			transitionShader.setUniformi("u_texture1", 1);
+			transitionTexture.bind(0);
+			transitionShader.setUniformf("u_percent", transitionPercent.floatValue());
+			assets.batch.setColor(Color.WHITE);
+			assets.batch.draw(transitionTexture, 0,0, Config.windowWidth, Config.windowHeight);
+			assets.batch.end();
+			assets.batch.setShader(null);
+		} else {
+			currentScreen.render(assets.batch);
+		}
 	}
 
 	public void setScreen(BaseScreen screen) {
-		currentScreen = screen;
+		setScreen(screen, null, .5f);
+	}
+
+	public void setScreen(final BaseScreen newScreen, ShaderProgram transitionType, float transitionSpeed) {
+		if (nextScreen != null) return;
+		if (transitioning) return; // only want one transition
+		if (currentScreen == null) {
+			currentScreen = newScreen;
+		} else {
+			transitioning = true;
+			if (transitionType == null) {
+				transitionShader = assets.randomTransitions.get(MathUtils.random(assets.randomTransitions.size - 1));
+			} else {
+				transitionShader = transitionType;
+			}
+			transitionPercent.setValue(0);
+			Timeline.createSequence()
+					.pushPause(.1f)
+					.push(Tween.call((i, baseTween) -> nextScreen = newScreen))
+					.push(Tween.to(transitionPercent, 1, transitionSpeed)
+							.target(1))
+					.push(Tween.call((i, baseTween) -> {
+						currentScreen = nextScreen;
+						nextScreen = null;
+						transitioning = false;
+					}))
+					.start(tween);
+		}
+	}
+
+	public BaseScreen getScreen() {
+		return currentScreen;
 	}
 
 	@Override

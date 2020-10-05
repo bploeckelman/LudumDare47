@@ -250,12 +250,21 @@ public class GameBoard {
 
     public void render(SpriteBatch batch) {
 
+        batch.setProjectionMatrix(gameState.gameScreen.shaker.getCombinedMatrix());
 
-//        for (Tetrad tetrad : tetrads) {
-//            tetrad.render(batch);
+        batch.draw(gameTexture, gameBounds.x, gameBounds.y + gameBounds.height, gameBounds.width, -gameBounds.height);
+        // Draw anything else in screen space here
+
+//        if (activeTetrad != null) {
+//            for (TetradPiece piece : activeTetrad.points) {
+//                Vector2 p = getScreenCoordOfTetradPiece(piece);
+//                batch.draw(gameState.assets.whiteCircle, p.x, p.y, 4, 4);
+//            }
 //        }
-        batch.end();
 
+    }
+
+    public void renderFrameBuffer(SpriteBatch batch) {
         gameFB.begin();
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
@@ -309,22 +318,6 @@ public class GameBoard {
 
         Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
         gameFB.end();
-
-
-        batch.begin();
-        batch.setProjectionMatrix(gameState.gameScreen.shaker.getCombinedMatrix());
-
-
-        batch.draw(gameTexture, gameBounds.x, gameBounds.y + gameBounds.height, gameBounds.width, -gameBounds.height);
-        // Draw anything else in screen space here
-
-//        if (activeTetrad != null) {
-//            for (TetradPiece piece : activeTetrad.points) {
-//                Vector2 p = getScreenCoordOfTetradPiece(piece);
-//                batch.draw(gameState.assets.whiteCircle, p.x, p.y, 4, 4);
-//            }
-//        }
-
     }
 
 
