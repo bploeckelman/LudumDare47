@@ -10,6 +10,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
@@ -41,7 +43,10 @@ public class SettingsUI extends UserInterface {
     private final Color buttonHoverColor = dark_violet;
 
     private boolean buttonHoveredOk;
-    private boolean transitionComplete;
+    private float transitionAmount;
+    private float transitionTarget;
+    private Interpolation boundsInterpolation = Interpolation.swingOut;
+    private Interpolation alphaInterpolation = Interpolation.linear;
 
     private final String headerText = "Settings";
     private final String buttonTextOk = "Ok";
@@ -78,7 +83,8 @@ public class SettingsUI extends UserInterface {
         this.alpha = new MutableFloat(0f);
 
         this.buttonHoveredOk = false;
-        this.transitionComplete = false;
+        this.transitionAmount = 0;
+        this.transitionTarget = 0;
 
         this.bounds.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0f, 0f);
 
@@ -132,7 +138,21 @@ public class SettingsUI extends UserInterface {
 
     @Override
     public void update(float dt) {
+        float transitionDt = dt;
+        if (transitionAmount != transitionTarget){
+            if (Math.abs(transitionAmount - transitionTarget) < transitionDt){
+                transitionAmount = transitionTarget;
+            } else {
+                transitionAmount += Math.signum(transitionTarget - transitionAmount) * transitionDt;
+            }
+        }
         if (isHidden()) return;
+        float boundsamount = MathUtils.clamp(transitionAmount * 2f, 0f, 1f);
+        bounds.set(MathUtils.lerp(finalWindowBounds.x + finalWindowBounds.width/2f, finalWindowBounds.x ,boundsInterpolation.apply(boundsamount)),
+                   MathUtils.lerp(finalWindowBounds.y + finalWindowBounds.height/2f, finalWindowBounds.y ,boundsInterpolation.apply(boundsamount)),
+                   MathUtils.lerp(0, finalWindowBounds.width , boundsInterpolation.apply(boundsamount)),
+                   MathUtils.lerp(0, finalWindowBounds.height ,boundsInterpolation.apply(boundsamount)));
+        alpha.setValue(transitionAmount);
 
         // temp for testing
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
@@ -146,7 +166,7 @@ public class SettingsUI extends UserInterface {
         buttonHoveredOk = boundsButtonOk.contains(mousePos.x, mousePos.y);
 
         // don't allow input until show() tween is fully complete
-        if (!transitionComplete) return;
+        if (transitionAmount != 1) return;
 
         if (Gdx.input.justTouched()) {
             touchPos.set(mousePos);
@@ -203,7 +223,7 @@ public class SettingsUI extends UserInterface {
         }
 
         // draw content
-        if (transitionComplete) {
+        if (transitionAmount == 1) {
             // header text
             float headerPosY, headerHeight;
             {
@@ -410,23 +430,23 @@ public class SettingsUI extends UserInterface {
     public void show() {
         super.show();
 
-        alpha.setValue(0f);
+//        alpha.setValue(0f);
+        transitionTarget = 1;
 
-        transitionComplete = false;
-        Timeline.createSequence()
-                .push(
-                        Timeline.createParallel()
-                                .push(
-                                        Tween.to(alpha, -1, 0.4f).target(1f)
-                                )
-                                .push(
-                                        Tween.to(bounds, RectangleAccessor.XYWH, 0.5f)
-                                                .target(finalWindowBounds.x, finalWindowBounds.y, finalWindowBounds.width, finalWindowBounds.height)
-                                                .ease(Bounce.OUT)
-                                )
-                )
-                .setCallback((i, baseTween) -> transitionComplete = true)
-                .start(tween);
+//        Timeline.createSequence()
+//                .push(
+//                        Timeline.createParallel()
+//                                .push(
+//                                        Tween.to(alpha, -1, 0.4f).target(1f)
+//                                )
+//                                .push(
+//                                        Tween.to(bounds, RectangleAccessor.XYWH, 0.5f)
+//                                                .target(finalWindowBounds.x, finalWindowBounds.y, finalWindowBounds.width, finalWindowBounds.height)
+//                                                .ease(Bounce.OUT)
+//                                )
+//                )
+//                .setCallback((i, baseTween) -> transitionComplete = true)
+//                .start(tween);
     }
 
 
@@ -435,23 +455,33 @@ public class SettingsUI extends UserInterface {
         float centerX = camera.viewportWidth  / 2f;
         float centerY = camera.viewportHeight / 2f;
 
-        alpha.setValue(1f);
-
-        transitionComplete = false;
-        Timeline.createSequence()
-                .push(
-                        Timeline.createParallel()
-                                .push(
-                                        Tween.to(alpha, -1, 0.4f).target(0f)
-                                )
-                                .push(
-                                        Tween.to(bounds, RectangleAccessor.XYWH, 0.5f)
-                                                .target(centerX, centerY, 0f, 0f)
-                                                .ease(Quad.OUT)
-                                )
-                )
-                .setCallback((i, baseTween) -> SettingsUI.super.hide())
-                .start(tween);
+//        alpha.setValue(1f);
+        transitionTarget = 0;
+//        transitionComplete = false;
+//        Timeline.createSequence()
+//                .push(
+//                        Timeline.createParallel()
+//                                .push(
+//                                        Tween.to(alpha, -1, 0.4f).target(0f)
+//                                )
+//                                .push(
+//                                        Tween.to(bounds, RectangleAccessor.XYWH, 0.5f)
+//                                                .target(centerX, centerY, 0f, 0f)
+//                                                .ease(Quad.OUT)
+//                                )
+//                )
+//                .setCallback((i, baseTween) -> SettingsUI.super.hide())
+//                .start(tween);
     }
 
+
+    @Override
+    public boolean isShown() {
+        return transitionAmount > 0;
+    }
+
+    @Override
+    public boolean isHidden() {
+        return transitionAmount == 0;
+    }
 }
