@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 
 public class Audio implements Disposable {
     public static final float MUSIC_VOLUME = 0.5f;
-    public static final float SOUND_VOLUME = 0.1f;
+    public static final float SOUND_VOLUME = 0.5f;
 
     public static boolean soundEnabled = true;
     public static boolean musicEnabled = true;
