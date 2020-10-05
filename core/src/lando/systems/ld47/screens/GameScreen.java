@@ -63,7 +63,6 @@ public class GameScreen extends BaseScreen{
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || playerInput.isPauseButtonJustPressed()) {
             gameHud.toggleSettings();
-            gameBoard.togglePause();
         }
 
         shader = game.idkfa ? game.assets.cityShader2 : game.assets.cityShader;
@@ -123,14 +122,6 @@ public class GameScreen extends BaseScreen{
 
     public boolean isPaused() {
         return gameBoard.isPaused();
-    }
-
-    public void unpause() {
-        gameBoard.unpause();
-    }
-
-    public void pause() {
-        gameBoard.pause();
     }
 
     public boolean isGamepadConnected() {

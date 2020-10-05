@@ -65,6 +65,7 @@ public class SettingsUI extends UserInterface {
     private final Toggle musicToggle;
     private final Toggle soundToggle;
     private final Toggle ghostToggle;
+    private final Toggle bitchModeToggle;
     private final float columnWidth;
     private final float columnHeight;
 
@@ -91,7 +92,7 @@ public class SettingsUI extends UserInterface {
                 finalWindowBounds.x + finalWindowBounds.width / 2f - buttonWidth / 2f,
                 finalWindowBounds.y + margin_button, buttonWidth, 80f);
 
-        int rows = 3;
+        int rows = 4;
         float headerHeight = 50f; // ??? just a guess
         float rowMargin = 20f;
         float yTop = finalWindowBounds.y + finalWindowBounds.height - headerHeight - rowMargin;
@@ -110,14 +111,20 @@ public class SettingsUI extends UserInterface {
         this.ghostToggle.boundsOn  .set(ghostToggle.bounds.x + 1f * columnWidth + inset, ghostToggle.bounds.y + inset, columnWidth - 2f * inset, columnHeight - 2f * inset);
         this.ghostToggle.boundsOff .set(ghostToggle.bounds.x + 2f * columnWidth + inset, ghostToggle.bounds.y + inset, columnWidth - 2f * inset, columnHeight - 2f * inset);
 
+        this.bitchModeToggle = new Toggle("Brick Deckard");
+        this.bitchModeToggle.bounds.set(finalWindowBounds.x + rowMargin, yBottom + rowHeight, rowWidth, rowHeight);
+        this.bitchModeToggle.boundsText.set(bitchModeToggle.bounds.x + 0f * columnWidth + inset, bitchModeToggle.bounds.y + inset, columnWidth - 2f * inset, columnHeight - 2f * inset);
+        this.bitchModeToggle.boundsOn  .set(bitchModeToggle.bounds.x + 1f * columnWidth + inset, bitchModeToggle.bounds.y + inset, columnWidth - 2f * inset, columnHeight - 2f * inset);
+        this.bitchModeToggle.boundsOff .set(bitchModeToggle.bounds.x + 2f * columnWidth + inset, bitchModeToggle.bounds.y + inset, columnWidth - 2f * inset, columnHeight - 2f * inset);
+
         this.soundToggle = new Toggle("Sound fx");
-        this.soundToggle.bounds.set(finalWindowBounds.x + rowMargin, yBottom + rowHeight, rowWidth, rowHeight);
+        this.soundToggle.bounds.set(finalWindowBounds.x + rowMargin, yBottom + rowHeight * 2f, rowWidth, rowHeight);
         this.soundToggle.boundsText.set(soundToggle.bounds.x + 0f * columnWidth + inset, soundToggle.bounds.y + inset, columnWidth - 2f * inset, columnHeight - 2f * inset);
         this.soundToggle.boundsOn  .set(soundToggle.bounds.x + 1f * columnWidth + inset, soundToggle.bounds.y + inset, columnWidth - 2f * inset, columnHeight - 2f * inset);
         this.soundToggle.boundsOff .set(soundToggle.bounds.x + 2f * columnWidth + inset, soundToggle.bounds.y + inset, columnWidth - 2f * inset, columnHeight - 2f * inset);
 
         this.musicToggle = new Toggle("Music");
-        this.musicToggle.bounds.set(finalWindowBounds.x + rowMargin, yBottom + 2f * rowHeight, rowWidth, rowHeight);
+        this.musicToggle.bounds.set(finalWindowBounds.x + rowMargin, yBottom + 3f * rowHeight, rowWidth, rowHeight);
         this.musicToggle.boundsText.set(musicToggle.bounds.x + 0f * columnWidth + inset, musicToggle.bounds.y + inset, columnWidth - 2f * inset, columnHeight - 2f * inset);
         this.musicToggle.boundsOn  .set(musicToggle.bounds.x + 1f * columnWidth + inset, musicToggle.bounds.y + inset, columnWidth - 2f * inset, columnHeight - 2f * inset);
         this.musicToggle.boundsOff .set(musicToggle.bounds.x + 2f * columnWidth + inset, musicToggle.bounds.y + inset, columnWidth - 2f * inset, columnHeight - 2f * inset);
@@ -134,17 +141,17 @@ public class SettingsUI extends UserInterface {
 
         mousePos.set(Gdx.input.getX(), Gdx.input.getY(), 0f);
         camera.unproject(mousePos);
+        bitchModeToggle.enabled = !gameState.isBitchMode();
 
         buttonHoveredOk = boundsButtonOk.contains(mousePos.x, mousePos.y);
 
         // don't allow input until show() tween is fully complete
         if (!transitionComplete) return;
 
-        if (Gdx.input.isTouched()) {
+        if (Gdx.input.justTouched()) {
             touchPos.set(mousePos);
 
             if (boundsButtonOk.contains(touchPos.x, touchPos.y)) {
-                gameState.gameScreen.unpause();
                 hide();
             }
 
@@ -170,6 +177,12 @@ public class SettingsUI extends UserInterface {
             } else if (ghostToggle.boundsOff.contains(touchPos.x, touchPos.y)) {
                 ghostToggle.enabled = false;
                 gameState.hideGhost();
+            }
+
+            if (bitchModeToggle.boundsOn.contains(touchPos.x, touchPos.y)) {
+                gameState.setBitchMode(false);
+            } else if (bitchModeToggle.boundsOff.contains(touchPos.x, touchPos.y)) {
+                gameState.setBitchMode(true);
             }
         }
     }
@@ -324,6 +337,47 @@ public class SettingsUI extends UserInterface {
                     assets.font.getData().setScale(0.7f);
 
                 }
+
+                // - bitch mode toggle (on, off)
+                {
+                    // description text
+                    assets.font.getData().setScale(1.25f);
+                    Color bitchTextColor = (bitchModeToggle.enabled) ? deep_sky_blue : Color.DARK_GRAY;
+                    layout.setText(assets.font, bitchModeToggle.description, bitchTextColor, bitchModeToggle.boundsText.width, Align.center, false);
+                    assets.font.draw(batch, layout, bitchModeToggle.boundsText.x, bitchModeToggle.boundsText.y + bitchModeToggle.boundsText.height / 2f + layout.height / 2f);
+                    assets.font.getData().setScale(0.7f);
+
+                    // "on" button
+                    if (bitchModeToggle.enabled) {
+                        batch.setColor(aqua);
+                        batch.draw(assets.whitePixel, bitchModeToggle.boundsOn.x, bitchModeToggle.boundsOn.y, bitchModeToggle.boundsOn.width, bitchModeToggle.boundsOn.height);
+                    }
+                    batch.setColor(Color.WHITE);
+                    assets.screws.draw(batch, bitchModeToggle.boundsOn.x, bitchModeToggle.boundsOn.y, bitchModeToggle.boundsOn.width, bitchModeToggle.boundsOn.height);
+
+                    // "on" button text
+                    assets.font.getData().setScale(1f);
+                    Color bitchButtonOnTextColor = (bitchModeToggle.enabled) ? deep_pink : Color.DARK_GRAY;
+                    layout.setText(assets.font, "On", bitchButtonOnTextColor, bitchModeToggle.boundsOn.width, Align.center, false);
+                    assets.font.draw(batch, layout, bitchModeToggle.boundsOn.x, bitchModeToggle.boundsOn.y + bitchModeToggle.boundsOn.height / 2f + layout.height / 2f);
+                    assets.font.getData().setScale(0.7f);
+
+                    // "off" button
+                    if (!bitchModeToggle.enabled) {
+                        batch.setColor(aqua);
+                        batch.draw(assets.whitePixel, bitchModeToggle.boundsOff.x, bitchModeToggle.boundsOff.y, bitchModeToggle.boundsOff.width, bitchModeToggle.boundsOff.height);
+                    }
+                    batch.setColor(Color.WHITE);
+                    assets.screws.draw(batch, bitchModeToggle.boundsOff.x, bitchModeToggle.boundsOff.y, bitchModeToggle.boundsOff.width, bitchModeToggle.boundsOff.height);
+
+                    // "off" button text
+                    assets.font.getData().setScale(1f);
+                    Color ghostButtonOffTextColor = (!bitchModeToggle.enabled) ? deep_pink : Color.DARK_GRAY;
+                    layout.setText(assets.font, "Off", ghostButtonOffTextColor, bitchModeToggle.boundsOff.width, Align.center, false);
+                    assets.font.draw(batch, layout, bitchModeToggle.boundsOff.x, bitchModeToggle.boundsOff.y + bitchModeToggle.boundsOff.height / 2f + layout.height / 2f);
+                    assets.font.getData().setScale(0.7f);
+
+                }
             }
 
             // ok button
@@ -344,6 +398,7 @@ public class SettingsUI extends UserInterface {
     }
 
     public void toggle() {
+        Gdx.app.log("Setting", "Toggled");
         if (isHidden()) {
             show();
         } else {

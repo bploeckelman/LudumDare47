@@ -55,7 +55,6 @@ public class GameBoard {
 
     public PointLight[] pointLights;
     private GameBackPlate backPlate;
-    private boolean paused = false;
 
     private DecalBatch decalBatch;
 
@@ -132,7 +131,7 @@ public class GameBoard {
     }
 
     public void update(float dt) {
-        if (paused) return;
+        if (isPaused()) return;
 
         Tetrad.GLOBAL_ANIM += dt;
 
@@ -575,19 +574,8 @@ public class GameBoard {
 
     }
 
-    public void togglePause() {
-        paused = !paused;
-    }
-
     public boolean isPaused() {
-        return paused;
+        return gameState.gameScreen.gameHud.getSettingsUI().isShown();
     }
 
-    public void unpause() {
-        paused = false;
-    }
-
-    public void pause() {
-        paused = true;
-    }
 }
