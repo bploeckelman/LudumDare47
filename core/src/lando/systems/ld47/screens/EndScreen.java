@@ -36,7 +36,7 @@ public class EndScreen extends BaseScreen {
     static String developers = "{COLOR=gray}Developed by:{COLOR=white}\n Doug Graham\n Brian Ploeckelman\n Brian Rossman\n Jeffrey Hwang";
     static String artists = "{COLOR=gray}Art by:{COLOR=white}\n Matt Neumann";
     static String emotionalSupport = "{COLOR=cyan}Emotional Support:{COLOR=white}\n Asuka and  Cherry";
-    static String music = "{COLOR=gray}Sound by:{COLOR=white}\n Peat Valeo";
+    static String music = "{COLOR=gray}Sound by:{COLOR=white}\n Pete Valeo";
     static String libgdx = "Made with {COLOR=red}<3{COLOR=white} and LibGDX";
     static String disclaimer = "Disclaimer!!!\nNo animals were harmed in the making of this game (they got lots of pets tho)";//Pets were not harmed in making of this game.";
 
