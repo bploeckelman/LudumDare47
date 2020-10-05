@@ -182,7 +182,7 @@ public class GameBoard {
             if (!tetrads.contains(tetradToRemove, true)) {
                 tetradToRemove = null;
             }
-            checkForPullOut();
+            // checkForPullOut();
 
             if (activeTetrad != null) {
                 PlayerInput.TriggerState state = playerInput.isRightPressed();

@@ -30,7 +30,7 @@ public class Opponent {
 
     public final Vector2 position = new Vector2();
     public Vector2 size = new Vector2();
-    private Direction direction = Direction.right;
+    public Direction direction = Direction.right;
 
     private State state = State.idle;
 
@@ -47,7 +47,7 @@ public class Opponent {
     }
 
     public void setState(State state) {
-        this.state = State.idle; //state;
+        this.state = state;
 
         switch (state) {
             case punch:
@@ -56,22 +56,55 @@ public class Opponent {
             case stun:
                 animation = screen.assets.sasquatch_stun;
                 break;
+            case moving:
+                lastX = position.x;
+                lastY = position.y;
+                animation = screen.assets.sasquatch_idle;
+                break;
             default:
                 animation = screen.assets.sasquatch_idle;
         }
-
         animationTime = 0;
     }
 
+    private float lastX = -1;
+    private float lastY = -1;
     public void update(float dt) {
         animationTime += dt;
 
         if (state == State.idle) {
             idleTime += dt;
             offsetY = MathUtils.sin(idleTime * 2f) * 5;
+        } else if (state == State.moving) {
+            if (position.x != lastX) {
+                direction = (position.x > lastX) ? Direction.right : Direction.left;
+            }
+            setAnimState();
+            lastY = position.y;
+            lastX = position.x;
+
+            switch (animState) {
+                case up:
+                    animation = screen.assets.sasquatch_up;
+                    break;
+                case down:
+                    animation = screen.assets.sasquatch_down;
+                    break;
+                default:
+                    animation = screen.assets.sasquatch_idle;
+            }
         }
 
         ai.update(dt);
+    }
+
+    private void setAnimState() {
+        float dy = position.y - lastY;
+        if (Math.abs(dy) < 2f) {
+            animState = AnimDirection.level;
+        } else {
+            animState = (dy) > 0 ? AnimDirection.up : AnimDirection.down;
+        }
     }
 
     public void render(SpriteBatch batch) {

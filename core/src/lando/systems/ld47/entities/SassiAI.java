@@ -8,65 +8,70 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld47.screens.GameScreen;
-import lando.systems.ld47.ui.HoldUI;
 import lando.systems.ld47.utils.accessors.Vector2Accessor;
 
 public class SassiAI {
 
-    float time = 5f;
+    enum Actions { none, boardLeft, boardRight, shootLeft, shootRight,
+        ramLeft, ramRight, shootNext, shootHold, teleportPiece, dropPiece };
+
     float stunTime = 0;
 
     float actionDuration = 5f;
     float actionTime = 1f;
     boolean animating = false;
-    int lastAction = 3; // walk left
 
-    float tleft, tright, bleft, bright, top, bottom, maxX, maxY;
-
-    private final Vector2 holdPosition;
-    private final Vector2 nextPosition;
+    Actions lastAction = Actions.none;
 
     // if the location of the board or it gets moved, this will need to change
-    private float[] yPosCoords = { 685, 635, 590, 545, 505, 465, 430, 395, 360, 325, 295, 265, 235, 210, 185, 160, 135, 110, 90, 65, 45 };
-    // bottom x, top x left side
-    private Vector2 leftDiff = new Vector2(450, 520);
-    // top x, bottom y right side
-    private Vector2 rightDiff = new Vector2(760,830);
+    private final float[] yPosCoords = { 45, 65, 90, 110, 135, 160, 185, 210, 235, 265, 295, 325, 360, 395, 430, 465, 505, 545, 590, 635, 685 };
 
-    // right
-    private int direction = 1;
+    private final float boardXBottomLeft = 450;
+    private final float boardXTopLeft = 520;
+    private final float boardXTopRight = 760;
+    private final float boardXBottomRight = 830;
+    private final float centerX = boardXBottomLeft + (boardXBottomRight - boardXBottomLeft) / 2;
+
+    private final float sPathXDiff = (boardXTopLeft - boardXBottomLeft) * 1.1f;
+    private final float minSPathXDiff = (boardXTopLeft - boardXBottomLeft) * 0.2f;
+    private final float minTurnHeight = 50f; // amount of y traveling to warrant a turn
+    private final float turnWidth;
 
     private Opponent opponent;
+    private float speed = 250f;
     private GameScreen screen;
+
+    // known way points
+    private Vector2 topLeft;
+    private Vector2 topRight;
+    private Vector2 hold;
+    private Vector2 next;
 
     public SassiAI(GameScreen screen, Opponent opponent) {
         this.screen = screen;
         this.opponent = opponent;
 
+        turnWidth = opponent.size.x * 0.6f;
+
         float width = this.opponent.size.x;
+        float height = this.opponent.size.y;
 
-        tleft = leftDiff.y - width;
-        tright = rightDiff.x;
-        bleft = leftDiff.x - width;
-        bright = rightDiff.y;
-
-        top = yPosCoords[0];
-        bottom = yPosCoords[19];
+        float top = yPosCoords[yPosCoords.length - 1];
+        topLeft = new Vector2(boardXTopLeft - width, top);
+        topRight = new Vector2(boardXTopRight, top);
 
         Rectangle bounds = screen.gameHud.getNextBox().bounds;
-        nextPosition = new Vector2(bounds.x - width, bounds.y);
+        next = new Vector2(bounds.x - width, bounds.y + (bounds.y - height)/2);
 
         bounds = screen.gameHud.getHoldBox().bounds;
-        holdPosition = new Vector2(bounds.x - width, bounds.y);
+        hold = new Vector2(bounds.x - width, bounds.y + (bounds.y - height)/2);
 
-        maxX = nextPosition.x - bleft;
-        maxY = top - bottom;
-        opponent.position.set(tleft, top);
+        // place opponent at the top right
+        opponent.position.set(topLeft.x, topLeft.y);
+        opponent.direction = Opponent.Direction.right;
     }
 
     public void update(float dt) {
-        time -= dt;
-
         if (animating) { return; }
 
         if (stunTime > 0) {
@@ -76,9 +81,9 @@ public class SassiAI {
 
         actionTime -= dt;
         if (actionTime < 0) {
-            actionDuration -= dt;
-            actionTime = MathUtils.random(1f, Math.max(actionDuration, 1f));
-            animating = true;
+//            actionDuration -= dt;
+//            actionTime = MathUtils.random(1f, Math.max(actionDuration, 1f));
+            actionTime = 1;
             randomAction();
         }
 
@@ -88,133 +93,198 @@ public class SassiAI {
     }
 
     private void randomAction() {
-        int action = getNextAction();
-        switch (lastAction) {
-            case 0:
-                hitNext();
+        Actions action = getNextAction(lastAction);
+        if (action == Actions.none) { return; }
+
+        switch (action) {
+            case boardLeft:
+                move(topLeft, action);
                 break;
-            case 1:
-                hitLeft(lastAction != 2);
-                 break;
-            case 2:
-                hitRight(lastAction != 1);
+            case boardRight:
+                move(topRight, action);
                 break;
-            case 3:
-                walkLeft();
+            case shootLeft:
+                Vector2 pos = getSidePos(true);
+                if (pos == null) {
+                    // nothing to shoot
+                    return;
+                }
+                move(pos, action);
                 break;
-            case 4:
-                walkRight();
+            case shootRight:
+                pos = getSidePos(false);
+                if (pos == null) {
+                    // nothing to shoot
+                    return;
+                }
+                move(pos, action);
                 break;
-            case 5:
-                hitHold();
+            case ramLeft:
+                break;
+            case ramRight:
+                break;
+            case shootNext:
+                break;
+            case shootHold:
+                break;
+            case teleportPiece:
+                break;
+            case dropPiece:
                 break;
         }
-        lastAction = action;
+
+        animating = true;
     }
 
-    private int getNextAction() {
-        int value = lastAction;
-        while (value == lastAction) {
-            value = MathUtils.random(4);
+    private Actions getNextAction(Actions lastAction) {
+//        // 20% chance of doing nothing
+//        if (MathUtils.random(4) < 1) { return Actions.none; }
+//
+//        Actions[] actions = Actions.values();
+        Actions[] actions = new Actions[] { Actions.none, Actions.boardLeft, Actions.shootLeft, Actions.boardRight, Actions.shootRight };
+
+        Actions next = lastAction;
+        while (next == lastAction) {
+            next = actions[MathUtils.random(1, actions.length - 1)];
         }
-        return value;
+        return next;
     }
 
-    private void walkRight() {
-        walk(tright, top);
-    }
-
-    private void walkLeft() {
-        walk(tleft, top);
-    }
-
-    private void hitNext() {
-        walk(nextPosition.x, nextPosition.y, Opponent.State.punch, screen.gameHud.getNextBox(), false);
-    }
-
-    private void hitHold() {
-        walk(holdPosition.x, holdPosition.y, Opponent.State.punch, screen.gameHud.getHoldBox(), false);
-    }
-
-    private void hitRight(boolean drop) {
-        Vector2 pos = getSidePos(false);
-        if (pos == null) {
-            animating = false;
-            return;
-        }
-        walk(pos.x, pos.y, Opponent.State.punch, null, drop);
-    }
-
-    private void hitLeft(boolean drop) {
-        Vector2 pos = getSidePos(true);
-        if (pos == null) {
-            animating = false;
-            return;
-        }
-        walk(pos.x, pos.y, Opponent.State.punch, null, drop);
-    }
-
-    Vector2 sidePos = new Vector2();
+    private final Vector2 sidePos = new Vector2();
     private Vector2 getSidePos(boolean left) {
         Array<Integer> rows = screen.gameBoard.getRowEnds(left);
         if (rows.isEmpty()) { return null; }
 
-        // array is reverse and I'm too lazy to switch it
-        int yPos = (yPosCoords.length - 1) - rows.random();
+        int yIndex = rows.random();
 
-        float x = getXPos(left, yPos);
-        sidePos.set(x, yPosCoords[yPos]);
+        float x = (left)
+                ? boardXBottomLeft - opponent.size.x + (boardXTopLeft - boardXBottomLeft) / 20 * yIndex
+                : boardXBottomRight - (boardXBottomRight -boardXTopRight) / 20 * yIndex;
+
+        sidePos.set(x, yPosCoords[yIndex]);
         return sidePos;
     }
 
-    private float getXPos(boolean left, int index) {
-        if (left) {
-            // x is bottom left, y is top left
-            return leftDiff.x + (leftDiff.y - leftDiff.x) / 20 * index;
-        }
-        // x is top right, y is bottom right
-        return rightDiff.y - (leftDiff.y - leftDiff.x) / 20 * index;
-    }
-
-    private void walk(float x, float y) {
-        this.walk(x, y, Opponent.State.idle, null, false);
-    }
-
-    private void walk(float x, float y, Opponent.State state, HoldUI punchBox, boolean drop) {
-
+    private void move(Vector2 movePos, Actions action) {
         Vector2 pos = opponent.position;
 
-        float dy = Math.abs(y - pos.y) / 2;
-        float dx = Math.abs(x - pos.x) / 2;
+        float dy = movePos.y - pos.y;
+        float dx = movePos.x - pos.x;
 
-        float wy = Math.max(y, pos.y) + 25;
-        float wx = Math.min(x, pos.x) + dx;
+        setOrientation(dy);
 
-        opponent.animState = Opponent.AnimDirection.up;
+        Vector2[] wayPoints = getWayPoints(pos, movePos, action);
+        dx += (turnWidth * wayPoints.length * 2);
 
-        if (drop) {
-            wy = Math.min(y, pos.y) + dy;
-            opponent.animState = Opponent.AnimDirection.down;
+        float moveTime = (float)Math.sqrt(dx*dx + dy*dy) / speed;
+
+
+        Tween moveTween = Tween.to(pos, Vector2Accessor.XY, moveTime);
+        for (Vector2 wp : wayPoints) {
+            moveTween.waypoint(wp.x, wp.y);
         }
+        moveTween.target(movePos.x, movePos.y).ease(TweenEquations.easeInOutCubic);
 
-        float time = 5f * Math.max(dx / maxX, dy / maxY);
-
-        opponent.setState(Opponent.State.idle);
+        opponent.setState(Opponent.State.moving);
 
         Timeline.createSequence()
-                .push(Tween.to(opponent.position, Vector2Accessor.XY, time).waypoint(wx, wy).target(x, y).ease(TweenEquations.easeInOutCubic))
+                .push(moveTween)
                 .start(screen.game.tween)
                 .setCallback(new TweenCallback() {
                     @Override
                     public void onEvent(int type, BaseTween<?> source) {
-                        opponent.setState(state);
-                        if (punchBox != null) {
-                            punchBox.punchBox();
-                        }
-                        animating = false;
+                        completeMove(pos, movePos, action);
                     }
                 });
+    }
 
+    private void completeMove(Vector2 from, Vector2 to, Actions action) {
+
+        Opponent.State state = Opponent.State.idle;
+        Opponent.Direction direction = Opponent.Direction.right;
+        switch (action) {
+            case none:
+                // won't happen
+                break;
+            case boardLeft:
+                break;
+            case boardRight:
+                direction = Opponent.Direction.left;
+                break;
+            case shootLeft:
+                state = Opponent.State.punch;
+                break;
+            case shootRight:
+                direction = Opponent.Direction.left;
+                state = Opponent.State.punch;
+                break;
+            case ramLeft:
+                break;
+            case ramRight:
+                direction = Opponent.Direction.left;
+                break;
+            case shootNext:
+                state = Opponent.State.punch;
+                break;
+            case shootHold:
+                state = Opponent.State.punch;
+                break;
+            case teleportPiece:
+                break;
+            case dropPiece:
+                break;
+        }
+
+        //opponent.setState(state);
+        opponent.setState(Opponent.State.idle);
+        opponent.animState = Opponent.AnimDirection.level;
+        opponent.direction = direction;
+
+        lastAction = action;
+        animating = false;
+    }
+
+    private void setOrientation(float dy) {
+        if (dy > 0){
+            opponent.animState = Opponent.AnimDirection.up;
+        } else if (dy < 0) {
+            opponent.animState = Opponent.AnimDirection.down;
+        } else {
+            opponent.animState = Opponent.AnimDirection.level;
+        }
+    }
+
+    private final Vector2[] emptyWayPoints = new Vector2[] {};
+    private Vector2[] getWayPoints(Vector2 pos, Vector2 movePos, Actions action) {
+
+        float dy = Math.abs(pos.y - movePos.y);
+        if (dy < minTurnHeight) { return emptyWayPoints; };
+
+        boolean up = pos.y < movePos.y;
+        boolean right = pos.x < movePos.x;
+
+        float dx = Math.abs(pos.x - movePos.x);
+
+        // s path
+        if (dx < sPathXDiff) {
+            if (dx < minSPathXDiff) { return emptyWayPoints; }
+
+            float yOffset = (Math.abs(pos.y - movePos.y)) / 3 * ((up) ? 1 : -1);
+            float xOffset = turnWidth * ((movePos.x < centerX) ? 1 : -1);
+
+            return new Vector2[]{
+                    new Vector2(pos.x + xOffset, pos.y + yOffset),
+                    new Vector2(movePos.x - xOffset, pos.y + (yOffset * 2f))
+            };
+        } else if (right && movePos.x > centerX || !right && movePos.x < centerX) {
+            float yOffset = (Math.abs(pos.y - movePos.y)) / 4 * ((up) ? -1 : 1);
+            float xOffset = turnWidth * ((movePos.x < centerX) ? 1 : -1);
+            return new Vector2[]{
+                    new Vector2(movePos.x - xOffset, movePos.y + yOffset)
+            };
+        }
+
+        return emptyWayPoints;
     }
 
     // for tetris
