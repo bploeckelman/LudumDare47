@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Align;
 import lando.systems.ld47.Config;
 import lando.systems.ld47.Game;
-import lando.systems.ld47.entities.Opponent;
 import lando.systems.ld47.ui.ScoreEntryUI;
 import lando.systems.ld47.ui.typinglabel.TypingLabel;
 
