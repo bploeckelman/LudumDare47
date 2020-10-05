@@ -196,8 +196,9 @@ public class PlayerInput extends ControllerAdapter {
 
     public boolean isHoldPressed() {
         return Gdx.input.isKeyJustPressed(Input.Keys.K)
-                || Gdx.input.isKeyJustPressed(Input.Keys.TAB)
-                || controllerState.holdButtonJustPressed;
+            || Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)
+            || Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_RIGHT)
+            || controllerState.holdButtonJustPressed;
     }
 
     public boolean isAnyButtonPressed() {
