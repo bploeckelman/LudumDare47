@@ -29,8 +29,6 @@ public class EndScreen extends BaseScreen {
     static String music = "Sound by:\nPeat Vee";
     static String libgdx = "Made with {COLOR=red}<3{COLOR=white} and LibGDX";
     static String disclaimer = "Disclaimer!!!\nNo animals were harmed in the making of this game (they got lots of pets tho)";//Pets were not harmed in making of this game.";
-    Color textColor = new Color(Color.WHITE);
-    Color textBorderColor = new Color(Color.GRAY);
 
     private final ScoreEntryUI scoreEntryUI;
     private final ShaderProgram shader;
@@ -67,8 +65,10 @@ public class EndScreen extends BaseScreen {
         disclaimerLabel.setFontScale(.75f);
 
         scoreEntryUI = new ScoreEntryUI(this, currentScore, currentRank);
-        scoreEntryUI.show();
-        Gdx.input.setInputProcessor(scoreEntryUI);
+        if (currentScore != 0) {
+            scoreEntryUI.show();
+            Gdx.input.setInputProcessor(scoreEntryUI);
+        }
 
         shader = game.assets.cityShader;
     }

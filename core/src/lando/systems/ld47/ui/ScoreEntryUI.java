@@ -149,8 +149,8 @@ public class ScoreEntryUI extends UserInterface implements InputProcessor {
             float headerPosY, headerHeight;
             // header text
             {
-                // TODO: get total count of scores in db to do rank X/Y
-                String headerText = "score: " + score + "    rank: " + rank;
+                // TODO: rank is a hassle, either figure it out later or skip it
+                String headerText = "Final score: " + score;// + "    rank: " + rank;
                 assets.font.getData().setScale(1.5f);
                 layout.setText(assets.font, headerText, scoreTextColor, bounds.width, Align.center, false);
                 headerHeight = layout.height;
