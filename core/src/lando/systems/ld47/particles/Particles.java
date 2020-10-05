@@ -23,7 +23,7 @@ public class Particles implements Disposable {
     private final Pool<Particle> particlePool = Pools.get(Particle.class, 3000);
 
     public final Array<ParticleDecal> activeDecals;
-    private final Pool<ParticleDecal> decalPool = Pools.get(ParticleDecal.class, 1000);
+    private final Pool<ParticleDecal> decalPool = Pools.get(ParticleDecal.class, 6000);
 
     public Particles(Assets assets) {
         this.assets = assets;
@@ -33,6 +33,11 @@ public class Particles implements Disposable {
         this.activeParticles.put(Layer.overlay,   new Array<>(false, 1000));
 
         this.activeDecals = new Array<>();
+
+        for (int i = 0; i < 6000; i ++) {
+            ParticleDecal d = new ParticleDecal();
+            decalPool.free(d);
+        }
     }
 
     public void update(float dt) {
