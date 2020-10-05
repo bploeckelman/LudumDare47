@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import lando.systems.ld47.Game;
 
-public class Tetrad implements Pool.Poolable {
+public class Tetrad implements Pool.Poolable, IShootable {
 
     enum FACE {TOP, LEFT, RIGHT, FRONT}
     public static float POINT_WIDTH = 40;
@@ -129,7 +129,6 @@ public class Tetrad implements Pool.Poolable {
                 batch.draw(blockImage, position.x + (POINT_WIDTH * scale * point.x), position.y + (POINT_WIDTH * scale * point.y), POINT_WIDTH * scale, POINT_WIDTH * scale);
             }
         }
-        batch.setColor(Color.WHITE);
     }
 
     private void buildMesh(){
@@ -214,11 +213,16 @@ public class Tetrad implements Pool.Poolable {
                 break;
         }
         tempColor.set(0,0,0, color.a);
-        switch (point.removeReason){
+        switch (point.removeReason) {
             case CLEARED:
             case NOT_REMOVED:
-                tempColor.g = 0; break;
-            case STOLEN: tempColor.g = 1f; break;
+                tempColor.g = 0;
+                break;
+            case SHOT:
+            case STOLEN:
+                tempColor.g = 1f;
+                break;
+
         }
         if (point.maxDestroyTimer != 0){
             tempColor.r = 1.f - (point.getDestroyTimer() / point.maxDestroyTimer);
@@ -511,5 +515,31 @@ public class Tetrad implements Pool.Poolable {
         // I
 
     }
+
+    // for shooting
+    // returns y position in grid
+    private TetradPiece targetBlock;
+    public int selectRandomBlock() {
+        targetBlock = points.random();
+        int row = (int) (origin.y + targetBlock.y);
+        System.out.println("ROW: " + row);
+          return row;
+    }
+
+    @Override
+    public void hit() {
+        if (targetBlock != null) {
+            targetBlock.setDestroyTimer(0, 0, TetradPiece.RemoveReason.SHOT);
+        }
+    }
+
+    @Override
+    public Vector2 getTarget() {
+        if (targetBlock == null) { return null; }
+
+        // return screen position of center of this TetradPiece
+        return new Vector2();
+    }
+
 
 }

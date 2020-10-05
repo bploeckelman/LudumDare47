@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 
 
 public class TetradPiece {
-    public enum RemoveReason { NOT_REMOVED, CLEARED, STOLEN};
+    public enum RemoveReason { NOT_REMOVED, CLEARED, STOLEN, SHOT};
     public int x;
     public int y;
     public Color color;

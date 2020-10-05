@@ -543,22 +543,12 @@ public class GameBoard {
         return tetrads.size >= minTetradsToTransport;
     }
 
-    public Tetrad getRandomTetrad() {
-        if (!canTransportTetrad()) { return null; }
-
-        return tetrads.random();
-    }
-
     public boolean canShootBlock() {
         return tetrads.size >= minTetradsToShoot;
     }
 
-    public Vector2 getRandomBlock() {
-        if (!canShootBlock()) { return null; }
-
-        Tetrad selected = tetrads.random();
-        TetradPiece piece = selected.points.random();
-        return new Vector2(selected.origin.x + piece.x, selected.origin.y + piece.y);
+    public Tetrad getRandomTetrad() {
+        return tetrads.random();
     }
 
     public void crash() {
@@ -583,5 +573,4 @@ public class GameBoard {
     public void pause() {
         paused = true;
     }
-
 }

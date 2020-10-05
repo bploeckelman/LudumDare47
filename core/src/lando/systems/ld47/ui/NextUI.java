@@ -1,5 +1,6 @@
 package lando.systems.ld47.ui;
 
+import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld47.GameState;
 
 public class NextUI extends HoldUI {
@@ -16,9 +17,9 @@ public class NextUI extends HoldUI {
         hold.center(center);
     }
 
-    public void punchBox() {
-        // play sound and animate!
+    @Override
+    public void hit() {
+        super.hit();
         gameState.popNext();
-        super.punchBox();
     }
 }

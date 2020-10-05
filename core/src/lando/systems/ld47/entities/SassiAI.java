@@ -104,6 +104,7 @@ public class SassiAI {
         Actions action = getNextAction(lastAction);
         if (action == Actions.none) { return; }
 
+        System.out.println(lastAction + " -> " + action);
         switch (action) {
             case boardLeft:
                 move(topLeft, action);
@@ -170,12 +171,13 @@ public class SassiAI {
     }
 
     private final Vector2 sidePos = new Vector2();
+    Tetrad target;
     private Vector2 getSidePos(BoardSide side, boolean isShooting) {
         int yIndex = yPosCoords.length / 2;
         if (isShooting) {
-            Vector2 block = gameBoard.getRandomBlock();
-            if (block == null) { return null; }
-            yIndex = (int)block.y;
+            target = gameBoard.getRandomTetrad();
+            if (target == null) { return null; }
+            yIndex = target.selectRandomBlock();
         }
 
         float x = (side == BoardSide.left)
@@ -229,8 +231,8 @@ public class SassiAI {
                 break;
             case shootLeft:
             case shootRight:
-                // gameBoard.shootBlock()
-                state = Opponent.State.shooting;
+                direction = (action == Actions.shootRight) ? Opponent.Direction.left : Opponent.Direction.right;
+                // opponent.shoot(target);
                 break;
             case ramLeft:
             case ramRight:
@@ -241,12 +243,10 @@ public class SassiAI {
                 ramBoard(action);
                 break;
             case shootNext:
-                screen.gameHud.getNextBox().punchBox();
-                state = Opponent.State.shooting;
+                opponent.shoot(screen.gameHud.getNextBox());
                 break;
             case shootHold:
-                holdBox.punchBox();
-                state = Opponent.State.shooting;
+                opponent.shoot(holdBox);
                 break;
             case teleportPiece:
                 break;
@@ -297,15 +297,24 @@ public class SassiAI {
     private Vector2[] getWayPoints(Vector2 pos, Vector2 movePos, Actions action) {
 
         float dy = Math.abs(pos.y - movePos.y);
-        if (dy < minTurnHeight || action == Actions.shootHold || action == Actions.shootNext) { return emptyWayPoints; };
+        if (dy < minTurnHeight) { return emptyWayPoints; };
 
         boolean up = pos.y < movePos.y;
         boolean right = pos.x < movePos.x;
 
         float dx = Math.abs(pos.x - movePos.x);
 
-        // s path
-        if (dx < sPathXDiff) {
+        if (action == Actions.shootHold || action == Actions.shootNext) {
+            if (pos.x > centerX) {
+                // moving to next or hold from right side
+                float yOffset = (Math.abs(pos.y - movePos.y)) / 2 * ((up) ? 1 : -1);
+
+                return new Vector2[]{
+                        new Vector2(pos.x - turnWidth, pos.y + yOffset)
+                };
+            }
+        } else if (dx < sPathXDiff) {
+            // s path
             if (dx < minSPathXDiff) { return emptyWayPoints; }
 
             float yOffset = (Math.abs(pos.y - movePos.y)) / 3 * ((up) ? 1 : -1);

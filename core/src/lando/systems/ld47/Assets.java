@@ -62,6 +62,7 @@ public class Assets implements Disposable {
     public Animation<TextureRegion> carDown;
     public Animation<TextureRegion> carShoot;
     public Animation<TextureRegion> carStun;
+    public Animation<TextureRegion> shot;
 
     public Animation<TextureRegion> cat;
     public Animation<TextureRegion> dog;
@@ -168,7 +169,7 @@ public class Assets implements Disposable {
         carDown = new Animation<>(0.1f, atlas.findRegions("car-down"), Animation.PlayMode.LOOP);
         carShoot = new Animation<>(0.1f, atlas.findRegions("car-shoot"), Animation.PlayMode.NORMAL);
         carStun = new Animation<>(0.1f, atlas.findRegions("car-stun"), Animation.PlayMode.LOOP);
-
+        shot = new Animation<>(0.1f, atlas.findRegions("fireball"), Animation.PlayMode.LOOP_PINGPONG);
         cat = new Animation<>(0.1f, atlas.findRegions("cat"), Animation.PlayMode.LOOP);
         dog = new Animation<>(0.1f, atlas.findRegions("dog"), Animation.PlayMode.LOOP);
 

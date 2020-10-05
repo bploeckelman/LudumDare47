@@ -26,11 +26,12 @@ public class EndScreen extends BaseScreen {
 
     static String title = "{GRADIENT=purple;cyan}Block Runner 2049{ENDGRADIENT}";
     static String theme = "Made for Ludum Dare 47: Stuck in a Loop";
+
     static String thanks = "{GRADIENT=purple;cyan}Thanks for playing our game!{ENDGRADIENT}";
     static String developers = "{COLOR=gray}Developed by:{COLOR=white}\n Doug Graham\n Brian Ploeckelman\n Brian Rossman\n Jeffrey Hwang";
     static String artists = "{COLOR=gray}Art by:{COLOR=white}\n Matt Neumann";
     static String emotionalSupport = "{COLOR=cyan}Emotional Support:{COLOR=white}\n Asuka and  Cherry";
-    static String music = "{COLOR=gray}Sound by:{COLOR=white}\nPeat Valeo";
+    static String music = "{COLOR=gray}Sound by:{COLOR=white}\n Peat Valeo";
     static String libgdx = "Made with {COLOR=red}<3{COLOR=white} and LibGDX";
     static String disclaimer = "Disclaimer!!!\nNo animals were harmed in the making of this game (they got lots of pets tho)";//Pets were not harmed in making of this game.";
 

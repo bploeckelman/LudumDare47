@@ -9,9 +9,10 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
 import lando.systems.ld47.Audio;
 import lando.systems.ld47.GameState;
+import lando.systems.ld47.entities.IShootable;
 import lando.systems.ld47.entities.Tetrad;
 
-public class HoldUI extends UserInterface {
+public class HoldUI extends UserInterface implements IShootable {
 
     public Tetrad hold;
     private float size;
@@ -59,12 +60,17 @@ public class HoldUI extends UserInterface {
         }
     }
 
-    public void punchBox() {
-        // play sound and animate!
+    @Override
+    public void hit() {
         if (hold != null) {
-            gameState.gameScreen.playSound(Audio.Sounds.tet_forced);
-            gameState.gameScreen.particles.addPiecePunchedParticles(hold.position.x, hold.position.y, hold.color);
+            gameState.gameScreen.playSound(Audio.Sounds.holdUIExplode);
+            gameState.gameScreen.particles.addPiecePunchedParticles(center.x, center.y, hold.color);
             hold = null;
         }
+    }
+
+    @Override
+    public Vector2 getTarget() {
+        return new Vector2(center.x, center.y);
     }
 }
