@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import lando.systems.ld47.Game;
 
-public class Tetrad implements Pool.Poolable, IShootable {
+public class Tetrad implements Pool.Poolable {
 
     enum FACE {TOP, LEFT, RIGHT, FRONT}
     public static float POINT_WIDTH = 40;
@@ -21,7 +21,7 @@ public class Tetrad implements Pool.Poolable, IShootable {
     public static float blockHeight = 1f;
     private static Color ghostColor = new Color(1,1,1,1f);
 
-    private GameBoard gameBoard;
+    public GameBoard gameBoard;
     private Game game;
     public Array<TetradPiece> points;
     private Vector2 center = new Vector2();
@@ -521,31 +521,4 @@ public class Tetrad implements Pool.Poolable, IShootable {
         // I
 
     }
-
-    // for shooting
-    // returns y position in grid
-    private TetradPiece targetBlock;
-    public int selectRandomBlock() {
-        targetBlock = points.random();
-        int row = (int) (origin.y + targetBlock.y);
-        System.out.println("ROW: " + row);
-          return row;
-    }
-
-    @Override
-    public void hit() {
-        if (targetBlock != null) {
-            targetBlock.setDestroyTimer(0, 0, TetradPiece.RemoveReason.SHOT);
-        }
-    }
-
-    @Override
-    public Vector2 getTarget() {
-        if (targetBlock == null) { return null; }
-
-        // return screen position of center of this TetradPiece
-        return new Vector2();
-    }
-
-
 }

@@ -1,9 +1,10 @@
 package lando.systems.ld47.entities;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
 
 
-public class TetradPiece {
+public class TetradPiece implements IShootable {
     public enum RemoveReason { NOT_REMOVED, CLEARED, STOLEN, SHOT};
     public int x;
     public int y;
@@ -50,5 +51,26 @@ public class TetradPiece {
 
     public Float getDestroyTimer() {
         return destroyTimer;
+    }
+
+
+
+//    // for shooting
+//    // returns y position in grid
+//    private TetradPiece targetBlock;
+//    public Vector2 selectRandomBlock() {
+//        targetBlock = points.random();
+//        return gameBoard.getScreenCoordOfTetradPiece(targetBlock);
+//    }
+
+    @Override
+    public void hit() {
+        setDestroyTimer(0, 0, TetradPiece.RemoveReason.SHOT);
+    }
+
+    @Override
+    public Vector2 getTarget() {
+        GameBoard gameBoard = owner.gameBoard;
+        return (gameBoard != null) ? gameBoard.getScreenCoordOfTetradPiece(this) : null;
     }
 }

@@ -24,7 +24,7 @@ public class Audio implements Disposable {
         none, cha_ching,
         tet_plunge, tet_rotate, tet_land, tet_clearLine,
         holdUIExplode, crash, fireballExplosion,
-        dec_shoot, dec_move, dec_hover
+        dec_shoot, dec_move, dec_hover, dec_teleport
     }
 
     public enum Musics {

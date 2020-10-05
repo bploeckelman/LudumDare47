@@ -567,6 +567,14 @@ public class GameBoard {
         return tetrads.random();
     }
 
+    public TetradPiece getRandomBlock() {
+        Tetrad tetrad = tetrads.random();
+        if (tetrad != null) {
+            return tetrad.points.random();
+        }
+        return null;
+    }
+
     public void crash() {
         gameState.gameScreen.shaker.addDamage(100);
         gameState.gameScreen.playSound(Audio.Sounds.crash);

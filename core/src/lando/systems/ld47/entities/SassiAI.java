@@ -7,6 +7,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import lando.systems.ld47.Audio;
 import lando.systems.ld47.screens.GameScreen;
 import lando.systems.ld47.ui.HoldUI;
 import lando.systems.ld47.utils.accessors.Vector2Accessor;
@@ -192,20 +193,21 @@ public class SassiAI {
     }
 
     private final Vector2 sidePos = new Vector2();
-    Tetrad target;
+    TetradPiece shootTarget;
     private Vector2 getSidePos(BoardSide side, boolean isShooting) {
-        int yIndex = yPosCoords.length / 2;
-        if (isShooting) {
-            target = gameBoard.getRandomTetrad();
-            if (target == null) { return null; }
-            yIndex = target.selectRandomBlock();
+        float y = 320;
+         if (isShooting) {
+            shootTarget = gameBoard.getRandomBlock();
+            Vector2 pos = shootTarget.getTarget();
+            if (pos == null) { return null; }
+            y = pos.y;
         }
 
         float x = (side == BoardSide.left)
-                ? boardXBottomLeft - opponent.size.x + (boardXTopLeft - boardXBottomLeft) / 20 * yIndex
-                : boardXBottomRight - (boardXBottomRight -boardXTopRight) / 20 * yIndex;
+                ? boardXBottomLeft - opponent.size.x // + (boardXTopLeft - boardXBottomLeft) / 20 * yIndex
+                : boardXBottomRight; //- (boardXBottomRight -boardXTopRight) / 20 * yIndex;
 
-        sidePos.set(x, yPosCoords[yIndex]);
+        sidePos.set(x, y);
         return sidePos;
     }
 
@@ -248,7 +250,7 @@ public class SassiAI {
             case shootLeft:
             case shootRight:
                 direction = (action == Actions.shootRight) ? Opponent.Direction.left : Opponent.Direction.right;
-                opponent.shoot(target);
+                opponent.shoot(shootTarget);
                 break;
             case ramLeft:
             case ramRight:
@@ -351,9 +353,20 @@ public class SassiAI {
 
     private void teleportBlock() {
         teleporting = false;
-        // move to pullout piece and trigger this
-        gameBoard.pulloutEnabled = true;
-        animating = false;
+        Tetrad piece = gameBoard.tetradToRemove;
+        if (piece != null) {
+            Vector2 pos = gameBoard.getScreenCoordsOfTetrad(piece);
+            currentTimeline = Timeline.createSequence().push(
+                    Tween.to(opponent.position, Vector2Accessor.XY, 1.5f)
+                    .target(pos.x -opponent.size.x/2, pos.y + Tetrad.POINT_WIDTH))
+            .setCallback((s, i) -> {
+                screen.playSound(Audio.Sounds.dec_teleport);
+                gameBoard.pulloutEnabled = true;
+                animating = false;
+            }).start(screen.tween);
+        } else {
+            animating = false;
+        }
     }
 
     // for tetris
