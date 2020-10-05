@@ -80,7 +80,7 @@ public class TitleCar {
 
     private void setAnimState() {
         float dy = position.y - lastY;
-        if (Math.abs(dy) < 0.2f) {
+        if (lastX == position.x) {
             animState = AnimDirection.level;
         } else {
             animState = (dy) > 0 ? AnimDirection.up : AnimDirection.down;

@@ -8,10 +8,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import lando.systems.ld47.Audio;
-import lando.systems.ld47.Config;
 import lando.systems.ld47.Game;
 import lando.systems.ld47.entities.TitleCar;
 import lando.systems.ld47.utils.accessors.Vector2Accessor;
@@ -60,11 +58,16 @@ public class TitleScreen extends BaseScreen {
         batch.draw(assets.titleImage, 0,0, hudCamera.viewportWidth, hudCamera.viewportHeight);
 
         GlyphLayout layout = game.assets.layout;
-        layout.setText(game.assets.bladeFont64, "click to launch", Color.BLACK, Config.windowWidth, Align.center, false);
-        game.assets.bladeFont64.draw(batch, layout, 0, 550);
+        layout.setText(game.assets.bladeFont64, "click to launch", Color.BLACK, 664, Align.left, false);
+        game.assets.bladeFont64.draw(batch, layout, 308, 550);
 
 
         car.render(batch);
+
+
+        layout.setText(game.assets.bladeFont64, "click to", Color.BLACK, 664, Align.left, false);
+        game.assets.bladeFont64.draw(batch, layout, 308, 550);
+
 
         batch.end();
     }
