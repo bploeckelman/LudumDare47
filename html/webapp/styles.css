@@ -1,3 +1,14 @@
+@font-face {
+    font-family: 'Bladerunner';
+    src:url('Blade-Runner-Movie-Font.ttf.woff') format('woff'),
+        url('Blade-Runner-Movie-Font.ttf.svg#Blade-Runner-Movie-Font') format('svg'),
+        url('Blade-Runner-Movie-Font.ttf.eot'),
+        url('Blade-Runner-Movie-Font.ttf.eot?#iefix') format('embedded-opentype'); 
+    font-weight: normal;
+    font-style: normal;
+}
+
+
 canvas {
     cursor: default;
     outline: none;
@@ -40,4 +51,76 @@ body {
 
 .superdev:hover {
     background-color: rgb(100,100,100);
+}
+
+
+#leaderboard {
+    color: white;
+    font-family: 'Bladerunner', sans-serif;
+    /* text-shadow: -1px 2px 25px hsl(283, 58%, 71%); */
+    font-size: 1.5rem;
+    background-color: hsla(283,64%, 9%, .6);
+
+    background-image:     
+    linear-gradient(40deg, 
+    transparent 50%, 
+    hsla(183, 80%, 20%, .5) 80%),
+    
+    radial-gradient(circle at bottom center, 
+    hsla(24, 50%, 40%, .1) 5%, 
+    hsla(24, 70%, 80%, .2) 18%, 
+    hsla(283, 64%, 10%, .5) 50%,
+    hsla(283, 64%, 30%, .5)
+    ), 
+
+    radial-gradient(circle at bottom center, 
+    hsl(24, 50%, 30%) 5%, 
+    hsl(24, 50%, 40%) 15%, 
+    hsl(24, 70%, 60%) 18%, 
+    hsl(283, 64%, 10%) 19%,
+    hsl(283, 64%, 30%)
+    );
+    background-position: bottom center;
+
+}
+
+#leaderboard 
+{
+    margin-left: 5rem;
+    border: 3px solid hsl(179,80%,59%);
+    width: 800px;
+}
+
+#leaderboard tr 
+{
+    border: 2px solid hsl(179,90%,59%);
+}
+
+#leaderboard tr td,
+#leaderboard tr th
+ {
+    padding: .5rem;
+    border: 1px solid hsl(179,90%,59%);
+    margin: 0;
+    /* background-color: hsla(200, 20%, 50%, .1); */
+}
+
+#leaderboard:before 
+{
+content: " ";
+float:right;
+position: fixed;
+display: block;
+/* position: absolute; */
+width: 830px;
+height: 975px;
+left: calc(4.5rem);
+top: 5rem;
+/* top: 0; */
+/* height: 100%; */
+/* top: 5rem; */
+background-color: hsla(300, 88%, 51%, .2);
+z-index: -1;
+filter: blur(30px)
+
 }
