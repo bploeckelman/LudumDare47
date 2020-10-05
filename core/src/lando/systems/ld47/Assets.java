@@ -119,6 +119,7 @@ public class Assets implements Disposable {
         mgr.load("audio/track-mood-2.mp3", Music.class);
         mgr.load("audio/track-mood-3.mp3", Music.class);
         mgr.load("audio/track-blade.mp3", Music.class);
+        mgr.load("audio/track-blade-1-3.mp3", Music.class);
 
         if (loading == Loading.SYNC) {
             mgr.finishLoading();
@@ -200,7 +201,7 @@ public class Assets implements Disposable {
         moodTrack = mgr.get("audio/track-mood.mp3", Music.class);
         moodTrack2 = mgr.get("audio/track-mood-2.mp3", Music.class);
         moodTrack3 = mgr.get("audio/track-mood-3.mp3", Music.class);
-        bladeRunner = mgr.get("audio/track-blade.mp3", Music.class);
+        bladeRunner = mgr.get("audio/track-blade-1-3.mp3", Music.class);
 
     }
 
