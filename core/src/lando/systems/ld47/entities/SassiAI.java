@@ -144,15 +144,13 @@ public class SassiAI {
         // if (MathUtils.random(4) < 1) { return Actions.none; }
 
         actions.clear();
-        actions.add(Actions.boardLeft, Actions.shootNext);
-//        actions.add(Actions.boardLeft, Actions.boardRight, Actions.shootNext);
+        actions.add(Actions.boardLeft, Actions.boardRight, Actions.shootNext);
         if (gameBoard.canShootBlock()) {
-//            actions.add(Actions.shootLeft, Actions.shootRight);
-            actions.add(Actions.shootRight);
+            actions.add(Actions.shootLeft, Actions.shootRight);
         }
-//        if (gameBoard.canTransportTetrad()) {
-//            actions.add(Actions.ramLeft, Actions.ramRight);
-//        }
+        if (gameBoard.canTransportTetrad()) {
+            actions.add(Actions.ramLeft, Actions.ramRight);
+        }
         if (holdBox.hold != null) {
             actions.add(Actions.shootHold);
         }
@@ -211,12 +209,7 @@ public class SassiAI {
 
         Timeline.createSequence().push(moveTween)
                 .start(screen.game.tween)
-                .setCallback(new TweenCallback() {
-                    @Override
-                    public void onEvent(int type, BaseTween<?> source) {
-                        completeMove(action);
-                    }
-                });
+                .setCallback((i, s) -> completeMove(action));
     }
 
     private void completeMove(Actions action) {
@@ -284,13 +277,10 @@ public class SassiAI {
                 .push(Tween.to(pos, Vector2Accessor.X, 0.2f).target(pos.x + xHit))
                 .push(Tween.to(pos, Vector2Accessor.X, 0.2f).target(pos.x - xHit))
                 .start(screen.tween)
-                .setCallback(new TweenCallback() {
-                    @Override
-                    public void onEvent(int type, BaseTween<?> source) {
+                .setCallback((s, i) -> {
                         gameBoard.crash();
                         animating = false;
-                    }
-                });
+                    });
     }
 
     private final Vector2[] emptyWayPoints = new Vector2[] {};
