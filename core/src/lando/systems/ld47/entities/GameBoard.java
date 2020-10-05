@@ -410,6 +410,9 @@ public class GameBoard {
 
     Vector2 endPos = new Vector2();
     private void checkForPullOut() {
+        if (!tetrads.contains(tetradToRemove, true)){
+            tetradToRemove = null;
+        }
         if (pulloutEnabled) {
             if (tetradToRemove != null) {
                 gameState.setNext(new Tetrad(tetradToRemove));

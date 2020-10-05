@@ -6,16 +6,21 @@ import lando.systems.ld47.Game;
 
 public class ControlsScreen extends BaseScreen {
 
+    public float debounceTime;
+
     public ControlsScreen(Game game) {
         super(game);
         playerInput.recheckController();
+        this.debounceTime = 1f;
     }
 
     @Override
     public void update(float dt) {
         super.update(dt);
 
-        if (Gdx.input.justTouched() || playerInput.isAnyButtonPressed()){
+        debounceTime -= dt;
+
+        if (debounceTime <= 0 && Gdx.input.justTouched() || playerInput.isAnyButtonPressed()){
             game.setScreen(new GameScreen(game));
         }
     }

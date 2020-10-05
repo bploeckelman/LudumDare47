@@ -11,6 +11,7 @@ public class StoryScreen extends BaseScreen {
 
     private final TypingLabel storyLabel;
     private boolean fullyTyped;
+    public float debounceTime;
 
     public StoryScreen(Game game) {
         super(game);
@@ -29,7 +30,7 @@ public class StoryScreen extends BaseScreen {
         this.storyLabel.setFontScale(0.9f);
 
         this.fullyTyped = false;
-
+        this.debounceTime = 2f;
         playerInput.recheckController();
     }
 
@@ -37,9 +38,11 @@ public class StoryScreen extends BaseScreen {
     public void update(float dt) {
         super.update(dt);
 
+        debounceTime -= dt;
+
         fullyTyped = storyLabel.hasEnded();
 
-        if (Gdx.input.justTouched() || playerInput.isAnyButtonPressed()){
+        if (debounceTime <= 0 && Gdx.input.justTouched() || playerInput.isAnyButtonPressed()){
             if (fullyTyped) {
                 game.setScreen(new ControlsScreen(game));
             } else {
