@@ -106,7 +106,7 @@ public class Tetrad implements Pool.Poolable {
 
         flashing = gameBoard.tetradToRemove == this;
         if (flashing) {
-            color.a = (1f + MathUtils.sin(accum * 10f)) / 2f;
+            color.a = (1.5f + MathUtils.sin(accum * 10f) * .5f) / 2f;
         } else {
             color.a = 1;
         }

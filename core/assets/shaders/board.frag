@@ -64,7 +64,7 @@ void main() {
 
     vec4 diffuseColor = max((directionIntensity * u_direction_color) + pointLightColor, u_ambient);
 
-    vec4 baseDif = vec4(1., 1., 1., .6);
+    vec4 baseDif = vec4(1., 1., 1., .8);
 
     vec4 lineDif = vec4(1., 0., 1., 1.);
     lineDif.a *= 1. - (v_pos.y / 60.);
