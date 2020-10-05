@@ -82,6 +82,7 @@ public class GameScreen extends BaseScreen{
             gameHud.render(batch);
             // render dude over the hud - so he can punch em
             opponent.render(batch);
+            particles.draw(batch, Particles.Layer.overlay);
         }
         batch.end();
     }

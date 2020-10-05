@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.ObjectMap;
 
 public class Assets implements Disposable {
 
@@ -57,6 +58,8 @@ public class Assets implements Disposable {
     public Animation<TextureRegion> sasquatch_down;
     public Animation<TextureRegion> sasquatch_punch;
     public Animation<TextureRegion> sasquatch_stun;
+
+    public ObjectMap<Integer, Animation<TextureRegion>> fontPoints;
 
     public NinePatch border;
     public NinePatch inset;
@@ -163,6 +166,10 @@ public class Assets implements Disposable {
         blockShader = loadShader("shaders/standard3d.vert", "shaders/cube.frag");
         boardShader = loadShader("shaders/board.vert", "shaders/board.frag");
 
+        fontPoints = new ObjectMap<>();
+        for (int i = 0; i <= 9; ++i) {
+            fontPoints.put(i, new Animation<>(0.1f, atlas.findRegions("particles/font-points-" + i)));
+        }
 
         loadAudio();
         return 1;

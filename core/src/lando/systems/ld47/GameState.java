@@ -71,6 +71,7 @@ public class GameState {
     public void addScore(int amount, int lineCleared) {
         mutScore.setValue(mutScore.intValue() + amount);
         mutLineCleared.setValue(mutLineCleared.intValue() + lineCleared);
+        gameScreen.gameHud.getScoreUI().spawnPointAddedParticle(amount);
     }
     public void addCombo() {
         comboScore.setValue(comboScore.intValue() + 1);

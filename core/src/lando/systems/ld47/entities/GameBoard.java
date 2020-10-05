@@ -454,19 +454,19 @@ public class GameBoard {
 
         gameState.gameScreen.shaker.addDamage(.2f * rowsCleared);
 
-
+        float comboMultiplier = 1 + Math.max(gameState.getCombo(), 10) / 10;
         switch (rowsCleared) {
             case 1:
-                gameState.addScore(100, 1);
+                gameState.addScore(Math.round(100 * comboMultiplier), 1);
                 break;
             case 2:
-                gameState.addScore(300, 2);
+                gameState.addScore(Math.round(300 * comboMultiplier), 2);
                 break;
             case 3:
-                gameState.addScore(500, 3);
+                gameState.addScore(Math.round(500 * comboMultiplier), 3);
                 break;
             case 4:
-                gameState.addScore(800, 4);
+                gameState.addScore(Math.round(800 * comboMultiplier), 4);
                 break;
         }
         if (rowsCleared > 0) {

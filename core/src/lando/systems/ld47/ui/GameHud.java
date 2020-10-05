@@ -47,6 +47,8 @@ public class GameHud {
         return gameInfoUI.holdUI;
     }
 
+    public ScoreUI getScoreUI() { return gameInfoUI.scoreUI; }
+
     public void update(float dt) {
         for (UserInterface ui : uiElements) {
             ui.update(dt);

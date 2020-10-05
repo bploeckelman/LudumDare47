@@ -2,6 +2,7 @@ package lando.systems.ld47.particles;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.*;
 import lando.systems.ld47.Assets;
@@ -88,6 +89,29 @@ public class Particles implements Disposable {
                     .startColor(c)
                     .endAlpha(0)
                     .timeToLive(.5f)
+                    .init());
+        }
+    }
+
+    public void pointIncreaseIndicator(float x, float y, float size, int point) {
+        String pointsStr = Integer.toString(point);
+        float velocityY = 30f;
+        float startSize = size;
+        float ttl = 2f;
+        for (int i = 0; i < pointsStr.length(); ++i) {
+            activeParticles.get(Layer.overlay).add(Particle.initializer(particlePool.obtain())
+                    .keyframe(assets.fontPoints.get(Character.digit(pointsStr.charAt(i), 10)).getKeyFrames()[0])
+                    .timeToLive(ttl)
+                    .startPos(x + i * (startSize - 3f), y)
+                    .velocity(0f, velocityY)
+                    .startSize(startSize, startSize)
+                    //.endSize(5f, 5f)
+//                            .interpolation(Interpolation.pow5Out)
+                    .interpolation(Interpolation.exp5Out)
+                    .startColor(Color.RED)
+                    .endColor(Color.TEAL)
+                    .startAlpha(1f)
+                    .endAlpha(0.1f)
                     .init());
         }
     }

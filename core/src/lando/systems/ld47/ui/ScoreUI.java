@@ -25,6 +25,10 @@ public class ScoreUI extends UserInterface {
         this.y = y;
     }
 
+    public void spawnPointAddedParticle(int point) {
+        gameState.gameScreen.particles.pointIncreaseIndicator(x + 80f, y - 40f, 30f, point);
+    }
+
     public void update(float dt) {
         score = gameState.getScore();
         scoreLabel = MathUtils.lerp(scoreLabel, score, 0.1f);
