@@ -16,6 +16,14 @@ public class TetradPiece implements IShootable {
     public RemoveReason removeReason;
     public Tetrad owner;
 
+    public TetradPiece(TetradPiece clone) {
+        this.owner = clone.owner;
+        this.x = clone.x;
+        this.y = clone.y;
+        this.color = clone.color;
+        this.removeReason = RemoveReason.NOT_REMOVED;
+    }
+
     public TetradPiece(Tetrad owner, int x, int y, Color color) {
         this.owner = owner;
         this.x = x;
@@ -65,7 +73,7 @@ public class TetradPiece implements IShootable {
 
     @Override
     public void hit() {
-        setDestroyTimer(0, 0, TetradPiece.RemoveReason.SHOT);
+        setDestroyTimer(0, .3f, TetradPiece.RemoveReason.SHOT);
     }
 
     @Override

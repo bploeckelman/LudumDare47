@@ -29,6 +29,7 @@ public class GameState {
     private boolean playSounds;
     private boolean showGhost;
     private boolean bitchMode;
+    private String playerName = "";
 
     public GameState(GameScreen gameScreen) {
         this.gameScreen = gameScreen;
@@ -37,6 +38,7 @@ public class GameState {
         this.showGhost = true;
         this.playMusic = true;
         this.playSounds = true;
+        this.playerName = assets.prefs.getString("name");
         popNext();
 
     }
@@ -126,5 +128,15 @@ public class GameState {
     }
 
     public boolean isBitchMode() { return bitchMode; }
+
+    public void savePlayerName(String name) {
+        playerName = name;
+        assets.prefs.putString("name", name);
+        assets.prefs.flush();
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
 
 }

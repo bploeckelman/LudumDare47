@@ -1,6 +1,7 @@
 package lando.systems.ld47;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
@@ -30,6 +31,7 @@ public class Assets implements Disposable {
 
     public enum Loading { SYNC, ASYNC }
 
+    public Preferences prefs;
     public AssetManager mgr;
     public SpriteBatch batch;
     public ShapeRenderer shapes;
@@ -124,6 +126,8 @@ public class Assets implements Disposable {
 
     public Assets(Loading loading) {
         initialized = false;
+
+        prefs = Gdx.app.getPreferences("BlockRunner");
 
         batch = new SpriteBatch();
         shapes = new ShapeRenderer();

@@ -5,10 +5,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.*;
 import lando.systems.ld47.Assets;
 import lando.systems.ld47.entities.Tetrad;
 import lando.systems.ld47.entities.TetradPiece;
+import lando.systems.ld47.utils.SimplePath;
 
 public class Particles implements Disposable {
 
@@ -108,6 +110,29 @@ public class Particles implements Disposable {
                     .startColor(c)
                     .endAlpha(0)
                     .timeToLive(.5f)
+                    .init());
+        }
+    }
+
+    public void addTeleportParticles(Vector2 startPos, Vector2 endPoint) {
+        int sparks = 100;
+        tempColor.fromHsv(MathUtils.random(180f, 330f), 1f, 1f);
+        for (int i = 0; i < sparks; i++) {
+            float sX = startPos.x + MathUtils.random(-3, 3);
+            float sY = startPos.y + MathUtils.random(-3, 3);
+            SimplePath path = new SimplePath(false,
+                    sX, sY,
+                    sX, sY,
+                    MathUtils.random(1000f, 1050f), MathUtils.random(300f, 350f),
+                    endPoint.x, endPoint.y,
+                    endPoint.x, endPoint.y);
+            activeParticles.get(Layer.front).add(Particle.initializer(particlePool.obtain())
+                    .keyframe(assets.whiteCircle)
+                    .path(path)
+                    .startColor(tempColor)
+                    .startSize(MathUtils.random(1f, 4f), MathUtils.random(1f, 4f))
+                    .endSize(1f, 1f)
+                    .timeToLive(MathUtils.random(.2f, .7f))
                     .init());
         }
     }

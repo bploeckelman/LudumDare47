@@ -408,38 +408,22 @@ public class GameBoard {
         return valid;
     }
 
+    Vector2 endPos = new Vector2();
     private void checkForPullOut() {
         if (pulloutEnabled) {
             if (tetradToRemove != null) {
-                tetradToRemove.flashing = false;
-                gameState.setNext(tetradToRemove);
-                tetrads.removeValue(tetradToRemove, true);
-                if (tetrads.size > 0) {
-                    boolean removedLine = true;
-                    float volume = 0.5f;
-                    while (removedLine) {
-                        boolean clearLine = true;
-                        for (int x = 0; x < TILESWIDE; x++) {
-                            for (Tetrad t : tetrads) {
-                                if (t.containsPoint(x, 0)) {
-                                    clearLine = false;
-                                }
-                            }
-                        }
-                        if (clearLine) {
-                            deleteRow(0);
-                            playSound(Audio.Sounds.tet_clearLine, volume += 0.1f);
-                            removedLine = true;
-                        } else {
-                            removedLine = false;
-                        }
-                    }
+                gameState.setNext(new Tetrad(tetradToRemove));
+                for (TetradPiece point : tetradToRemove.points) {
+                    point.setDestroyTimer(0, .4f, TetradPiece.RemoveReason.STOLEN);
+                    Vector2 pos = getScreenCoordOfTetradPiece(point);
+                    Rectangle endBounds = gameState.gameScreen.gameHud.getNextBox().bounds;
+                    endPos.set(endBounds.x + endBounds.width/2f, endBounds.y + endBounds.height/2f);
+                    gameState.gameScreen.particles.addTeleportParticles(pos, endPos);
                 }
+
+
             }
             tetradToRemove = getFreeBottomPiece();
-            if (tetradToRemove != null) {
-                tetradToRemove.flashing = true;
-            }
             pulloutEnabled = false;
         }
     }

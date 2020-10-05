@@ -48,15 +48,23 @@ public class Tetrad implements Pool.Poolable {
     private float[] vertices;
     private int verticesIndex;
 
-
+    public Tetrad(Tetrad clone) {
+        this(clone.game);
+        this.points.clear();
+        for (TetradPiece point : clone.points) {
+            this.points.add(new TetradPiece(point));
+        }
+        this.position.set(clone.position);
+        this.origin = new Vector2(clone.origin);
+        this.bounds = clone.bounds;
+        this.center.set(clone.center);
+    }
 
     public Tetrad(Game game) {
         this.game = game;
         position = new Vector2(0, 0);
 
-
         points = new Array<>();
-
 
         this.mesh = new Mesh(false, MAX_NUM_VERTICES, 0,
                 new VertexAttribute(VertexAttributes.Usage.Position,           NUM_COMPONENTS_POSITION, "a_position"),
