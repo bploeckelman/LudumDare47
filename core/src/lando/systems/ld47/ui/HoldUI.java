@@ -43,7 +43,7 @@ public class HoldUI extends UserInterface implements IShootable {
             Vector3 projection = new Vector3();
             projection = gameState.gameScreen.hudCamera.unproject(projection);
             projection.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            System.out.println("{ " + projection.x + ", " + projection.y + "}");
+            //System.out.println("{ " + projection.x + ", " + projection.y + "}");
         }
     }
 

@@ -261,11 +261,11 @@ public class Assets implements Disposable {
                 Gdx.files.internal(fragSourcePath));
 
         if (!shaderProgram.isCompiled()) {
-            Gdx.app.error("LoadShader", "compilation failed:\n" + shaderProgram.getLog());
+            // Gdx.app.error("LoadShader", "compilation failed:\n" + shaderProgram.getLog());
             throw new GdxRuntimeException("LoadShader: compilation failed:\n" + shaderProgram.getLog());
         } else if (Config.shaderDebug){
-            Gdx.app.setLogLevel(Gdx.app.LOG_DEBUG);
-            Gdx.app.debug("LoadShader", "ShaderProgram compilation log: " + shaderProgram.getLog());
+            // Gdx.app.setLogLevel(Gdx.app.LOG_DEBUG);
+            // Gdx.app.debug("LoadShader", "ShaderProgram compilation log: " + shaderProgram.getLog());
         }
 
         return shaderProgram;

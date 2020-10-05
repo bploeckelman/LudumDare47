@@ -109,17 +109,13 @@ public class SassiAI {
             actionTime = 1;
             randomAction();
         }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.K)) {
-            stun();
-        }
     }
 
     private void randomAction() {
         Actions action = getNextAction(lastAction);
         if (action == Actions.none) { return; }
 
-        System.out.println(lastAction + " -> " + action);
+        //Gdx.app.log(lastAction + " -> " + action);
         switch (action) {
             case boardLeft:
                 move(topLeft, action);

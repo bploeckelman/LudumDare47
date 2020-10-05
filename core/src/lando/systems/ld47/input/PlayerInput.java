@@ -236,13 +236,13 @@ public class PlayerInput extends ControllerAdapter {
 
     @Override
     public void connected(Controller controller) {
-        Gdx.app.log("controller", "connected: " + controller.getName());
+        // Gdx.app.log("controller", "connected: " + controller.getName());
         controllerState.controller = controller;
     }
 
     @Override
     public void disconnected(Controller controller) {
-        Gdx.app.log("controller", "disconnected: " + controller.getName());
+        // Gdx.app.log("controller", "disconnected: " + controller.getName());
         controllerState.controller = null;
     }
 

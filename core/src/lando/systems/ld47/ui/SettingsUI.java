@@ -154,11 +154,6 @@ public class SettingsUI extends UserInterface {
                    MathUtils.lerp(0, finalWindowBounds.height ,boundsInterpolation.apply(boundsamount)));
         alpha.setValue(transitionAmount);
 
-        // temp for testing
-        if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
-            gameState.setBitchMode(!gameState.isBitchMode());
-        }
-
         mousePos.set(Gdx.input.getX(), Gdx.input.getY(), 0f);
         camera.unproject(mousePos);
         bitchModeToggle.enabled = !gameState.isBitchMode();
@@ -418,7 +413,7 @@ public class SettingsUI extends UserInterface {
     }
 
     public void toggle() {
-        Gdx.app.log("Setting", "Toggled");
+        //Gdx.app.log("Setting", "Toggled");
         if (isHidden()) {
             show();
         } else {

@@ -106,7 +106,7 @@ public class Audio implements Disposable {
 
         SoundContainer soundCont = sounds.get(soundOption);
         if (soundCont == null) {
-            Gdx.app.log("NoSound", "No sound found for " + soundOption.toString());
+            // Gdx.app.log("NoSound", "No sound found for " + soundOption.toString());
             return 0;
         }
 
@@ -218,7 +218,7 @@ class SoundContainer {
             currentSound = s;
             return s;
         } else {
-            System.out.println("No sounds found!");
+            // Gdx.app.log("No sounds found!");
             return null;
         }
     }

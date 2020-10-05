@@ -439,7 +439,7 @@ public class Particle implements Pool.Poolable {
 
             if ((particle.widthStart  == 0f && particle.widthEnd  == 0f)
              || (particle.heightStart == 0f && particle.heightEnd == 0f)) {
-                Gdx.app.log("WARN", "A particle has been created with degenerate size (starting and ending width or height both equal zero), you probably didn't mean to do this as this means the particle won't be visible");
+                // Gdx.app.log("WARN", "A particle has been created with degenerate size (starting and ending width or height both equal zero), you probably didn't mean to do this as this means the particle won't be visible");
             }
 
             particle.rotationStart = rotationStart;
@@ -459,9 +459,9 @@ public class Particle implements Pool.Poolable {
             particle.b = bStart;
             particle.a = aStart;
 
-            if (particle.aStart == 0f && particle.aEnd == 0f) {
-                Gdx.app.log("WARN", "A particle has been created with degenerate alpha (starting and ending alpha both equal zero), you probably didn't mean to do this as this means the particle won't be visible");
-            }
+            // if (particle.aStart == 0f && particle.aEnd == 0f) {
+            //     Gdx.app.log("WARN", "A particle has been created with degenerate alpha (starting and ending alpha both equal zero), you probably didn't mean to do this as this means the particle won't be visible");
+            // }
 
             particle.timed = timed;
             particle.ttlMax = ttlMax;
