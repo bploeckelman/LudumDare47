@@ -21,7 +21,7 @@ public class ScoreEntryUI extends UserInterface implements InputProcessor {
     private static final float margin_horizontal = 60f;
     private static final float margin_vertical   = 140f;
     private static final float margin_button     = 20f;
-    private static final int   max_name_length   = 15;
+    private static final int   max_name_length   = 17;
 
     private static final Color dark_violet   = new Color(150f / 255f, 0f, 1f, 1f);
     private static final Color deep_pink     = new Color(1f, 0f, 193f / 255f, 1f);
