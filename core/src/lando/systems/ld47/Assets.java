@@ -63,6 +63,9 @@ public class Assets implements Disposable {
     public Animation<TextureRegion> sasquatch_punch;
     public Animation<TextureRegion> sasquatch_stun;
 
+    public Animation<TextureRegion> cat;
+    public Animation<TextureRegion> dog;
+
     public ObjectMap<Integer, Animation<TextureRegion>> fontPoints;
 
     public NinePatch border;
@@ -164,6 +167,9 @@ public class Assets implements Disposable {
         sasquatch_down = new Animation<>(0.1f, atlas.findRegions("car-down"), Animation.PlayMode.LOOP);
         sasquatch_punch = new Animation<>(0.1f, atlas.findRegions("car-shoot"), Animation.PlayMode.NORMAL);
         sasquatch_stun = new Animation<>(0.1f, atlas.findRegions("car-stun"), Animation.PlayMode.LOOP);
+
+        cat = new Animation<>(0.1f, atlas.findRegions("cat"), Animation.PlayMode.LOOP);
+        dog = new Animation<>(0.1f, atlas.findRegions("dog"), Animation.PlayMode.LOOP);
 
         border = new NinePatch(atlas.findRegion("ninepatches/border"), 9, 9, 9, 9);
         inset  = new NinePatch(atlas.findRegion("ninepatches/inset"), 9, 9, 9, 9);

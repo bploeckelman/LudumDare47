@@ -2,11 +2,14 @@ package lando.systems.ld47.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Align;
 import lando.systems.ld47.Config;
 import lando.systems.ld47.Game;
+import lando.systems.ld47.entities.Opponent;
 import lando.systems.ld47.ui.ScoreEntryUI;
 import lando.systems.ld47.ui.typinglabel.TypingLabel;
 
@@ -19,13 +22,15 @@ public class EndScreen extends BaseScreen {
     private TypingLabel thanksLabel;
     private TypingLabel disclaimerLabel;
 
+    private Animation<TextureRegion> catAnimation;
+    private Animation<TextureRegion> dogAnimation;
 
     static String title = "Block Runner 2049";
     static String theme = "Made for Ludum Dare 47: Stuck in a Loop";
     static String thanks = "Thanks for playing our game!";
-    static String developers = "Developed by:\nDoug Graham\nBrian Ploeckelman\nBrian Rossman\nJeffrey Hwang";
-    static String artists = "Art by:\nMatt Neumann";
-    static String emotionalSupport = "Emotional Support:\nAsuka and Cherry";
+    static String developers = "Developed by:\n Doug Graham\n Brian Ploeckelman\n Brian Rossman\n Jeffrey Hwang";
+    static String artists = "Art by:\n Matt Neumann";
+    static String emotionalSupport = "Emotional Support:\n Asuka and  Cherry";
     static String music = "Sound by:\nPeat Vee";
     static String libgdx = "Made with {COLOR=red}<3{COLOR=white} and LibGDX";
     static String disclaimer = "Disclaimer!!!\nNo animals were harmed in the making of this game (they got lots of pets tho)";//Pets were not harmed in making of this game.";
@@ -48,6 +53,8 @@ public class EndScreen extends BaseScreen {
         leftCreditLabel.setWidth(Config.windowWidth / 2f - 150f);
         leftCreditLabel.setLineAlign(Align.left);
         leftCreditLabel.setFontScale(1f);
+        catAnimation = assets.cat;
+        dogAnimation = assets.dog;
 
         rightCreditLabel = new TypingLabel(assets.bladeFont32, artists.toLowerCase() + "\n\n" + music.toLowerCase() + "\n\n" + libgdx.toLowerCase(), Config.windowWidth / 2 + 75f, Config.windowHeight / 2f + 135f);
         rightCreditLabel.setWidth(Config.windowWidth / 2f - 150f);
@@ -76,7 +83,6 @@ public class EndScreen extends BaseScreen {
     @Override
     public void update(float dt) {
         accum += dt;
-
         titleLabel.update(dt);
         themeLabel.update(dt);
         leftCreditLabel.update(dt);
@@ -113,7 +119,12 @@ public class EndScreen extends BaseScreen {
             rightCreditLabel.render(batch);
             thanksLabel.render(batch);
             disclaimerLabel.render(batch);
-
+            if (accum > 7.5) {
+                TextureRegion catTexture = catAnimation.getKeyFrame(accum);
+                TextureRegion dogTexture = dogAnimation.getKeyFrame(accum);
+                batch.draw(catTexture, 330f, 215f);
+                batch.draw(dogTexture, 60f, 210f);
+            }
             scoreEntryUI.draw(batch, null);
         }
         batch.end();
