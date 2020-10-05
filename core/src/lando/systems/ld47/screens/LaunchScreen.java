@@ -2,8 +2,10 @@ package lando.systems.ld47.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.utils.Align;
 import lando.systems.ld47.Config;
 import lando.systems.ld47.Game;
 import lando.systems.ld47.ui.typinglabel.TypingLabel;
@@ -48,6 +50,9 @@ public class LaunchScreen extends BaseScreen {
         titleLabel.render(batch);
         batch.setColor(Color.WHITE);
 
+        BitmapFont chromeFont = assets.bladeFont16;
+        assets.layout.setText(chromeFont, "Chrome needs this.", Color.WHITE, hudCamera.viewportWidth, Align.center, true);
+        chromeFont.draw(batch, assets.layout, 0, 15);
         batch.end();
     }
 }

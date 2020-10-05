@@ -57,6 +57,8 @@ public class SassiAI {
 
     private final GameBoard gameBoard;
 
+    private Timeline currentTimeline;
+
     public SassiAI(GameScreen screen, Opponent opponent) {
         this.screen = screen;
         this.gameBoard = screen.gameBoard;
@@ -228,7 +230,7 @@ public class SassiAI {
 
         opponent.setState(Opponent.State.moving);
 
-        Timeline.createSequence().push(moveTween)
+        currentTimeline = Timeline.createSequence().push(moveTween)
                 .start(screen.game.tween)
                 .setCallback((i, s) -> completeMove(action));
     }
@@ -292,7 +294,7 @@ public class SassiAI {
         float xOffset = -turnWidth * modifier;
         float xHit = 10f * modifier;
 
-        Timeline.createSequence()
+        currentTimeline = Timeline.createSequence()
                 .pushPause(1f)
                 .push(Tween.to(pos, Vector2Accessor.X, 0.3f).target(pos.x + xOffset).ease(Quad.OUT))
                 .push(Tween.to(pos, Vector2Accessor.X, 0.2f).target(pos.x + xHit))
@@ -358,5 +360,25 @@ public class SassiAI {
     public void stun() {
         opponent.setState(Opponent.State.stun);
         stunTime = 5;
+    }
+
+    // pause and disable
+    private boolean paused;
+    public void pause(boolean toggled) {
+        paused = toggled;
+        if (currentTimeline != null) {
+            if (paused) {
+                currentTimeline.pause();
+            } else if (!currentTimeline.isFinished()) {
+                currentTimeline.resume();
+            }
+        }
+    }
+
+    public void disable() {
+        if (currentTimeline != null) {
+            currentTimeline.kill();
+            currentTimeline = null;
+        }
     }
 }

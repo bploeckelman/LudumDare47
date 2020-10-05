@@ -29,7 +29,6 @@ public class GameScreen extends BaseScreen{
         gameBoard = new GameBoard(gameState);
         gameHud = new GameHud(gameState);
 
-        opponent = new Opponent(this);
         shader = game.idkfa ? game.assets.cityShader2 : game.assets.cityShader;
         playMusic(Audio.Musics.blade_runner);
 //        gameState.startMusic();
@@ -40,9 +39,27 @@ public class GameScreen extends BaseScreen{
         playerInput.recheckController();
     }
 
+    private boolean opponentDisabled = true;
+    private void checkBitchMode(boolean bitchMode) {
+        if (opponentDisabled == bitchMode) {
+            return;
+        }
+
+        if (bitchMode) {
+            if (opponent != null) {
+                opponent.disable();
+                opponent = null;
+            }
+        } else {
+            opponent = new Opponent(this);
+        }
+        opponentDisabled = bitchMode;
+    }
+
     @Override
     public void update(float dt) {
         super.update(dt);
+        checkBitchMode(gameState.isBitchMode());
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || playerInput.isPauseButtonJustPressed()) {
             gameHud.toggleSettings();
@@ -53,7 +70,9 @@ public class GameScreen extends BaseScreen{
         accum += dt;
 
         gameBoard.update(dt);
-        opponent.update(dt);
+        if (opponent != null) {
+            opponent.update(dt);
+        }
         gameHud.update(dt);
     }
 
@@ -73,7 +92,6 @@ public class GameScreen extends BaseScreen{
         batch.begin();
         {
             gameBoard.render(batch);
-            //sasquatch.render(batch);
             particles.draw(batch, Particles.Layer.front);
         }
         batch.end();
@@ -83,7 +101,9 @@ public class GameScreen extends BaseScreen{
         {
             gameHud.render(batch);
             // render dude over the hud - so he can punch em
-            opponent.render(batch);
+            if (opponent != null) {
+                opponent.render(batch);
+            }
             // render settings over dude - so they can't be punched
             gameHud.renderSettings(batch);
             particles.draw(batch, Particles.Layer.overlay);

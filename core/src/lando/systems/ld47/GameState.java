@@ -28,6 +28,7 @@ public class GameState {
     private boolean playMusic;
     private boolean playSounds;
     private boolean showGhost;
+    private boolean bitchMode;
 
     public GameState(GameScreen gameScreen) {
         this.gameScreen = gameScreen;
@@ -108,6 +109,10 @@ public class GameState {
         Audio.soundEnabled = false;
     }
 
+    public void setBitchMode(boolean on) {
+        bitchMode = on;
+    }
+
     public void showGhost() {
         showGhost = true;
     }
@@ -119,5 +124,7 @@ public class GameState {
     public boolean isGhostVisible() {
         return showGhost;
     }
+
+    public boolean isBitchMode() { return bitchMode; }
 
 }

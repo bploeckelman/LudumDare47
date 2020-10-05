@@ -6,6 +6,7 @@ import aurelienribon.tweenengine.equations.Bounce;
 import aurelienribon.tweenengine.equations.Quad;
 import aurelienribon.tweenengine.primitives.MutableFloat;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -125,6 +126,11 @@ public class SettingsUI extends UserInterface {
     @Override
     public void update(float dt) {
         if (isHidden()) return;
+
+        // temp for testing
+        if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+            gameState.setBitchMode(!gameState.isBitchMode());
+        }
 
         mousePos.set(Gdx.input.getX(), Gdx.input.getY(), 0f);
         camera.unproject(mousePos);

@@ -47,9 +47,10 @@ public class Opponent {
     private final Vector2 shotOffset;
     public final float carScale = 0.5f;
 
+    private Tween fireTween;
+
     public Opponent(GameScreen screen) {
         this.screen = screen;
-        setState(State.idle);
 
         TextureRegion texture = screen.assets.car.getKeyFrame(0);
         size.set(new Vector2(texture.getRegionWidth() * carScale, texture.getRegionHeight() * carScale));
@@ -78,6 +79,8 @@ public class Opponent {
     private float lastX = -1;
     private float lastY = -1;
     public void update(float dt) {
+        if (disabled || checkPaused()) { return; }
+
         animationTime += dt;
 
         if (state == State.idle) {
@@ -110,7 +113,6 @@ public class Opponent {
             fireball.update(dt);
         }
 
-
         ai.update(dt);
     }
 
@@ -124,6 +126,8 @@ public class Opponent {
     }
 
     public void render(SpriteBatch batch) {
+        if (disabled) { return; }
+
         if (animation != null) {
 
             batch.setColor(Color.WHITE);
@@ -164,7 +168,7 @@ public class Opponent {
 
         float duration = Math.abs(t.x - fireball.position.x) / 200;
 
-        Tween.to(fireball.position, Vector2Accessor.XY, duration)
+        fireTween = Tween.to(fireball.position, Vector2Accessor.XY, duration)
                 .target(t.x, t.y)
                 .start(screen.tween)
                 .setCallback((i, s)-> {
@@ -173,5 +177,47 @@ public class Opponent {
                     fireball = null;
                     isShooting = false;
                 });
+    }
+
+    // pause and disabled stuff
+    private boolean disabled = false;
+    public void disable() {
+        disabled = true;
+        if (fireTween != null) {
+            try {
+                fireTween.kill();
+            } catch (Exception e) {
+                // just a precaution
+            }
+            fireTween = null;
+        }
+        ai.disable();
+    }
+
+    private boolean paused = false;
+    public boolean checkPaused() {
+        if (screen.isPaused()) {
+            if (!paused) {
+                pause(true);
+            }
+            paused = true;
+        } else if (paused) {
+            pause(false);
+        }
+
+        return paused;
+    }
+
+    private void pause(boolean toggled) {
+        if (fireTween != null) {
+            if (toggled) {
+                fireTween.pause();
+            }
+            else {
+                fireTween.resume();
+            }
+        }
+        ai.pause(toggled);
+        paused = toggled;
     }
 }

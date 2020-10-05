@@ -27,7 +27,7 @@ public class Game extends ApplicationAdapter {
 	public Assets assets;
 	public Audio audio;
 
-	public BaseScreen currentScreen;
+	private BaseScreen currentScreen;
 	private BaseScreen nextScreen;
 	private MutableFloat transitionPercent;
 	private FrameBuffer transitionFBO;
