@@ -422,8 +422,9 @@ public class GameBoard {
                 }
 
 
+            } else {
+                tetradToRemove = getFreeBottomPiece();
             }
-            tetradToRemove = getFreeBottomPiece();
             pulloutEnabled = false;
         }
     }

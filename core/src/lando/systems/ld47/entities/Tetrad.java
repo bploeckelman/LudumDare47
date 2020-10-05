@@ -399,7 +399,7 @@ public class Tetrad implements Pool.Poolable {
 
     public boolean resolvingTetrad() {
         for (TetradPiece piece : points) {
-            if (piece.getDestroyTimer() != null && piece.getDestroyTimer() > 0) return true;
+            if (piece.getDestroyTimer() != null && piece.getDestroyTimer() > 0 && piece.removeReason == TetradPiece.RemoveReason.CLEARED) return true;
         }
         return false;
     }
