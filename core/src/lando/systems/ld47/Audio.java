@@ -24,11 +24,11 @@ public class Audio implements Disposable {
         none, cha_ching,
         tet_plunge, tet_rotate, tet_land, tet_clearLine, tet_noswap,
         holdUIExplode, crash, fireballExplosion,
-        dec_shoot, dec_move, dec_hover, dec_teleport
+        dec_shoot, dec_move, dec_hover, dec_teleport, rotateLeft, rotateRight, hold
     }
 
     public enum Musics {
-        none, mood_track, mood_track2, mood_track3, blade_runner
+        none, mood_track, mood_track2, mood_track3, blade_runner, intro_track
     }
 
     public ObjectMap<Sounds, SoundContainer> sounds = new ObjectMap<>();
@@ -49,11 +49,18 @@ public class Audio implements Disposable {
         putSound(Sounds.tet_land, assets.sampleSound);
         putSound(Sounds.cha_ching, assets.chaChingSound);
         putSound(Sounds.tet_clearLine, assets.sampleSound);
+        putSound(Sounds.rotateLeft, assets.rotateLeft);
+        putSound(Sounds.rotateRight, assets.rotateRight);
+        putSound(Sounds.hold, assets.hold);
+        putSound(Sounds.tet_noswap, assets.error);
+        putSound(Sounds.fireballExplosion, assets.explode);
+        putSound(Sounds.crash, assets.crash);
 
         musics.put(Musics.mood_track, assets.moodTrack);
         musics.put(Musics.mood_track2, assets.moodTrack2);
         musics.put(Musics.mood_track3, assets.moodTrack3);
         musics.put(Musics.blade_runner, assets.bladeRunner);
+        musics.put(Musics.intro_track, assets.introTrack);
 
         musicVolume = new MutableFloat(0);
         setMusicVolume(MUSIC_VOLUME, 2f);

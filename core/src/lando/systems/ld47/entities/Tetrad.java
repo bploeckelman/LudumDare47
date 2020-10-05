@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
+import lando.systems.ld47.Audio;
 import lando.systems.ld47.Game;
 
 public class Tetrad implements Pool.Poolable {
@@ -366,8 +367,10 @@ public class Tetrad implements Pool.Poolable {
         for (TetradPiece point : points) {
             if (dir < 0) {
                 point.set(point.y, bounds - point.x);
+                game.audio.playSound(Audio.Sounds.rotateLeft);
             } else {
                 point.set(bounds - point.y, point.x);
+                game.audio.playSound(Audio.Sounds.rotateRight);
             }
         }
     }

@@ -106,6 +106,13 @@ public class Assets implements Disposable {
     // audio
     public Sound sampleSound;
     public Sound chaChingSound;
+    public Sound rotateLeft;
+    public Sound rotateRight;
+    public Sound hold;
+    public Sound error;
+    public Sound explode;
+    public Sound crash;
+    public Music introTrack;
     public Music moodTrack;
     public Music moodTrack2;
     public Music moodTrack3;
@@ -144,6 +151,13 @@ public class Assets implements Disposable {
         mgr.load("audio/track-mood-3.mp3", Music.class);
         mgr.load("audio/track-blade.mp3", Music.class);
         mgr.load("audio/track-blade-1-3.mp3", Music.class);
+        mgr.load("audio/intro.mp3", Music.class);
+        mgr.load("audio/block_sounds/rotate-left.wav", Sound.class);
+        mgr.load("audio/block_sounds/rotate-right.wav", Sound.class);
+        mgr.load("audio/block_sounds/hold.wav", Sound.class);
+        mgr.load("audio/block_sounds/error.wav", Sound.class);
+        mgr.load("audio/block_sounds/explode.wav", Sound.class);
+        mgr.load("audio/car_ramming/crash5.wav", Sound.class);
 
         if (loading == Loading.SYNC) {
             mgr.finishLoading();
@@ -250,7 +264,15 @@ public class Assets implements Disposable {
         moodTrack = mgr.get("audio/track-mood.mp3", Music.class);
         moodTrack2 = mgr.get("audio/track-mood-2.mp3", Music.class);
         moodTrack3 = mgr.get("audio/track-mood-3.mp3", Music.class);
+        introTrack = mgr.get("audio/intro.mp3", Music.class);
         bladeRunner = mgr.get("audio/track-blade-1-3.mp3", Music.class);
+        rotateLeft = mgr.get("audio/block_sounds/rotate-left.wav", Sound.class);
+        rotateRight = mgr.get("audio/block_sounds/rotate-right.wav", Sound.class);
+        hold = mgr.get("audio/block_sounds/hold.wav", Sound.class);
+        error = mgr.get("audio/block_sounds/error.wav", Sound.class);
+        explode = mgr.get("audio/block_sounds/explode.wav", Sound.class);
+        crash = mgr.get("audio/car_ramming/crash5.wav", Sound.class);
+
 
     }
 

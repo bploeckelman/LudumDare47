@@ -10,7 +10,7 @@ import lando.systems.ld47.Game;
 public class TitleScreen extends BaseScreen {
     public TitleScreen(Game game) {
         super(game);
-        playMusic(Audio.Musics.mood_track2);
+        playMusic(Audio.Musics.intro_track);
         playerInput.recheckController();
     }
 
