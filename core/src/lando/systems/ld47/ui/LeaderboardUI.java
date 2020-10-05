@@ -19,8 +19,8 @@ public class LeaderboardUI extends UserInterface {
     private final MutableFloat pulse;
 
     private LeaderboardScore currentLeaderboardScore;
-    private int currentScore;
-    private int currentRank;
+    public int currentScore;
+    public int currentRank;
     private float currentScoreLabel;
     private float rankChangeCountdown;
     private boolean rankChanged;

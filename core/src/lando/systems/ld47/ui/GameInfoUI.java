@@ -41,6 +41,5 @@ public class GameInfoUI extends UserInterface {
         layout.setText(assets.font, "2020", Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.center, false);
         assets.font.draw(batch, layout, gameState.gameScreen.hudCamera.viewportWidth / 4 * 3 - 40f, gameState.gameScreen.hudCamera.viewportHeight - 100f);
         assets.font.getData().setScale(.7f);
-
     }
 }

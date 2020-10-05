@@ -6,6 +6,7 @@ import aurelienribon.tweenengine.equations.Bounce;
 import aurelienribon.tweenengine.equations.Quad;
 import aurelienribon.tweenengine.primitives.MutableFloat;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -15,23 +16,43 @@ import com.badlogic.gdx.utils.Align;
 import lando.systems.ld47.screens.BaseScreen;
 import lando.systems.ld47.utils.accessors.*;
 
-public class ScoreEntryUI extends UserInterface {
+public class ScoreEntryUI extends UserInterface implements InputProcessor {
 
-    private static final float margin_horizontal = 50f;
-    private static final float margin_vertical   = 100f;
-    private static final float margin_button = 20f;
-    private static final float header_height = 40f;
+    private static final float margin_horizontal = 60f;
+    private static final float margin_vertical   = 140f;
+    private static final float margin_button     = 20f;
+    private static final int   max_name_length   = 20;
 
-    private static final String headerText = "Final Score";
+    private static final Color dark_violet   = new Color(150f / 255f, 0f, 1f, 1f);
+    private static final Color deep_pink     = new Color(1f, 0f, 193f / 255f, 1f);
+    private static final Color deep_sky_blue = new Color(0f, 184f / 255f, 1f, 1f);
+    private static final Color aqua          = new Color(0f, 1f, 249f / 255f, 1f);
+    private static final Color blue          = new Color(73f / 255f, 0f, 1f, 1f);
+
     private static final String buttonText = "Submit Score";
+    private static final String namePromptText = "Type your name and click 'submit':";
+
+    private final int score;
+    private final int rank;
 
     private Camera camera;
     private Vector3 mousePos;
     private MutableFloat alpha;
-    private Rectangle boundsButton;
     private Rectangle boundsNameEntry;
-    private String name;
+    private Rectangle boundsButtonSubmit;
+    private Rectangle boundsButtonCancel;
+    private Rectangle finalWindowBounds;
 
+    private Color backgroundColor  = blue;
+    private Color headerTextColor  = deep_sky_blue;
+    private Color scoreTextColor   = aqua;
+    private Color buttonColor      = deep_pink;
+    private Color buttonHoverColor = dark_violet;
+
+    private String name;
+    private boolean buttonHoveredSubmit;
+    private boolean buttonHoveredCancel;
+    private boolean scoreSubmitted;
     private boolean transitionComplete;
 
     // 4 rows
@@ -41,34 +62,55 @@ public class ScoreEntryUI extends UserInterface {
     // - name entry
     // - submit button
 
-    public ScoreEntryUI(BaseScreen screen) {
+    public ScoreEntryUI(BaseScreen screen, int score, int rank) {
         super(screen);
 
         this.camera = screen.hudCamera;
+        this.score = score;
+        this.rank = rank;
 
         this.mousePos = new Vector3();
         this.alpha = new MutableFloat(0f);
 
+        this.buttonHoveredSubmit = false;
+        this.buttonHoveredCancel = false;
+        this.scoreSubmitted = false;
         this.transitionComplete = false;
 
-        this.bounds.setPosition(camera.viewportWidth / 2f, camera.viewportHeight / 2f);
+        this.bounds.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0f, 0f);
 
-        this.boundsButton = new Rectangle(
-                bounds.x + margin_button, bounds.y + margin_button,
-                bounds.width - 2f * margin_button, 150f);
+        this.finalWindowBounds = new Rectangle(
+                margin_horizontal, margin_vertical,
+                camera.viewportWidth - 2f * margin_horizontal,
+                camera.viewportHeight - 2f * margin_vertical);
 
+        float buttonWidth = (1f / 3f) * finalWindowBounds.width;
+        this.boundsButtonSubmit = new Rectangle(
+                finalWindowBounds.x + finalWindowBounds.width / 2f - buttonWidth,
+                finalWindowBounds.y + margin_button, buttonWidth, 80f);
+
+        this.boundsButtonCancel = new Rectangle(
+                finalWindowBounds.x + finalWindowBounds.width / 2f,
+                finalWindowBounds.y + margin_button, buttonWidth, 80f);
+
+        float entryHeight = 120f;
+        float entryWidth = (2f / 3f) * finalWindowBounds.width;
         this.boundsNameEntry = new Rectangle(
-                bounds.x + margin_button, boundsButton.y + margin_button,
-                bounds.width - 2f * margin_button, 100f);
+                finalWindowBounds.x + finalWindowBounds.width / 2f - entryWidth / 2f,
+                bounds.y + bounds.height / 2f - entryHeight / 2f - margin_button,
+                entryWidth, entryHeight);
 
         this.name = "Anonymous";
     }
 
     public void update(float dt) {
+        if (isHidden()) return;
+
         mousePos.set(Gdx.input.getX(), Gdx.input.getY(), 0f);
         camera.unproject(mousePos);
 
-        // TODO: set hover flags based on mouse pos
+        buttonHoveredSubmit = boundsButtonSubmit.contains(mousePos.x, mousePos.y);
+        buttonHoveredCancel = boundsButtonCancel.contains(mousePos.x, mousePos.y);
 
         // don't allow input until show() tween is fully complete
         if (!transitionComplete) return;
@@ -76,8 +118,15 @@ public class ScoreEntryUI extends UserInterface {
         if (Gdx.input.isTouched()) {
             touchPos.set(mousePos);
 
-            if (boundsButton.contains(touchPos.x, touchPos.y)) {
-                screen.leaderboardService.postScore(name, gameState.getScore());
+            if (boundsButtonCancel.contains(touchPos.x, touchPos.y)) {
+                // disable this class as an input processor
+                Gdx.input.setInputProcessor(null);
+                hide();
+            } else if (!scoreSubmitted && boundsButtonSubmit.contains(touchPos.x, touchPos.y)) {
+                screen.leaderboardService.postScore(name, score);
+                scoreSubmitted = true;
+                // disable this class as an input processor
+                Gdx.input.setInputProcessor(null);
                 hide();
             }
         }
@@ -85,41 +134,79 @@ public class ScoreEntryUI extends UserInterface {
 
     public void draw(SpriteBatch batch, Rectangle hudBounds) {
         // draw background
-        batch.setColor(0x30 / 255f, 0x30 / 255f, 0x30 / 255f, alpha.floatValue());
-        batch.draw(assets.whitePixel, bounds.x, bounds.y, bounds.width, bounds.height);
+        {
+            batch.setColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, alpha.floatValue());
+            batch.draw(assets.whitePixel, bounds.x, bounds.y, bounds.width, bounds.height);
+            batch.setColor(Color.WHITE);
 
-        // draw border
-        batch.setColor(1f, 1f, 1f, alpha.floatValue());
-        assets.border.draw(batch, bounds.x, bounds.y, bounds.width, bounds.height);
+            batch.setColor(1f, 1f, 1f, alpha.floatValue());
+            assets.screws.draw(batch, bounds.x, bounds.y, bounds.width, bounds.height);
+            batch.setColor(Color.WHITE);
+        }
 
-        // show content
+        // draw content
         if (transitionComplete) {
+            float headerPosY, headerHeight;
             // header text
             {
-                layout.setText(assets.font, headerText, Color.LIGHT_GRAY, bounds.width, Align.center, false);
-                assets.font.draw(batch, layout, bounds.x, bounds.y + bounds.height - layout.height / 2f);
+                // TODO: get total count of scores in db to do rank X/Y
+                String headerText = "score: " + score + "    rank: " + rank;
+                assets.font.getData().setScale(1.5f);
+                layout.setText(assets.font, headerText, scoreTextColor, bounds.width, Align.center, false);
+                headerHeight = layout.height;
+                headerPosY = bounds.y + bounds.height - headerHeight / 2f;
+                assets.font.draw(batch, layout, bounds.x, headerPosY);
+                assets.font.getData().setScale(0.7f);
             }
 
-            // TODO: score achieved (and rank X/Y)
+            // score and rank
+            {
+                assets.font.getData().setScale(1.1f);
+                layout.setText(assets.font, namePromptText, Color.BLACK, bounds.width, Align.center, false);
+                float scoreRankPosY = headerPosY - headerHeight - margin_button - layout.height / 2f;
+                assets.font.draw(batch, layout, bounds.x, scoreRankPosY);
+                assets.font.getData().setScale(0.7f);
+            }
 
             // name entry field
             {
-                assets.border.draw(batch, boundsNameEntry.x, boundsNameEntry.y, boundsNameEntry.width, boundsNameEntry.height);
-                assets.font.setColor(Color.BLACK);
+                batch.setColor(Color.WHITE);
+                batch.draw(assets.whitePixel, boundsNameEntry.x, boundsNameEntry.y, boundsNameEntry.width, boundsNameEntry.height);
+                assets.screws.draw(batch, boundsNameEntry.x, boundsNameEntry.y, boundsNameEntry.width, boundsNameEntry.height);
 
-                assets.layout.setText(assets.font, name);
-                assets.font.draw(batch, name, boundsNameEntry.x, boundsNameEntry.y + boundsNameEntry.height / 2f + assets.layout.height / 2f, boundsNameEntry.width, Align.center, false);
+                assets.font.getData().setScale(1.4f);
+                assets.font.setColor(Color.DARK_GRAY);
+                layout.setText(assets.font, name);
+                assets.font.draw(batch, name, boundsNameEntry.x, boundsNameEntry.y + boundsNameEntry.height / 2f + layout.height / 2f, boundsNameEntry.width, Align.center, false);
                 assets.font.setColor(Color.WHITE);
+                assets.font.getData().setScale(0.7f);
             }
 
-            // score submission button
+            // score submission & cancel buttons
             {
-                assets.border.draw(batch, boundsButton.x, boundsButton.y, boundsButton.width, boundsButton.height);
-                assets.font.setColor(Color.BLACK);
+                batch.setColor(buttonHoveredSubmit ? buttonHoverColor : buttonColor);
+                batch.draw(assets.whitePixel, boundsButtonSubmit.x, boundsButtonSubmit.y, boundsButtonSubmit.width, boundsButtonSubmit.height);
+                assets.screws.draw(batch, boundsButtonSubmit.x, boundsButtonSubmit.y, boundsButtonSubmit.width, boundsButtonSubmit.height);
+                batch.setColor(1f, 1f, 1f, 1f);
 
-                assets.layout.setText(assets.font, buttonText);
-                assets.font.draw(batch, buttonText, boundsButton.x, boundsButton.y + boundsButton.height / 2f + assets.layout.height / 2f, boundsButton.width, Align.center, false);
+                assets.font.getData().setScale(1.1f);
                 assets.font.setColor(Color.WHITE);
+                layout.setText(assets.font, buttonText);
+                assets.font.draw(batch, buttonText, boundsButtonSubmit.x, boundsButtonSubmit.y + boundsButtonSubmit.height / 2f + layout.height / 2f, boundsButtonSubmit.width, Align.center, false);
+                assets.font.setColor(1f, 1f, 1f, 1f);
+                assets.font.getData().setScale(0.7f);
+
+                batch.setColor(buttonHoveredCancel ? buttonHoverColor : buttonColor);
+                batch.draw(assets.whitePixel, boundsButtonCancel.x, boundsButtonCancel.y, boundsButtonCancel.width, boundsButtonCancel.height);
+                assets.screws.draw(batch, boundsButtonCancel.x, boundsButtonCancel.y, boundsButtonCancel.width, boundsButtonCancel.height);
+                batch.setColor(1f, 1f, 1f, 1f);
+
+                assets.font.getData().setScale(1.1f);
+                assets.font.setColor(Color.WHITE);
+                layout.setText(assets.font, "Cancel");
+                assets.font.draw(batch, "Cancel", boundsButtonCancel.x, boundsButtonCancel.y + boundsButtonCancel.height / 2f + layout.height / 2f, boundsButtonCancel.width, Align.center, false);
+                assets.font.setColor(1f, 1f, 1f, 1f);
+                assets.font.getData().setScale(0.7f);
             }
         }
     }
@@ -136,11 +223,6 @@ public class ScoreEntryUI extends UserInterface {
     public void show() {
         super.show();
 
-        float finalWindowX = margin_horizontal;
-        float finalWindowY = margin_vertical;
-        float finalWindowW = camera.viewportWidth  - 2f * margin_horizontal;
-        float finalWindowH = camera.viewportHeight - 2f * margin_vertical;
-
         alpha.setValue(0f);
 
         transitionComplete = false;
@@ -152,7 +234,7 @@ public class ScoreEntryUI extends UserInterface {
                                 )
                                 .push(
                                         Tween.to(bounds, RectangleAccessor.XYWH, 0.5f)
-                                                .target(finalWindowX, finalWindowY, finalWindowW, finalWindowH)
+                                                .target(finalWindowBounds.x, finalWindowBounds.y, finalWindowBounds.width, finalWindowBounds.height)
                                                 .ease(Bounce.OUT)
                                 )
                 )
@@ -185,4 +267,67 @@ public class ScoreEntryUI extends UserInterface {
                 .start(tween);
     }
 
+    @Override
+    public boolean keyDown(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        // handle backspace
+        if (character == (char) 8 && !name.isEmpty()) {
+            name = name.substring(0, name.length() - 1);
+            return true;
+        }
+
+        // handle delete
+        if (character == (char) 127) {
+            name = "";
+            return true;
+        }
+
+        // sanity checks
+        if (!Character.isLetterOrDigit(character) && !Character.isSpaceChar(character)) return false;
+        if (name.length() >= max_name_length) return false;
+
+        // clear the placeholder if they start typing
+        if (name.equalsIgnoreCase("anonymous")) {
+            name = "";
+        }
+
+        // actually add the new character
+        name += character;
+
+        return true;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
+    }
 }

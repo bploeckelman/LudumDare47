@@ -4,7 +4,6 @@ import aurelienribon.tweenengine.TweenManager;
 import aurelienribon.tweenengine.primitives.MutableInteger;
 import com.badlogic.gdx.utils.Pool;
 import lando.systems.ld47.entities.Tetrad;
-import lando.systems.ld47.leaderboard.LeaderboardService;
 import lando.systems.ld47.screens.GameScreen;
 
 public class GameState {

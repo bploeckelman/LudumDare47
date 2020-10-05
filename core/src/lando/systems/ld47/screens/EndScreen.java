@@ -1,9 +1,9 @@
 package lando.systems.ld47.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Align;
 import lando.systems.ld47.Config;
 import lando.systems.ld47.Game;
@@ -20,7 +20,7 @@ public class EndScreen extends BaseScreen {
     private TypingLabel disclaimerLabel;
 
 
-    static String title = "Tetris";
+    static String title = "Block Runner 2049";
     static String theme = "Made for Ludum Dare 47: Stuck in a Loop";
     static String thanks = "Thanks for playing our game!";
     static String developers = "Developed by:\nDoug Graham\nBrian Ploeckelman\nBrian Rossman\nJeffrey Hwang";
@@ -28,13 +28,15 @@ public class EndScreen extends BaseScreen {
     static String emotionalSupport = "Emotional Support:\nAsuka and Cherry";
     static String music = "Sound by:\nPeat Vee";
     static String libgdx = "Made with {COLOR=red}<3{COLOR=white} and LibGDX";
-    static String disclaimer = "Disclaimer!!!\nPets were not harmed in making of this game.";
+    static String disclaimer = "Disclaimer!!!\nNo animals were harmed in the making of this game (they got lots of pets tho)";//Pets were not harmed in making of this game.";
     Color textColor = new Color(Color.WHITE);
     Color textBorderColor = new Color(Color.GRAY);
 
     private final ScoreEntryUI scoreEntryUI;
+    private final ShaderProgram shader;
+    private float accum = 0f;
 
-    public EndScreen(Game game) {
+    public EndScreen(Game game, int currentScore, int currentRank) {
         super(game);
         titleLabel = new TypingLabel(assets.font, title, 0f, Config.windowHeight / 2f + 290f);
         titleLabel.setWidth(Config.windowWidth);
@@ -64,12 +66,17 @@ public class EndScreen extends BaseScreen {
         thanksLabel.setLineAlign(Align.center);
         disclaimerLabel.setFontScale(.75f);
 
-        this.scoreEntryUI = new ScoreEntryUI(this);
-        this.scoreEntryUI.show();
+        scoreEntryUI = new ScoreEntryUI(this, currentScore, currentRank);
+        scoreEntryUI.show();
+        Gdx.input.setInputProcessor(scoreEntryUI);
+
+        shader = game.assets.cityShader;
     }
 
     @Override
     public void update(float dt) {
+        accum += dt;
+
         titleLabel.update(dt);
         themeLabel.update(dt);
         leftCreditLabel.update(dt);
@@ -77,20 +84,28 @@ public class EndScreen extends BaseScreen {
         thanksLabel.update(dt);
         disclaimerLabel.update(dt);
         scoreEntryUI.update(dt);
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
-            game.setScreen(new TitleScreen(game));
-        }
     }
 
     @Override
     public void render(SpriteBatch batch) {
+        batch.setProjectionMatrix(hudCamera.combined);
+        batch.setShader(shader);
+        batch.begin();
+        {
+            shader.setUniformf("iTime", accum);
+            shader.setUniformf("iResolution", hudCamera.viewportWidth, hudCamera.viewportHeight);
+            batch.draw(assets.pixel, 0, 0, hudCamera.viewportWidth, hudCamera.viewportHeight, -.5f, -.5f, hudCamera.viewportWidth-.5f, hudCamera.viewportHeight - .5f);
+        }
+        batch.end();
+
+        batch.setShader(null);
         batch.setProjectionMatrix(worldCamera.combined);
         batch.begin();
         {
             batch.setColor(0f, 0f, 0f, 0.6f);
-            batch.draw(assets.whitePixel, 25f, 110f, Config.windowWidth / 2f - 50f, 350f);
-            batch.draw(assets.whitePixel, Config.windowWidth / 2f + 25f, 110f, Config.windowWidth / 2f - 50f, 350f);
+            batch.draw(assets.whitePixel, 25f, 130f, Config.windowWidth / 2f - 50f, 400f);
+            batch.draw(assets.whitePixel, Config.windowWidth / 2f + 25f, 130f, Config.windowWidth / 2f - 50f, 400f);
+
             batch.setColor(Color.WHITE);
             titleLabel.render(batch);
             themeLabel.render(batch);
@@ -98,6 +113,7 @@ public class EndScreen extends BaseScreen {
             rightCreditLabel.render(batch);
             thanksLabel.render(batch);
             disclaimerLabel.render(batch);
+
             scoreEntryUI.draw(batch, null);
         }
         batch.end();

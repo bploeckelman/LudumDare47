@@ -47,7 +47,7 @@ public class GameScreen extends BaseScreen{
 
         // TODO: remove
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)){
-            game.setScreen(new EndScreen(game));
+            game.setScreen(new EndScreen(game, gameHud.getCurrentScore(), gameHud.getCurrentRank()));
         }
 
         // TESTING ---------------

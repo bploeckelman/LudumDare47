@@ -92,4 +92,13 @@ public class GameHud {
     public void updateScores(Array<LeaderboardScore> scores) {
         leaderboardUI.updateScores(scores);
     }
+
+    public int getCurrentRank() {
+        return leaderboardUI.currentRank;
+    }
+
+    public int getCurrentScore() {
+        return leaderboardUI.currentScore;
+    }
+
 }
