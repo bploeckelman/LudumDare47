@@ -189,12 +189,13 @@ public class ScoreEntryUI extends UserInterface implements InputProcessor {
                 assets.screws.draw(batch, boundsButtonSubmit.x, boundsButtonSubmit.y, boundsButtonSubmit.width, boundsButtonSubmit.height);
                 batch.setColor(1f, 1f, 1f, 1f);
 
-                assets.bladeFont64.getData().setScale(.6f);
+                assets.bladeFont64.getData().setScale(.5f);
                 assets.bladeFont64.setColor(Color.WHITE);
                 layout.setText(assets.bladeFont64, buttonText);
-                assets.bladeFont64.draw(batch, buttonText, boundsButtonSubmit.x, boundsButtonSubmit.y + boundsButtonSubmit.height / 2f + layout.height / 2f, boundsButtonSubmit.width, Align.center, false);
+                assets.bladeFont64.draw(batch, buttonText, boundsButtonSubmit.x, boundsButtonSubmit.y + boundsButtonSubmit.height / 2f + layout.height / 2f, boundsButtonSubmit.width - 25f, Align.right, false);
                 assets.bladeFont64.setColor(1f, 1f, 1f, 1f);
                 assets.bladeFont64.getData().setScale(1f);
+                batch.draw(assets.uploadIcon, boundsButtonSubmit.x + 25f, boundsButtonSubmit.y + boundsButtonSubmit.height / 2f - assets.uploadIcon.getRegionHeight() / 2f);
 
                 batch.setColor(buttonHoveredCancel ? buttonHoverColor : buttonColor);
                 batch.draw(assets.whitePixel, boundsButtonCancel.x, boundsButtonCancel.y, boundsButtonCancel.width, boundsButtonCancel.height);
