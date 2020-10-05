@@ -20,7 +20,6 @@ public class Assets implements Disposable {
     private final AssetDescriptor<TextureAtlas> atlasAsset = new AssetDescriptor<>("images/sprites.atlas", TextureAtlas.class);
     private final AssetDescriptor<Texture> pixelTextureAsset = new AssetDescriptor<>("images/pixel.png", Texture.class);
     private final AssetDescriptor<Texture> blockTextureAsset = new AssetDescriptor<>("images/blocks.png", Texture.class);
-    private final AssetDescriptor<Texture> launchTextureAsset = new AssetDescriptor<>("images/launch.png", Texture.class);
     private final AssetDescriptor<Texture> titleTextureAsset = new AssetDescriptor<>("images/title.png", Texture.class);
     private final AssetDescriptor<Texture> titleSillyTextureAsset = new AssetDescriptor<>("images/title-block-and-deckard.png", Texture.class);
     private final AssetDescriptor<Texture> controlsTextureAsset = new AssetDescriptor<>("images/controls.png", Texture.class);
@@ -43,7 +42,6 @@ public class Assets implements Disposable {
     public BitmapFont bladeFont64;
     public boolean initialized;
 
-    public Texture launchImage;
     public Texture titleImage;
     public Texture titleSillyImage;
     public Texture controlsImage;
@@ -148,7 +146,6 @@ public class Assets implements Disposable {
         mgr.load(titleSillyTextureAsset);
         mgr.load(controlsTextureAsset);
         mgr.load(noiseTextureAsset);
-        mgr.load(launchTextureAsset);
         mgr.load(riseFont16Asset);
         mgr.load(bladeFont16Asset);
         mgr.load(bladeFont32Asset);
@@ -181,7 +178,6 @@ public class Assets implements Disposable {
         if (initialized) return 1f;
 
         pixel = mgr.get(pixelTextureAsset);
-        launchImage = mgr.get(launchTextureAsset);
         titleImage = mgr.get(titleTextureAsset);
         titleSillyImage = mgr.get(titleSillyTextureAsset);
         controlsImage = mgr.get(controlsTextureAsset);
