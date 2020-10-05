@@ -13,6 +13,11 @@
               <a class="superdev" href="javascript:%7B%20window.__gwt_bookmarklet_params%20%3D%20%7B'server_url'%3A'http%3A%2F%2Flocalhost%3A9876%2F'%7D%3B%20var%20s%20%3D%20document.createElement('script')%3B%20s.src%20%3D%20'http%3A%2F%2Flocalhost%3A9876%2Fdev_mode_on.js'%3B%20void(document.getElementsByTagName('head')%5B0%5D.appendChild(s))%3B%7D">&#8635;</a>
               <div oncontextmenu="return false;" align="center" id="embed-html"></div>
               <table id='leaderboard' border=1></table>
+              <div id="prev-next">
+                     <button id="previous">Previous</button>
+                     <span id="current-page">1</span>
+                     <button id="next">next</button>
+              </div>
               <script type="text/javascript" src="html/html.nocache.js"></script>
        </body>
 
@@ -82,7 +87,60 @@
 		 	    }
 		      })();
 
+
+                    var page = 0;
+                    canAdvance = true;
+
+              const getPage = async function(type) {
+
+                     
+                     if(type == "next"){
+                            if (canAdvance)
+                     {
+                            page ++;
+                     }
+                            
+                     }
+              
+                     if(type == "previous"){
+                            if(page > 0)
+                            {
+                                  page--
+                            }
+                     }
+                     getUrl = 'https://lando.systems/ld47-leaderboard/scores?page='+page;
+
+                     var response = await fetch(getUrl);
+                         var data = await response.json();
+                         console.log(data.content);
+                         tbl = document.getElementById('leaderboard');
+                         tbl.children = [];
+
+                         if(data.content.length > 0)
+                         {
+                                canAdvance = true;
+                         while (tbl.firstChild) {
+                                  tbl.removeChild(tbl.firstChild);
+                            }
+
+			    for (let x of data.content) {
+				  addRow(tbl, x.name, x.score);
+                          }
+                          document.getElementById('current-page').innerHTML = page+1;
+                     }
+                     else {
+                            canAdvance = false;
+                     }
+              }
+
               document.getElementById('embed-html').addEventListener('mousedown', handleMouseDown, false);
               document.getElementById('embed-html').addEventListener('mouseup', handleMouseUp, false);
+
+              document.getElementById("previous").addEventListener('click',function(){
+                     getPage('previous')
+              });
+              document.getElementById("next").addEventListener('click',function(){
+                     getPage('next')
+              });
        </script>
 </html>
