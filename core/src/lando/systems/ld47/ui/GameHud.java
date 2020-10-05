@@ -21,6 +21,7 @@ public class GameHud {
 
     private GameInfoUI gameInfoUI;
     private LeaderboardUI leaderboardUI;
+    private SettingsUI settingsUI;
 
     private final Array<UserInterface> uiElements = new Array<>();
 
@@ -35,6 +36,7 @@ public class GameHud {
 //        uiElements.add(nextUI = new NextUI(gameState, this.camera.viewportWidth - 130, bounds.height - 50));
         uiElements.add(gameInfoUI = new GameInfoUI(gameState));
         uiElements.add(leaderboardUI = new LeaderboardUI(gameState));
+        uiElements.add(settingsUI = new SettingsUI(gameState.gameScreen));
 
         controllerText = new StringBuilder();
     }
@@ -55,6 +57,7 @@ public class GameHud {
         }
 
         // DEBUG --------------------------------
+        // TODO: replace me with a little icon or something
         controllerText.clear();
         controllerText.append("[");
         Array<Controller> controllers = Controllers.getControllers();
@@ -76,6 +79,7 @@ public class GameHud {
         }
 
         // DEBUG --------------------------------
+        // TODO: replace me with a little icon or something
         GlyphLayout layout = gameState.assets.layout;
         layout.setText(gameState.assets.font, controllerText.toString());
         gameState.assets.font.draw(batch, layout, 10, layout.height + 10);
@@ -86,7 +90,7 @@ public class GameHud {
             gameState.assets.font.draw(batch, layout, (Config.windowWidth - layout.width)*3/4, Config.windowHeight - layout.height);
             layout.setText(gameState.assets.font, "We do not support White Supremacists");
             gameState.assets.font.draw(batch, layout, (Config.windowWidth - layout.width)/4, Config.windowHeight - layout.height);
-        };
+        }
 
         batch.setColor(Color.WHITE);
     }
@@ -103,4 +107,7 @@ public class GameHud {
         return leaderboardUI.currentScore;
     }
 
+    public void toggleSettings() {
+        settingsUI.toggle();
+    }
 }

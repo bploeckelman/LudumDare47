@@ -4,13 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld47.Audio;
 import lando.systems.ld47.Game;
 import lando.systems.ld47.GameState;
 import lando.systems.ld47.entities.GameBoard;
 import lando.systems.ld47.entities.Opponent;
-import lando.systems.ld47.leaderboard.LeaderboardService;
 import lando.systems.ld47.particles.Particles;
 import lando.systems.ld47.ui.GameHud;
 
@@ -43,6 +41,11 @@ public class GameScreen extends BaseScreen{
     @Override
     public void update(float dt) {
         super.update(dt);
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || playerInput.isPauseButtonJustPressed()) {
+            gameHud.toggleSettings();
+            gameBoard.togglePause();
+        }
 
         shader = game.idkfa ? game.assets.cityShader2 : game.assets.cityShader;
         accum += dt;
@@ -86,6 +89,18 @@ public class GameScreen extends BaseScreen{
 
     public void gameOver() {
         game.setScreen(new EndScreen(game, gameHud.getCurrentScore(), gameHud.getCurrentRank()));
+    }
+
+    public boolean isPaused() {
+        return gameBoard.isPaused();
+    }
+
+    public void unpause() {
+        gameBoard.unpause();
+    }
+
+    public void pause() {
+        gameBoard.pause();
     }
 
 }

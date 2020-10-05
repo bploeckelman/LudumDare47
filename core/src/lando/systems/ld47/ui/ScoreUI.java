@@ -35,7 +35,9 @@ public class ScoreUI extends UserInterface {
         lineCleared = gameState.getLineCleared();
         lineClearedLabel = MathUtils.lerp(lineClearedLabel, lineCleared, 0.5f);
         combo = gameState.getCombo();
-        time += dt;
+        if (!gameState.gameScreen.isPaused()) {
+            time += dt;
+        }
     }
 
     public void draw(SpriteBatch batch, Rectangle bounds) {

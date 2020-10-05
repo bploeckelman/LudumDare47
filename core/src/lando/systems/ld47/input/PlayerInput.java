@@ -42,6 +42,9 @@ public class PlayerInput extends ControllerAdapter {
         public boolean holdButtonPressed;
         public boolean holdButtonJustPressed;
 
+        public boolean pauseButtonPressed;
+        public boolean pauseButtonJustPressed;
+
         public ControllerState() {
             reset();
         }
@@ -60,6 +63,8 @@ public class PlayerInput extends ControllerAdapter {
             rotateRightButtonJustPressed = false;
             holdButtonPressed            = false;
             holdButtonJustPressed        = false;
+            pauseButtonPressed           = false;
+            pauseButtonJustPressed       = false;
         }
     }
     private ControllerState controllerState = new ControllerState();
@@ -128,6 +133,10 @@ public class PlayerInput extends ControllerAdapter {
             boolean holdButtonDown = lBumperDown || rBumperDown;
             controllerState.holdButtonJustPressed = holdButtonDown && !controllerState.holdButtonPressed;
             controllerState.holdButtonPressed = holdButtonDown;
+
+            boolean startButtonDown = controllerState.controller.getButton(Xbox.START) || controllerState.controller.getButton(Xbox.BACK);
+            controllerState.pauseButtonJustPressed = startButtonDown && !controllerState.pauseButtonPressed;
+            controllerState.pauseButtonPressed = startButtonDown;
         } else {
             controllerState.reset();
         }
@@ -212,6 +221,10 @@ public class PlayerInput extends ControllerAdapter {
             }
         }
         return false;
+    }
+
+    public boolean isPauseButtonJustPressed() {
+        return controllerState.pauseButtonJustPressed;
     }
 
     // ------------------------------------------------------------------------------

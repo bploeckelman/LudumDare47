@@ -46,6 +46,7 @@ public class GameBoard {
 
     public PointLight[] pointLights;
     private GameBackPlate backPlate;
+    private boolean paused = false;
 
     public GameBoard(GameState gameState) {
         this.gameState = gameState;
@@ -58,8 +59,6 @@ public class GameBoard {
         blocksToFallTilRemove = 3;
         fallInterval = 1f;
         timeToFall = fallInterval;
-
-
 
         gameFB = new FrameBuffer(Pixmap.Format.RGBA8888, (int)gameBounds.width, (int)gameBounds.height, true);
         gameTexture = gameFB.getColorBufferTexture();
@@ -121,6 +120,8 @@ public class GameBoard {
     }
 
     public void update(float dt) {
+        if (paused) return;
+
         Tetrad.GLOBAL_ANIM += dt;
 
         for (PointLight light : pointLights) {
@@ -533,4 +534,21 @@ public class GameBoard {
 
         return endblocks;
     }
+
+    public void togglePause() {
+        paused = !paused;
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
+
+    public void unpause() {
+        paused = false;
+    }
+
+    public void pause() {
+        paused = true;
+    }
+
 }
