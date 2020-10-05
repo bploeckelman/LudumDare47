@@ -227,6 +227,7 @@ public class SassiAI {
         moveTween.target(movePos.x, movePos.y).ease(TweenEquations.easeInOutCubic);
 
         opponent.setState(Opponent.State.moving);
+        screen.playSound(Audio.Sounds.dec_move);
 
         currentTimeline = Timeline.createSequence().push(moveTween)
                 .start(screen.game.tween)

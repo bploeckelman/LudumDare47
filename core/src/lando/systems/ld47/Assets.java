@@ -118,6 +118,7 @@ public class Assets implements Disposable {
     public Sound carShootCharge;
     public Sound blockLaserChargeRelease;
     public Sound blockMechanicalGrowl;
+    public Sound blockLaserPluck;
     public Music introTrack;
     public Music moodTrack;
     public Music moodTrack2;
@@ -174,6 +175,7 @@ public class Assets implements Disposable {
         mgr.load("audio/car_shooting/charge2.wav", Sound.class);
         mgr.load("audio/block_sounds/laser-charge-release.wav", Sound.class);
         mgr.load("audio/block_sounds/mechanical-growl.wav", Sound.class);
+        mgr.load("audio/block_sounds/laserpluck.wav", Sound.class);
 
         if (loading == Loading.SYNC) {
             mgr.finishLoading();
@@ -291,6 +293,7 @@ public class Assets implements Disposable {
         carFart = mgr.get("audio/car_moving/carfart.wav", Sound.class);
         blockLaserChargeRelease = mgr.get("audio/block_sounds/laser-charge-release.wav", Sound.class);
         blockMechanicalGrowl = mgr.get("audio/block_sounds/mechanical-growl.wav", Sound.class);
+        blockLaserPluck = mgr.get("audio/block_sounds/laserpluck.wav", Sound.class);
 
     }
 

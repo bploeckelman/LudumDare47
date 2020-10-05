@@ -46,7 +46,7 @@ public class Audio implements Disposable {
         this.assets = game.assets;
         this.tween = game.tween;
 
-        putSound(Sounds.tet_land, assets.sampleSound);
+        putSound(Sounds.tet_land, assets.blockLaserPluck);
         putSound(Sounds.cha_ching, assets.chaChingSound);
         putSound(Sounds.rotateLeft, assets.rotateNew);
         putSound(Sounds.rotateRight, assets.rotateNew);
@@ -56,7 +56,7 @@ public class Audio implements Disposable {
         putSound(Sounds.crash, assets.crash);
         putSound(Sounds.holdUIExplode, assets.explode);
         putSound(Sounds.dec_teleport, assets.carTeleportWhooshUp);
-        putSound(Sounds.dec_hover, assets.carFart);
+        putSound(Sounds.dec_move, assets.carFart);
         putSound(Sounds.dec_shoot, assets.carShootCharge);
         putSound(Sounds.tet_clearLine, assets.blockMechanicalGrowl);
 
