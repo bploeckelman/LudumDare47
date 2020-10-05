@@ -10,6 +10,10 @@ import com.badlogic.gdx.utils.Pool;
 
 public class ParticleDecal implements Pool.Poolable {
 
+    public static Builder builder(ParticleDecal particle) {
+        return new Builder(particle);
+    }
+
     public Decal decal;
     private boolean billboard;
     private Interpolation interpolation;
@@ -49,6 +53,7 @@ public class ParticleDecal implements Pool.Poolable {
 
 
     private ParticleDecal(){
+        reset();
     }
 
     private void setTexture(TextureRegion texture) {

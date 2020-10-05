@@ -123,10 +123,11 @@ public class Particles implements Disposable {
             for (float i = startY; i >= endY + 1; i -= .1f) {
                 delay += .01f;
                 for (int j = 0; j < 10; j++) {
-                    activeDecals.add(new ParticleDecal.Builder(decalPool.obtain())
+                    activeDecals.add(ParticleDecal.builder(decalPool.obtain())
                             .texture(assets.whiteCircle)
                             .pos(x + MathUtils.random( 1f), i + MathUtils.random(-.05f, .05f), .99f)
                             .vel(MathUtils.random(-.1f, .1f), -1, 0)
+                            .acc(0, 2f, 0)
                             .colorStart(tempColor)
                             .colorEnd(0f, 0f, 0f, 0f)
                             .startSize(.04f, .08f)
