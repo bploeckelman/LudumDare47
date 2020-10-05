@@ -1,16 +1,15 @@
 # Links
 ---
 
-- ** [HTML5/WebGL](https://lando.systems/games/ld46-intheflesh) **
-- ** [Desktop/Java](https://lando.systems/games/ld46-intheflesh/ld46-intheflesh.jar) **
-- ** [Source](https://github.com/bploeckelman/LudumDare46) **
+- ** [HTML5/WebGL](https://lando.systems/games/ld47-blockrunner2049) **
+- ** [Desktop/Java](https://lando.systems/games/ld47-blockrunner2049/ld47-blockrunner2049.jar) **
+- ** [Source](https://github.com/bploeckelman/LudumDare47) **
 
 In the year 2020, the blocks are taking over. 
 
 Retire them (with help from assistant/antagonist, Brick Deckard).
 
-![gameplay.gif](///raw/503/z/30204.gif)
-
+TODO: insert gif
 
 # Controls:
 ---
@@ -21,9 +20,7 @@ Retire them (with help from assistant/antagonist, Brick Deckard).
 - ** W ** to insta-drop current block
 - ** Ctrl ** store current block for later
 
-
-![ss5.png](///raw/503/z/304e6.png)
-
+TODO: insert image
 
 # Game:
 ---
@@ -36,9 +33,7 @@ Drop blocks to clear rows while the ** Block Runner ** attempts to help and/or h
 
 :small_blue_diamond: Global leaderboard
 
-
-
-![ss3.png](///raw/503/z/30507.png)
+TODO: insert image
 
 
 # About the Team:
@@ -64,7 +59,9 @@ Audio:
 
 Support Shiba:
 - Asuka!
-![shiba-w-scarf.jpg](///raw/103/z/12960.jpg)
+
+Support Kitty:
+- Cherry!
 
 
 We hope you enjoy playing the game as much as we did making it! :fingers_crossed:
