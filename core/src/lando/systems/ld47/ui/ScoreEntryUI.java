@@ -21,7 +21,7 @@ public class ScoreEntryUI extends UserInterface implements InputProcessor {
     private static final float margin_horizontal = 60f;
     private static final float margin_vertical   = 140f;
     private static final float margin_button     = 20f;
-    private static final int   max_name_length   = 20;
+    private static final int   max_name_length   = 15;
 
     private static final Color dark_violet   = new Color(150f / 255f, 0f, 1f, 1f);
     private static final Color deep_pink     = new Color(1f, 0f, 193f / 255f, 1f);
@@ -38,10 +38,10 @@ public class ScoreEntryUI extends UserInterface implements InputProcessor {
     private Camera camera;
     private Vector3 mousePos;
     private MutableFloat alpha;
+    private Rectangle finalWindowBounds;
     private Rectangle boundsNameEntry;
     private Rectangle boundsButtonSubmit;
     private Rectangle boundsButtonCancel;
-    private Rectangle finalWindowBounds;
 
     private Color backgroundColor  = blue;
     private Color headerTextColor  = deep_sky_blue;
@@ -77,6 +77,8 @@ public class ScoreEntryUI extends UserInterface implements InputProcessor {
         this.scoreSubmitted = false;
         this.transitionComplete = false;
 
+        this.name = "anonymous";
+
         this.bounds.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0f, 0f);
 
         this.finalWindowBounds = new Rectangle(
@@ -94,13 +96,11 @@ public class ScoreEntryUI extends UserInterface implements InputProcessor {
                 finalWindowBounds.y + margin_button, buttonWidth, 80f);
 
         float entryHeight = 120f;
-        float entryWidth = (2f / 3f) * finalWindowBounds.width;
+        float entryWidth = (4f / 5f) * finalWindowBounds.width;
         this.boundsNameEntry = new Rectangle(
                 finalWindowBounds.x + finalWindowBounds.width / 2f - entryWidth / 2f,
                 bounds.y + bounds.height / 2f - entryHeight / 2f - margin_button,
                 entryWidth, entryHeight);
-
-        this.name = "anonymous";
     }
 
     public void update(float dt) {
@@ -115,7 +115,7 @@ public class ScoreEntryUI extends UserInterface implements InputProcessor {
         // don't allow input until show() tween is fully complete
         if (!transitionComplete) return;
 
-        if (Gdx.input.isTouched()) {
+        if (Gdx.input.justTouched()) {
             touchPos.set(mousePos);
 
             if (boundsButtonCancel.contains(touchPos.x, touchPos.y)) {
@@ -163,7 +163,7 @@ public class ScoreEntryUI extends UserInterface implements InputProcessor {
             {
                 assets.bladeFont64.getData().setScale(.7f);
                 layout.setText(assets.bladeFont64, namePromptText, Color.BLACK, bounds.width, Align.center, false);
-                float scoreRankPosY = headerPosY - headerHeight - margin_button - layout.height / 2f;
+                float scoreRankPosY = headerPosY - headerHeight - margin_button - layout.height;
                 assets.bladeFont64.draw(batch, layout, bounds.x, scoreRankPosY);
                 assets.bladeFont64.getData().setScale(1f);
             }
@@ -174,7 +174,7 @@ public class ScoreEntryUI extends UserInterface implements InputProcessor {
                 batch.draw(assets.whitePixel, boundsNameEntry.x, boundsNameEntry.y, boundsNameEntry.width, boundsNameEntry.height);
                 assets.screws.draw(batch, boundsNameEntry.x, boundsNameEntry.y, boundsNameEntry.width, boundsNameEntry.height);
 
-                assets.bladeFont64.getData().setScale(.7f);
+                assets.bladeFont64.getData().setScale(1.1f);
                 assets.bladeFont64.setColor(Color.DARK_GRAY);
                 layout.setText(assets.bladeFont64, name);
                 assets.bladeFont64.draw(batch, name, boundsNameEntry.x, boundsNameEntry.y + boundsNameEntry.height / 2f + layout.height / 2f, boundsNameEntry.width, Align.center, false);
@@ -282,12 +282,15 @@ public class ScoreEntryUI extends UserInterface implements InputProcessor {
         // handle backspace
         if (character == (char) 8 && !name.isEmpty()) {
             name = name.substring(0, name.length() - 1);
+            if (name.isEmpty()) {
+                name = "Anonymous";
+            }
             return true;
         }
 
         // handle delete
         if (character == (char) 127) {
-            name = "";
+            name = "Anonymous";
             return true;
         }
 

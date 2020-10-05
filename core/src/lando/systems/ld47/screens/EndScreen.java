@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
 import lando.systems.ld47.Config;
 import lando.systems.ld47.Game;
@@ -13,6 +15,9 @@ import lando.systems.ld47.ui.ScoreEntryUI;
 import lando.systems.ld47.ui.typinglabel.TypingLabel;
 
 public class EndScreen extends BaseScreen {
+
+    private static final Color dark_violet   = new Color(150f / 255f, 0f, 1f, 1f);
+    private static final Color deep_pink     = new Color(1f, 0f, 193f / 255f, 1f);
 
     private TypingLabel titleLabel;
     private TypingLabel themeLabel;
@@ -38,6 +43,11 @@ public class EndScreen extends BaseScreen {
     private final ScoreEntryUI scoreEntryUI;
     private final ShaderProgram shader;
     private float accum = 0f;
+
+    private final Vector3 mousePos;
+    private final Vector3 touchPos;
+    private final Rectangle boundsButtonRestart;
+    private boolean buttonHoveredRestart;
 
     public EndScreen(Game game, int currentScore, int currentRank) {
         super(game);
@@ -78,10 +88,30 @@ public class EndScreen extends BaseScreen {
         }
 
         shader = game.assets.cityShader;
+
+        this.mousePos = new Vector3();
+        this.touchPos = new Vector3();
+        this.buttonHoveredRestart = false;
+        float margin = 10f;
+        float buttonSize = 80f;
+        this.boundsButtonRestart = new Rectangle(margin, hudCamera.viewportHeight - buttonSize - margin, buttonSize, buttonSize);
     }
 
     @Override
     public void update(float dt) {
+        mousePos.set(Gdx.input.getX(), Gdx.input.getY(), 0f);
+        hudCamera.unproject(mousePos);
+
+        buttonHoveredRestart = boundsButtonRestart.contains(mousePos.x, mousePos.y);
+
+        if (scoreEntryUI.isHidden() && Gdx.input.justTouched()) {
+            touchPos.set(mousePos);
+
+            if (boundsButtonRestart.contains(touchPos.x, touchPos.y)) {
+                game.setScreen(new GameScreen(game));
+            }
+        }
+
         accum += dt;
         titleLabel.update(dt);
         themeLabel.update(dt);
@@ -125,6 +155,11 @@ public class EndScreen extends BaseScreen {
                 batch.draw(catTexture, 330f, 215f);
                 batch.draw(dogTexture, 60f, 210f);
             }
+
+            batch.setColor((buttonHoveredRestart) ? deep_pink : dark_violet);
+            batch.draw(assets.restartIcon, boundsButtonRestart.x, boundsButtonRestart.y, boundsButtonRestart.width, boundsButtonRestart.height);
+            batch.setColor(Color.WHITE);
+
             scoreEntryUI.draw(batch, null);
         }
         batch.end();
