@@ -1,0 +1,70 @@
+# Links
+---
+
+- ** [HTML5/WebGL](https://lando.systems/games/ld46-intheflesh) **
+- ** [Desktop/Java](https://lando.systems/games/ld46-intheflesh/ld46-intheflesh.jar) **
+- ** [Source](https://github.com/bploeckelman/LudumDare46) **
+
+In the year 2020, the blocks are taking over. 
+
+Retire them (with help from assistant/antagonist, Brick Deckard).
+
+![gameplay.gif](///raw/503/z/30204.gif)
+
+
+# Controls:
+---
+- ** Full controller support ** on the web!
+
+- ** Left/right arrow** or ** A/D ** to move 
+- ** Q/E ** to rotate the current block
+- ** W ** to insta-drop current block
+- ** Ctrl ** store current block for later
+
+
+![ss5.png](///raw/503/z/304e6.png)
+
+
+# Game:
+---
+
+Drop blocks to clear rows while the ** Block Runner ** attempts to help and/or hinder your efforts.
+
+:small_blue_diamond: Block-Removing Puzzler
+
+:small_blue_diamond: Era-appropriate retrowave aesthetic
+
+:small_blue_diamond: Global leaderboard
+
+
+
+![ss3.png](///raw/503/z/30507.png)
+
+
+# About the Team:
+---
+
+[LandoSystems](https://lando.systems) is a group of jammers from Madison, Wisconsin that varies in size from 2 to 12 people. This is the team's 27th Ludum Dare game!! :grinning:
+
+
+# Team Members:
+---
+
+Code:
+- Doug Graham [dsgraham](https://twitter.com/dsgraham)
+- Brian Ploeckelman [PalpatinesSmile](https://twitter.com/PalpatinesSmile)
+- Brian Rossman
+- Jeffrey Hwang
+
+Art:
+- Matt Neumann
+
+Audio:
+- Pete Valeo
+
+Support Shiba:
+- Asuka!
+![shiba-w-scarf.jpg](///raw/103/z/12960.jpg)
+
+
+We hope you enjoy playing the game as much as we did making it! :fingers_crossed:

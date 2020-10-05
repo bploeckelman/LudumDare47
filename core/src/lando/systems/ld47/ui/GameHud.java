@@ -63,6 +63,8 @@ public class GameHud {
 
     public ScoreUI getScoreUI() { return gameInfoUI.scoreUI; }
 
+    public SettingsUI getSettingsUI() { return settingsUI;}
+
     public void update(float dt) {
         mousePos.set(Gdx.input.getX(), Gdx.input.getY(), 0f);
         camera.unproject(mousePos);
