@@ -110,15 +110,20 @@ public class EndScreen extends BaseScreen {
             if (boundsButtonRestart.contains(touchPos.x, touchPos.y)) {
                 game.setScreen(new GameScreen(game));
             }
+
+
+
         }
 
-        accum += dt;
-        titleLabel.update(dt);
-        themeLabel.update(dt);
-        leftCreditLabel.update(dt);
-        rightCreditLabel.update(dt);
-        thanksLabel.update(dt);
-        disclaimerLabel.update(dt);
+        if (scoreEntryUI.isHidden()){
+            accum += dt;
+            titleLabel.update(dt);
+            themeLabel.update(dt);
+            leftCreditLabel.update(dt);
+            rightCreditLabel.update(dt);
+            thanksLabel.update(dt);
+            disclaimerLabel.update(dt);
+        }
         scoreEntryUI.update(dt);
     }
 
