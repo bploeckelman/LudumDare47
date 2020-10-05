@@ -52,7 +52,7 @@ public class ParticleDecal implements Pool.Poolable {
     public boolean ready;
 
 
-    private ParticleDecal(){
+    public ParticleDecal(){
         reset();
     }
 
