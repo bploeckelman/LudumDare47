@@ -23,7 +23,8 @@ public class Assets implements Disposable {
     private final AssetDescriptor<Texture> noiseTextureAsset = new AssetDescriptor<>("images/noise.png", Texture.class);
     private final AssetDescriptor<BitmapFont> riseFont16Asset = new AssetDescriptor<>("fonts/chevyray-rise-16.fnt", BitmapFont.class);
     private final AssetDescriptor<BitmapFont> bladeFont16Asset = new AssetDescriptor<>("fonts/blade-runner-16.fnt", BitmapFont.class);
-    private final AssetDescriptor<BitmapFont> bladeFont32Asset = new AssetDescriptor<>("fonts/blade-runner-16.fnt", BitmapFont.class);
+    private final AssetDescriptor<BitmapFont> bladeFont32Asset = new AssetDescriptor<>("fonts/blade-runner-32.fnt", BitmapFont.class);
+    private final AssetDescriptor<BitmapFont> bladeFont64Asset = new AssetDescriptor<>("fonts/blade-runner-64.fnt", BitmapFont.class);
 
     public enum Loading { SYNC, ASYNC }
 
@@ -34,6 +35,7 @@ public class Assets implements Disposable {
     public BitmapFont font;
     public BitmapFont bladeFont16;
     public BitmapFont bladeFont32;
+    public BitmapFont bladeFont64;
     public boolean initialized;
 
     public Texture launchImage;
@@ -105,6 +107,7 @@ public class Assets implements Disposable {
         mgr.load(riseFont16Asset);
         mgr.load(bladeFont16Asset);
         mgr.load(bladeFont32Asset);
+        mgr.load(bladeFont64Asset);
 
         // audio
         mgr.load("audio/sample-sound.wav", Sound.class);
@@ -130,6 +133,7 @@ public class Assets implements Disposable {
         font = mgr.get(riseFont16Asset);
         bladeFont16 = mgr.get(bladeFont16Asset);
         bladeFont32 = mgr.get(bladeFont32Asset);
+        bladeFont64 = mgr.get(bladeFont64Asset);
 
         noiseTexture = mgr.get(noiseTextureAsset);
         noiseTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
