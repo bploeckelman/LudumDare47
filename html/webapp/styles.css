@@ -57,11 +57,11 @@ body {
 
 #embed-html 
 {
-/* display: block;
+display: block;
 width: 1280px;
 height: 720px;
-background-color: grey;
-margin: auto; */
+/* background-color: grey; */
+margin: auto;
 }
 
 body
@@ -86,7 +86,12 @@ body
     font-size: 1.5rem;
     background-color: hsla(283,64%, 9%, .6);
 
-    background-image:     
+    background-image:
+    linear-gradient(0deg, 
+    black 12%, 
+    transparent 12%    
+    ),
+
     linear-gradient(40deg, 
     transparent 50%, 
     hsla(183, 80%, 20%, .5) 80%),
@@ -105,7 +110,25 @@ body
     hsl(283, 64%, 10%) 19%,
     hsl(283, 64%, 30%)
     );
-    background-position: top center;
+    background-repeat:
+    repeat-y,
+    repeat,
+    no-repeat,
+    no-repeat
+    ;
+
+    background-position: 
+    bottom center,
+    top center,
+    top center,
+    top center
+    ;
+ 
+    background-size: 
+    100% 1%, 
+    100% 100%,
+    100% 100%,
+    100% 100%;
 
 }
 
