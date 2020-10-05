@@ -190,6 +190,7 @@ public class PlayerInput extends ControllerAdapter {
     public boolean isPlungedPressed() {
         return Gdx.input.isKeyJustPressed(Input.Keys.SPACE)
             || Gdx.input.isKeyJustPressed(Input.Keys.W)
+            || Gdx.input.isKeyJustPressed(Input.Keys.UP)
             || controllerState.plungeButtonJustPressed
             || controllerState.moveUpJustPressed;
     }

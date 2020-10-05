@@ -61,7 +61,9 @@ public class GameScreen extends BaseScreen{
         super.update(dt);
         checkBitchMode(gameState.isBitchMode());
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || playerInput.isPauseButtonJustPressed()) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SHIFT_LEFT)
+         || Gdx.input.isKeyJustPressed(Input.Keys.SHIFT_RIGHT)
+         || playerInput.isPauseButtonJustPressed()) {
             gameHud.toggleSettings();
         }
 

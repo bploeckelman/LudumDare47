@@ -8,6 +8,7 @@ public class ControlsScreen extends BaseScreen {
 
     public ControlsScreen(Game game) {
         super(game);
+        playerInput.recheckController();
     }
 
     @Override
@@ -24,7 +25,7 @@ public class ControlsScreen extends BaseScreen {
         batch.begin();
         batch.setProjectionMatrix(hudCamera.combined);
         {
-            batch.draw(assets.titleSillyImage, 0, 0, hudCamera.viewportWidth, hudCamera.viewportHeight);
+            batch.draw(assets.controlsImage, 0, 0, hudCamera.viewportWidth, hudCamera.viewportHeight);
         }
         batch.end();
     }

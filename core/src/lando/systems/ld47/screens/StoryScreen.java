@@ -29,6 +29,8 @@ public class StoryScreen extends BaseScreen {
         this.storyLabel.setFontScale(0.9f);
 
         this.fullyTyped = false;
+
+        playerInput.recheckController();
     }
 
     @Override
