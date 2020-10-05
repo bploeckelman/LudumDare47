@@ -39,55 +39,42 @@ public class TitleCar {
 
     public AnimDirection animState = AnimDirection.level;
 
-    public final float carScale = 0.5f;
+    public final float carScale = 0.7f;
 
     public TitleCar(Game game) {
         this.game = game;
         TextureRegion texture = game.assets.car.getKeyFrame(0);
         size.set(new Vector2(texture.getRegionWidth() * carScale, texture.getRegionHeight() * carScale));
-
+        animation = game.assets.car;
     }
 
-    public void setState(State state) {
-        this.state = state;
-        switch (state) {
-            case moving:
-                lastX = position.x;
-                lastY = position.y;
-                animation = game.assets.car;
-                break;
-            default:
-                animation = game.assets.car;
-        }
-        animationTime = 0;
-    }
-
-    private float lastX = -1;
     private float lastY = -1;
+    private float lastX = -1;
     public void update(float dt) {
         animationTime += dt;
 
-        if (state == State.idle) {
+        if ((position.x - lastX) < 10) {
             idleTime += dt;
             offsetY = MathUtils.sin(idleTime * 2f) * 5;
-        } else if (state == State.moving) {
-            if (position.x != lastX) {
-                direction = (position.x > lastX) ? Direction.right : Direction.left;
-            }
-            setAnimState();
-            lastY = position.y;
-            lastX = position.x;
+        }
 
-            switch (animState) {
-                case up:
-                    animation = game.assets.carUp;
-                    break;
-                case down:
-                    animation = game.assets.carDown;
-                    break;
-                default:
-                    animation = game.assets.car;
-            }
+
+        if (position.x != lastX) {
+            direction = (position.x > lastX) ? Direction.right : Direction.left;
+        }
+        setAnimState();
+        lastY = position.y;
+        lastX = position.x;
+
+        switch (animState) {
+            case up:
+                animation = game.assets.carUp;
+                break;
+            case down:
+                animation = game.assets.carDown;
+                break;
+            default:
+                animation = game.assets.car;
         }
     }
 

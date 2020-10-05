@@ -24,7 +24,6 @@ public class TitleScreen extends BaseScreen {
 
         car = new TitleCar(game);
         car.position.set(-300, 300);
-        car.setState(TitleCar.State.moving);
 
         Timeline.createSequence()
                 .pushPause(2)
