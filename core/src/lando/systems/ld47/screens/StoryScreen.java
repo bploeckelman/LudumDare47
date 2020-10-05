@@ -19,7 +19,7 @@ public class StoryScreen extends BaseScreen {
                 + "    The {FADE}{COLOR=red}Homage{COLOR=white}{ENDFADE} was more advanced in its presentation, and at least equal in its mechanics, to the original, and was celebrated as an achievement by the team who created it.\n"
                 + "    After a heated exchange among members of the {GRADIENT=purple;cyan}Lando Systems{ENDGRADIENT} team, the {FADE}{COLOR=red}Homage{COLOR=white}{ENDFADE} was deemed insufficiently original and dismissed with claims of being {SICK}{COLOR=blue}a clone{COLOR=white}{ENDSICK}.\n"
                 + "    Special new gameplay elements were added. These augmented the existing systems enough to relieve most concerns about its resemblance to its predecessor.\n"
-                + "    This was no longer called an {FADE}{COLOR=red}homage...{COLOR=white}{ENDFADE}\n\n                {SLOW}It was called {WAVE}{FADE}{GRADIENT=purple;cyan}Block Runner{ENDGRADIENT}{ENDFADE}{ENDWAVE}{NORMAL}"
+                + "    This was no longer called an {FADE}{COLOR=red}homage...{COLOR=white}{ENDFADE}\n\n                {SLOWER}It was called {WAVE}{FADE}{GRADIENT=purple;cyan}Block Runner{ENDGRADIENT}{ENDFADE}{ENDWAVE}{NORMAL}"
                 ;
 
         float margin = 60f;
