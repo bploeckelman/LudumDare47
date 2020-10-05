@@ -14,9 +14,9 @@ public class GameInfoUI extends UserInterface {
 
     public GameInfoUI(GameState gameState) {
         super(gameState.gameScreen);
-        nextUI = new NextUI(gameState, gameState.gameScreen.hudCamera.viewportWidth / 8 * 6 - 35f, gameState.gameScreen.hudCamera.viewportHeight - 180f, "NEXT");
+        nextUI = new NextUI(gameState, gameState.gameScreen.hudCamera.viewportWidth / 8 * 6 - 35f, gameState.gameScreen.hudCamera.viewportHeight - 180f, "next");
         scoreUI = new ScoreUI(gameState, gameState.gameScreen.hudCamera.viewportWidth / 4 * 3 -30f, gameState.gameScreen.hudCamera.viewportHeight - 470f);
-        holdUI = new HoldUI(gameState, gameState.gameScreen.hudCamera.viewportWidth / 8 * 7 - 45f, gameState.gameScreen.hudCamera.viewportHeight - 180f, "HOLD");
+        holdUI = new HoldUI(gameState, gameState.gameScreen.hudCamera.viewportWidth / 8 * 7 - 45f, gameState.gameScreen.hudCamera.viewportHeight - 180f, "hold");
     }
 
     public void update(float dt) {
@@ -32,14 +32,14 @@ public class GameInfoUI extends UserInterface {
         scoreUI.draw(batch, bounds);
     }
     private void renderPanel(SpriteBatch batch){
-        String title = "Tetrad Runner";
+        String title = "block runner";
         batch.setColor(Color.WHITE);
-        assets.screws.draw(batch, gameState.gameScreen.hudCamera.viewportWidth / 4 * 3 - 50f, 50f, gameState.gameScreen.hudCamera.viewportWidth / 4, gameState.gameScreen.hudCamera.viewportHeight - 100f);
-        assets.font.getData().setScale(1f);
-        layout.setText(assets.font, title, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.center, false);
-        assets.font.draw(batch, layout, gameState.gameScreen.hudCamera.viewportWidth / 4 * 3 - 40f, gameState.gameScreen.hudCamera.viewportHeight - 60f);
-        layout.setText(assets.font, "2020", Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.center, false);
-        assets.font.draw(batch, layout, gameState.gameScreen.hudCamera.viewportWidth / 4 * 3 - 40f, gameState.gameScreen.hudCamera.viewportHeight - 100f);
-        assets.font.getData().setScale(.7f);
+        assets.screws.draw(batch, gameState.gameScreen.hudCamera.viewportWidth / 4 * 3 - 50f, 50f, gameState.gameScreen.hudCamera.viewportWidth / 4, gameState.gameScreen.hudCamera.viewportHeight - 160f);
+        assets.bladeFont64.getData().setScale(.7f);
+        layout.setText(assets.bladeFont64, title, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.center, false);
+        assets.bladeFont64.draw(batch, layout, gameState.gameScreen.hudCamera.viewportWidth / 4 * 3 - 40f, gameState.gameScreen.hudCamera.viewportHeight - 25f);
+        layout.setText(assets.bladeFont64, "2049", Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.center, false);
+        assets.bladeFont64.draw(batch, layout, gameState.gameScreen.hudCamera.viewportWidth / 4 * 3 - 40f, gameState.gameScreen.hudCamera.viewportHeight - 65f);
+        assets.bladeFont64.getData().setScale(1f);
     }
 }
