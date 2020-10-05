@@ -3,6 +3,8 @@ package lando.systems.ld47.entities;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
+import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
@@ -14,6 +16,8 @@ import com.badlogic.gdx.utils.OrderedSet;
 import lando.systems.ld47.Audio;
 import lando.systems.ld47.GameState;
 import lando.systems.ld47.input.PlayerInput;
+import lando.systems.ld47.particles.Particle;
+import lando.systems.ld47.particles.ParticleDecal;
 import lando.systems.ld47.utils.OrbitPointLight;
 import lando.systems.ld47.utils.PointLight;
 
@@ -48,6 +52,8 @@ public class GameBoard {
     private GameBackPlate backPlate;
     private boolean paused = false;
 
+    private DecalBatch decalBatch;
+
     public GameBoard(GameState gameState) {
         this.gameState = gameState;
         this.playerInput = gameState.gameScreen.playerInput;
@@ -70,6 +76,8 @@ public class GameBoard {
         boardCam.far = 400;
         boardCam.lookAt(5f, 8, 0);
         boardCam.update();
+
+        decalBatch = new DecalBatch(new CameraGroupStrategy(boardCam));
 
         backPlate = new GameBackPlate();
 
@@ -128,6 +136,7 @@ public class GameBoard {
             light.update(dt);
         }
         backPlate.update(dt);
+        gameState.gameScreen.particles.updateDecals(dt, boardCam);
 
         for (int i = tetrads.size - 1; i >= 0; i--) {
             Tetrad tetrad = tetrads.get(i);
@@ -209,7 +218,14 @@ public class GameBoard {
 
                 if (activeTetrad != null) {
                     if (playerInput.isPlungedPressed()) {
+                        Tetrad movingTetrad = activeTetrad;
+                        float startY = movingTetrad.origin.y;
+                        int count = 0;
                         while (moveDown(activeTetrad)) {
+                            count++;
+                        }
+                        if (count >= 3) {
+                            gameState.gameScreen.particles.addPlummetParticles(movingTetrad, startY);
                         }
                     }
                 }
@@ -278,8 +294,15 @@ public class GameBoard {
         if (activeTetrad != null) {
             activeTetrad.renderModels(shader);
         }
-        // without this the fonts break for some reason?
-//        gameState.gameScreen.assets.noiseTexture.bind(0);
+
+        Array<ParticleDecal> decals = gameState.gameScreen.particles.activeDecals;
+        for (ParticleDecal decal : decals) {
+            if (decal.ready) {
+                decalBatch.add(decal.decal);
+            }
+        }
+        decalBatch.flush();
+
         Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
         gameFB.end();
 

@@ -430,6 +430,10 @@ public class Tetrad implements Pool.Poolable {
         position.set(center.x - this.center.x * POINT_WIDTH * scale, center.y - this.center.y * POINT_WIDTH * scale);
     }
 
+    public Vector2 getCenter() {
+        return center;
+    }
+
     private void buildNewPiece() {
         type = MathUtils.random(6);
         switch (type) {

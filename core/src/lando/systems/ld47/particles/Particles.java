@@ -1,11 +1,14 @@
 package lando.systems.ld47.particles;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.*;
 import lando.systems.ld47.Assets;
+import lando.systems.ld47.entities.Tetrad;
+import lando.systems.ld47.entities.TetradPiece;
 
 public class Particles implements Disposable {
 
@@ -17,12 +20,17 @@ public class Particles implements Disposable {
 
     private final Pool<Particle> particlePool = Pools.get(Particle.class, 3000);
 
+    public final Array<ParticleDecal> activeDecals;
+    private final Pool<ParticleDecal> decalPool = Pools.get(ParticleDecal.class, 1000);
+
     public Particles(Assets assets) {
         this.assets = assets;
         this.activeParticles = new ObjectMap<>();
         this.activeParticles.put(Layer.back,  new Array<>(false, 1000));
         this.activeParticles.put(Layer.front, new Array<>(false, 1000));
         this.activeParticles.put(Layer.overlay,   new Array<>(false, 1000));
+
+        this.activeDecals = new Array<>();
     }
 
     public void update(float dt) {
@@ -34,6 +42,17 @@ public class Particles implements Disposable {
                     activeParticles.get(layer).removeIndex(i);
                     particlePool.free(particle);
                 }
+            }
+        }
+    }
+
+    public void updateDecals(float dt, Camera camera) {
+        for (int i = activeDecals.size -1; i >= 0; i--) {
+            ParticleDecal decal = activeDecals.get(i);
+            decal.update(dt, camera);
+            if (!decal.isAlive()){
+                activeDecals.removeIndex(i);
+                decalPool.free(decal);
             }
         }
     }
@@ -90,6 +109,32 @@ public class Particles implements Disposable {
                     .endAlpha(0)
                     .timeToLive(.5f)
                     .init());
+        }
+    }
+
+    Color tempColor = new Color(Color.WHITE);
+    public void addPlummetParticles(Tetrad tetrad, float startOriginY){
+        tempColor.fromHsv(MathUtils.random(180f, 330f), 1f, 1f);
+        for (TetradPiece point : tetrad.points){
+            float x = point.x + tetrad.origin.x;
+            float endY = point.y + tetrad.origin.y;
+            float startY = point.y + startOriginY;
+            float delay = .01f;
+            for (float i = startY; i >= endY + 1; i -= .1f) {
+                delay += .01f;
+                for (int j = 0; j < 10; j++) {
+                    activeDecals.add(new ParticleDecal.Builder(decalPool.obtain())
+                            .texture(assets.whiteCircle)
+                            .pos(x + MathUtils.random( 1f), i + MathUtils.random(-.05f, .05f), .99f)
+                            .vel(MathUtils.random(-.1f, .1f), -1, 0)
+                            .colorStart(tempColor)
+                            .colorEnd(0f, 0f, 0f, 0f)
+                            .startSize(.04f, .08f)
+                            .endSize(0f, 0f)
+                            .time( delay)
+                            .build());
+                }
+            }
         }
     }
 
