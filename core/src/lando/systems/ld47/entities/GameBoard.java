@@ -82,8 +82,8 @@ public class GameBoard {
         pointLights[4] = new PointLight(4, new Vector3(-30, 10, 20), new Color(.3f, .3f, .3f, 1f));
 
         // TODO: move this stuff up to BaseScreen or Game so we can use controllers on other screens
-        Controllers.clearListeners();
-        Controllers.addListener(playerInput);
+//        Controllers.clearListeners();
+//        Controllers.addListener(playerInput);
     }
 
     // this happens in an update loop, so it's cool

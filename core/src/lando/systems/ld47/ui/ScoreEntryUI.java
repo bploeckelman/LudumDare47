@@ -292,7 +292,7 @@ public class ScoreEntryUI extends UserInterface implements InputProcessor {
         }
 
         // sanity checks
-        if (!Character.isLetterOrDigit(character) && character == ' ') return false;
+        if (!Character.isLetterOrDigit(character) && character != ' ') return false;
         if (name.length() >= max_name_length) return false;
 
         // clear the placeholder if they start typing
