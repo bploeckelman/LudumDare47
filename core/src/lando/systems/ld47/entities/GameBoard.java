@@ -80,6 +80,10 @@ public class GameBoard {
         pointLights[2] = new OrbitPointLight(2, new Vector3(0, -15, 0), new Color(.5f, .5f, 0f, 1f), new Vector3(1, 0, 0));
         pointLights[3] = new PointLight(3, new Vector3(-30, 10, 20), new Color(.3f, .3f, .3f, 1f));
         pointLights[4] = new PointLight(4, new Vector3(-30, 10, 20), new Color(.3f, .3f, .3f, 1f));
+
+        // TODO: move this stuff up to BaseScreen or Game so we can use controllers on other screens
+        Controllers.clearListeners();
+        Controllers.addListener(playerInput);
     }
 
     // this happens in an update loop, so it's cool
@@ -97,12 +101,25 @@ public class GameBoard {
 
         // figure out positioning
         tetrad.insertIntoBoard(this, origin);
+        // Test that is actually fits in the game
+        if (invalidMove(tetrad, Vector2.Zero)) {
+            if (!invalidMove(tetrad, new Vector2(-1, 0))) {
+                tetrad.origin.x -= 1;
+            }
+            else if (!invalidMove(tetrad, new Vector2(1, 0))) {
+                tetrad.origin.x += 1;
+            } else {
+                // can't fit into the board
+                // TODO: Play some sound here
+                if (current != null) {
+                    current.insertIntoBoard(this, tetrad.origin);
+                }
+                return tetrad;
+
+            }
+        }
+
         activeTetrad = tetrad;
-
-        // TODO: move this stuff up to BaseScreen or Game so we can use controllers on other screens
-        Controllers.clearListeners();
-        Controllers.addListener(playerInput);
-
 
         return current;
     }
