@@ -470,6 +470,7 @@ public class GameBoard {
         }
         if (rowsCleared > 0) {
             gameState.addCombo();
+            gameState.gameScreen.playSound(Audio.Sounds.tet_clearLine);
         }
         else {
             gameState.breakCombo();

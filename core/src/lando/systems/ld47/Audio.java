@@ -55,6 +55,11 @@ public class Audio implements Disposable {
         putSound(Sounds.tet_noswap, assets.error);
         putSound(Sounds.fireballExplosion, assets.explode);
         putSound(Sounds.crash, assets.crash);
+        putSound(Sounds.holdUIExplode, assets.explode);
+        putSound(Sounds.dec_teleport, assets.carTeleportWhooshUp);
+        putSound(Sounds.dec_hover, assets.carFart);
+        putSound(Sounds.dec_shoot, assets.carShootCharge);
+        putSound(Sounds.tet_clearLine, assets.blockLaserChargeRelease);
 
         musics.put(Musics.mood_track, assets.moodTrack);
         musics.put(Musics.mood_track2, assets.moodTrack2);
