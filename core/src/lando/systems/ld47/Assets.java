@@ -48,9 +48,10 @@ public class Assets implements Disposable {
     public Animation<TextureRegion> greenBlock;
     public Animation<TextureRegion> shineBlock;
 
-    public Animation<TextureRegion> sasquatch;
+    public Animation<TextureRegion> sasquatch_idle;
+    public Animation<TextureRegion> sasquatch_up;
+    public Animation<TextureRegion> sasquatch_down;
     public Animation<TextureRegion> sasquatch_punch;
-    public Animation<TextureRegion> sasquatch_throw;
     public Animation<TextureRegion> sasquatch_stun;
 
     public NinePatch border;
@@ -137,10 +138,11 @@ public class Assets implements Disposable {
         orangeBlock = new Animation<>(0.1f, atlas.findRegions("block-orange"), Animation.PlayMode.LOOP);
         redBlock = new Animation<>(0.1f, atlas.findRegions("block-red"), Animation.PlayMode.LOOP);
 
-        sasquatch = new Animation<>(0.1f, atlas.findRegions("car-side"), Animation.PlayMode.LOOP);
-        sasquatch_punch = new Animation<>(0.1f, atlas.findRegions("car-stun"), Animation.PlayMode.LOOP);
+        sasquatch_idle = new Animation<>(0.1f, atlas.findRegions("car-side"), Animation.PlayMode.LOOP);
+        sasquatch_up = new Animation<>(0.1f, atlas.findRegions("car-up"), Animation.PlayMode.LOOP);
+        sasquatch_down = new Animation<>(0.1f, atlas.findRegions("car-down"), Animation.PlayMode.LOOP);
+        sasquatch_punch = new Animation<>(0.1f, atlas.findRegions("car-shoot"), Animation.PlayMode.NORMAL);
         sasquatch_stun = new Animation<>(0.1f, atlas.findRegions("car-stun"), Animation.PlayMode.LOOP);
-        sasquatch_throw = new Animation<>(0.1f, atlas.findRegions("car-stun"), Animation.PlayMode.LOOP);
 
         border = new NinePatch(atlas.findRegion("ninepatches/border"), 9, 9, 9, 9);
         inset  = new NinePatch(atlas.findRegion("ninepatches/inset"), 9, 9, 9, 9);

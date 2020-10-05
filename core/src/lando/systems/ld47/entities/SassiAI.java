@@ -54,10 +54,10 @@ public class SassiAI {
         bottom = yPosCoords[19];
 
         Rectangle bounds = screen.gameHud.getNextBox().bounds;
-        nextPosition = new Vector2(bounds.x, bounds.y);
+        nextPosition = new Vector2(bounds.x - width, bounds.y);
 
         bounds = screen.gameHud.getHoldBox().bounds;
-        holdPosition = new Vector2(bounds.x, bounds.y);
+        holdPosition = new Vector2(bounds.x - width, bounds.y);
 
         maxX = nextPosition.x - bleft;
         maxY = top - bottom;
@@ -121,15 +121,11 @@ public class SassiAI {
     }
 
     private void walkRight() {
-        walk(tright, top, getTopState());
+        walk(tright, top);
     }
 
     private void walkLeft() {
-        walk(tleft, top, getTopState());
-    }
-
-    private Opponent.State getTopState() {
-        return (MathUtils.random(10) < 3) ? Opponent.State.throwing : Opponent.State.idle;
+        walk(tleft, top);
     }
 
     private void hitNext() {
@@ -180,8 +176,8 @@ public class SassiAI {
         return rightDiff.y - (leftDiff.y - leftDiff.x) / 20 * index;
     }
 
-    private void walk(float x, float y, Opponent.State state) {
-        this.walk(x, y, state, null, false);
+    private void walk(float x, float y) {
+        this.walk(x, y, Opponent.State.idle, null, false);
     }
 
     private void walk(float x, float y, Opponent.State state, HoldUI punchBox, boolean drop) {
@@ -194,13 +190,17 @@ public class SassiAI {
         float wy = Math.max(y, pos.y) + 25;
         float wx = Math.min(x, pos.x) + dx;
 
+        opponent.animState = Opponent.AnimDirection.up;
+
         if (drop) {
             wy = Math.min(y, pos.y) + dy;
+            opponent.animState = Opponent.AnimDirection.down;
         }
 
         float time = 5f * Math.max(dx / maxX, dy / maxY);
 
         opponent.setState(Opponent.State.idle);
+
         Timeline.createSequence()
                 .push(Tween.to(opponent.position, Vector2Accessor.XY, time).waypoint(wx, wy).target(x, y).ease(TweenEquations.easeInOutCubic))
                 .start(screen.game.tween)
