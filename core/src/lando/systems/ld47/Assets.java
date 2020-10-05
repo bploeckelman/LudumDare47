@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -86,6 +87,21 @@ public class Assets implements Disposable {
 
     public ShaderProgram blockShader;
     public ShaderProgram boardShader;
+
+    public Array<ShaderProgram> randomTransitions;
+    public ShaderProgram blindsShader;
+    public ShaderProgram fadeShader;
+    public ShaderProgram radialShader;
+    public ShaderProgram doomShader;
+    public ShaderProgram pizelizeShader;
+    public ShaderProgram doorwayShader;
+    public ShaderProgram crosshatchShader;
+    public ShaderProgram rippleShader;
+    public ShaderProgram heartShader;
+    public ShaderProgram stereoShader;
+    public ShaderProgram circleCropShader;
+    public ShaderProgram cubeShader;
+    public ShaderProgram dreamyShader;
 
     // audio
     public Sound sampleSound;
@@ -196,6 +212,25 @@ public class Assets implements Disposable {
         cityShader2 = loadShader("shaders/standard.vert", "shaders/city3.frag");
         blockShader = loadShader("shaders/standard3d.vert", "shaders/cube.frag");
         boardShader = loadShader("shaders/board.vert", "shaders/board.frag");
+
+
+        randomTransitions = new Array<>();
+        blindsShader = loadShader("shaders/transitions/default.vert", "shaders/transitions/blinds.frag");
+        fadeShader = loadShader("shaders/transitions/default.vert", "shaders/transitions/dissolve.frag");
+        radialShader = loadShader("shaders/transitions/default.vert", "shaders/transitions/radial.frag");
+        doomShader = loadShader("shaders/transitions/default.vert", "shaders/transitions/doomdrip.frag");
+        pizelizeShader = loadShader("shaders/transitions/default.vert", "shaders/transitions/pixelize.frag");
+        doorwayShader = loadShader("shaders/transitions/default.vert", "shaders/transitions/doorway.frag");
+        crosshatchShader = loadShader("shaders/transitions/default.vert", "shaders/transitions/crosshatch.frag");
+        rippleShader = loadShader("shaders/transitions/default.vert", "shaders/transitions/ripple.frag");
+        heartShader = loadShader("shaders/transitions/default.vert", "shaders/transitions/heart.frag");
+        stereoShader = loadShader("shaders/transitions/default.vert", "shaders/transitions/stereo.frag");
+        circleCropShader = loadShader("shaders/transitions/default.vert", "shaders/transitions/circlecrop.frag");
+        cubeShader = loadShader("shaders/transitions/default.vert", "shaders/transitions/cube.frag");
+        dreamyShader = loadShader("shaders/transitions/default.vert", "shaders/transitions/dreamy.frag");
+
+        randomTransitions.add(radialShader);
+        randomTransitions.add(pizelizeShader);
 
         fontPoints = new ObjectMap<>();
         for (int i = 0; i <= 9; ++i) {
