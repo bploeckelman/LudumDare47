@@ -108,8 +108,7 @@ public class Assets implements Disposable {
     // audio
     public Sound sampleSound;
     public Sound chaChingSound;
-    public Sound rotateLeft;
-    public Sound rotateRight;
+    public Sound rotateNew;
     public Sound hold;
     public Sound error;
     public Sound explode;
@@ -164,8 +163,7 @@ public class Assets implements Disposable {
         mgr.load("audio/track-blade.mp3", Music.class);
         mgr.load("audio/track-blade-1-3.mp3", Music.class);
         mgr.load("audio/intro.mp3", Music.class);
-        mgr.load("audio/block_sounds/rotate-left.wav", Sound.class);
-        mgr.load("audio/block_sounds/rotate-right.wav", Sound.class);
+        mgr.load("audio/block_sounds/rotate-new.wav", Sound.class);
         mgr.load("audio/block_sounds/hold.wav", Sound.class);
         mgr.load("audio/block_sounds/error.wav", Sound.class);
         mgr.load("audio/block_sounds/explode.wav", Sound.class);
@@ -282,8 +280,7 @@ public class Assets implements Disposable {
         moodTrack3 = mgr.get("audio/track-mood-3.mp3", Music.class);
         introTrack = mgr.get("audio/intro.mp3", Music.class);
         bladeRunner = mgr.get("audio/track-blade-1-3.mp3", Music.class);
-        rotateLeft = mgr.get("audio/block_sounds/rotate-left.wav", Sound.class);
-        rotateRight = mgr.get("audio/block_sounds/rotate-right.wav", Sound.class);
+        rotateNew = mgr.get("audio/block_sounds/rotate-new.wav", Sound.class);
         hold = mgr.get("audio/block_sounds/hold.wav", Sound.class);
         error = mgr.get("audio/block_sounds/error.wav", Sound.class);
         explode = mgr.get("audio/block_sounds/explode.wav", Sound.class);

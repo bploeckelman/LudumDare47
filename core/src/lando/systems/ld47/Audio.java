@@ -48,9 +48,8 @@ public class Audio implements Disposable {
 
         putSound(Sounds.tet_land, assets.sampleSound);
         putSound(Sounds.cha_ching, assets.chaChingSound);
-        putSound(Sounds.tet_clearLine, assets.sampleSound);
-        putSound(Sounds.rotateLeft, assets.rotateLeft);
-        putSound(Sounds.rotateRight, assets.rotateRight);
+        putSound(Sounds.rotateLeft, assets.rotateNew);
+        putSound(Sounds.rotateRight, assets.rotateNew);
         putSound(Sounds.hold, assets.hold);
         putSound(Sounds.tet_noswap, assets.error);
         putSound(Sounds.fireballExplosion, assets.explode);
