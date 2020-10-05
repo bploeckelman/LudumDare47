@@ -24,13 +24,13 @@ public class EndScreen extends BaseScreen {
     private Animation<TextureRegion> catAnimation;
     private Animation<TextureRegion> dogAnimation;
 
-    static String title = "Block Runner 2049";
+    static String title = "{GRADIENT=purple;cyan}Block Runner 2049{ENDGRADIENT}";
     static String theme = "Made for Ludum Dare 47: Stuck in a Loop";
-    static String thanks = "Thanks for playing our game!";
-    static String developers = "Developed by:\n Doug Graham\n Brian Ploeckelman\n Brian Rossman\n Jeffrey Hwang";
-    static String artists = "Art by:\n Matt Neumann";
-    static String emotionalSupport = "Emotional Support:\n Asuka and  Cherry";
-    static String music = "Sound by:\nPeat Valeo";
+    static String thanks = "{GRADIENT=purple;cyan}Thanks for playing our game!{ENDGRADIENT}";
+    static String developers = "{COLOR=gray}Developed by:{COLOR=white}\n Doug Graham\n Brian Ploeckelman\n Brian Rossman\n Jeffrey Hwang";
+    static String artists = "{COLOR=gray}Art by:{COLOR=white}\n Matt Neumann";
+    static String emotionalSupport = "{COLOR=cyan}Emotional Support:{COLOR=white}\n Asuka and  Cherry";
+    static String music = "{COLOR=gray}Sound by:{COLOR=white}\nPeat Valeo";
     static String libgdx = "Made with {COLOR=red}<3{COLOR=white} and LibGDX";
     static String disclaimer = "Disclaimer!!!\nNo animals were harmed in the making of this game (they got lots of pets tho)";//Pets were not harmed in making of this game.";
 
@@ -60,12 +60,12 @@ public class EndScreen extends BaseScreen {
         rightCreditLabel.setLineAlign(Align.left);
         rightCreditLabel.setFontScale(1f);
 
-        thanksLabel = new TypingLabel(assets.bladeFont32, thanks.toLowerCase(), 0f, 105f);
+        thanksLabel = new TypingLabel(assets.bladeFont32, thanks.toLowerCase(), 0f, 115f);
         thanksLabel.setWidth(Config.windowWidth);
         thanksLabel.setLineAlign(Align.center);
         thanksLabel.setFontScale(1f);
 
-        disclaimerLabel = new TypingLabel(assets.bladeFont32, "{JUMP=.2}{WAVE=0.9;1.2;1.75}{RAINBOW}" + disclaimer + "{ENDRAINBOW}{ENDWAVE}{ENDJUMP}", 0f, 75f);
+        disclaimerLabel = new TypingLabel(assets.bladeFont32, "{JUMP=.2}{WAVE=0.9;1.2;1.75}{RAINBOW}" + disclaimer + "{ENDRAINBOW}{ENDWAVE}{ENDJUMP}", 0f, 60f);
         disclaimerLabel.setWidth(Config.windowWidth);
         thanksLabel.setLineAlign(Align.center);
         disclaimerLabel.setFontScale(.7f);
