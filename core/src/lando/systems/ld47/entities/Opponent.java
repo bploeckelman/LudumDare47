@@ -31,7 +31,6 @@ public class Opponent {
     public final Vector2 position = new Vector2();
     public Vector2 size = new Vector2();
     public Direction direction = Direction.right;
-    public boolean fixDirection = false;
 
     private State state = State.idle;
 
@@ -49,21 +48,20 @@ public class Opponent {
 
     public void setState(State state) {
         this.state = state;
-        fixDirection = false;
         switch (state) {
             case shooting:
-                animation = screen.assets.sasquatch_punch;
+                animation = screen.assets.carShoot;
                 break;
             case stun:
-                animation = screen.assets.sasquatch_stun;
+                animation = screen.assets.carStun;
                 break;
             case moving:
                 lastX = position.x;
                 lastY = position.y;
-                animation = screen.assets.sasquatch_idle;
+                animation = screen.assets.car;
                 break;
             default:
-                animation = screen.assets.sasquatch_idle;
+                animation = screen.assets.car;
         }
         animationTime = 0;
     }
@@ -77,7 +75,7 @@ public class Opponent {
             idleTime += dt;
             offsetY = MathUtils.sin(idleTime * 2f) * 5;
         } else if (state == State.moving) {
-            if (!fixDirection && position.x != lastX) {
+            if (position.x != lastX) {
                 direction = (position.x > lastX) ? Direction.right : Direction.left;
             }
             setAnimState();
@@ -86,13 +84,13 @@ public class Opponent {
 
             switch (animState) {
                 case up:
-                    animation = screen.assets.sasquatch_up;
+                    animation = screen.assets.carUp;
                     break;
                 case down:
-                    animation = screen.assets.sasquatch_down;
+                    animation = screen.assets.carDown;
                     break;
                 default:
-                    animation = screen.assets.sasquatch_idle;
+                    animation = screen.assets.car;
             }
         }
 

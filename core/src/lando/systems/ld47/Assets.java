@@ -57,11 +57,11 @@ public class Assets implements Disposable {
     public Animation<TextureRegion> greenBlock;
     public Animation<TextureRegion> shineBlock;
 
-    public Animation<TextureRegion> sasquatch_idle;
-    public Animation<TextureRegion> sasquatch_up;
-    public Animation<TextureRegion> sasquatch_down;
-    public Animation<TextureRegion> sasquatch_punch;
-    public Animation<TextureRegion> sasquatch_stun;
+    public Animation<TextureRegion> car;
+    public Animation<TextureRegion> carUp;
+    public Animation<TextureRegion> carDown;
+    public Animation<TextureRegion> carShoot;
+    public Animation<TextureRegion> carStun;
 
     public Animation<TextureRegion> cat;
     public Animation<TextureRegion> dog;
@@ -163,11 +163,11 @@ public class Assets implements Disposable {
         orangeBlock = new Animation<>(0.1f, atlas.findRegions("block-orange"), Animation.PlayMode.LOOP);
         redBlock = new Animation<>(0.1f, atlas.findRegions("block-red"), Animation.PlayMode.LOOP);
 
-        sasquatch_idle = new Animation<>(0.1f, atlas.findRegions("car-side"), Animation.PlayMode.LOOP);
-        sasquatch_up = new Animation<>(0.1f, atlas.findRegions("car-up"), Animation.PlayMode.LOOP);
-        sasquatch_down = new Animation<>(0.1f, atlas.findRegions("car-down"), Animation.PlayMode.LOOP);
-        sasquatch_punch = new Animation<>(0.1f, atlas.findRegions("car-shoot"), Animation.PlayMode.NORMAL);
-        sasquatch_stun = new Animation<>(0.1f, atlas.findRegions("car-stun"), Animation.PlayMode.LOOP);
+        car = new Animation<>(0.1f, atlas.findRegions("car-side"), Animation.PlayMode.LOOP);
+        carUp = new Animation<>(0.1f, atlas.findRegions("car-up"), Animation.PlayMode.LOOP);
+        carDown = new Animation<>(0.1f, atlas.findRegions("car-down"), Animation.PlayMode.LOOP);
+        carShoot = new Animation<>(0.1f, atlas.findRegions("car-shoot"), Animation.PlayMode.NORMAL);
+        carStun = new Animation<>(0.1f, atlas.findRegions("car-stun"), Animation.PlayMode.LOOP);
 
         cat = new Animation<>(0.1f, atlas.findRegions("cat"), Animation.PlayMode.LOOP);
         dog = new Animation<>(0.1f, atlas.findRegions("dog"), Animation.PlayMode.LOOP);

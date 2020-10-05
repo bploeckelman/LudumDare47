@@ -4,7 +4,6 @@ import aurelienribon.tweenengine.*;
 import aurelienribon.tweenengine.equations.Quad;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -70,10 +69,10 @@ public class SassiAI {
         topRight = new Vector2(boardXTopRight, top);
 
         Rectangle bounds = screen.gameHud.getNextBox().bounds;
-        next = new Vector2(bounds.x - width, bounds.y + (bounds.y - height)/2);
+        next = new Vector2(bounds.x - width, bounds.y + (bounds.height - height)/2);
 
         bounds = holdBox.bounds;
-        hold = new Vector2(bounds.x - width, bounds.y + (bounds.y - height)/2);
+        hold = new Vector2(bounds.x - width, bounds.y + (bounds.height - height)/2);
 
         // place opponent at the top right
         opponent.position.set(topLeft.x, topLeft.y);
@@ -147,15 +146,15 @@ public class SassiAI {
         actions.add(Actions.boardLeft, Actions.shootNext);
 //        actions.add(Actions.boardLeft, Actions.boardRight, Actions.shootNext);
         if (gameBoard.canShootBlock()) {
-            actions.add(Actions.shootLeft, Actions.shootRight);
+//            actions.add(Actions.shootLeft, Actions.shootRight);
+            actions.add(Actions.shootRight);
         }
 //        if (gameBoard.canTransportTetrad()) {
 //            actions.add(Actions.ramLeft, Actions.ramRight);
 //        }
-//        if (holdBox.hold != null) {
-//            actions.add(Actions.shootHold);
-//        }
-
+        if (holdBox.hold != null) {
+            actions.add(Actions.shootHold);
+        }
         Actions next = lastAction;
         while (next == lastAction) {
             next = actions.random();
@@ -213,12 +212,12 @@ public class SassiAI {
                 .setCallback(new TweenCallback() {
                     @Override
                     public void onEvent(int type, BaseTween<?> source) {
-                        completeMove(pos, movePos, action);
+                        completeMove(action);
                     }
                 });
     }
 
-    private void completeMove(Vector2 from, Vector2 to, Actions action) {
+    private void completeMove(Actions action) {
 
         Opponent.State state = Opponent.State.idle;
         Opponent.Direction direction = Opponent.Direction.right;
