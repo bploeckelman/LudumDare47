@@ -39,7 +39,7 @@ public class TitleCar {
 
     public AnimDirection animState = AnimDirection.level;
 
-    public final float carScale = 0.7f;
+    public final float carScale = 1.5f;
 
     public TitleCar(Game game) {
         this.game = game;
@@ -51,7 +51,7 @@ public class TitleCar {
     private float lastY = -1;
     private float lastX = -1;
     public void update(float dt) {
-        animationTime += dt;
+        animationTime += dt/2;
 
         if ((position.x - lastX) < 10) {
             idleTime += dt;
@@ -80,7 +80,7 @@ public class TitleCar {
 
     private void setAnimState() {
         float dy = position.y - lastY;
-        if (Math.abs(dy) < 2f) {
+        if (Math.abs(dy) < 0.2f) {
             animState = AnimDirection.level;
         } else {
             animState = (dy) > 0 ? AnimDirection.up : AnimDirection.down;

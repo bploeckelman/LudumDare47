@@ -26,14 +26,14 @@ public class TitleScreen extends BaseScreen {
         playerInput.recheckController();
 
         car = new TitleCar(game);
-        car.position.set(-300, 300);
+        car.position.set(-500, 400);
 
         Timeline.createSequence()
-                .pushPause(2)
-                .push(Tween.to(car.position, Vector2Accessor.XY, 5).target(600, 225).ease(Quad.INOUT))
+                .pushPause(3)
+                .push(Tween.to(car.position, Vector2Accessor.XY, 4).target(500, 225).ease(Quad.INOUT))
                 .pushPause(5)
-                .push(Tween.to(car.position, Vector2Accessor.XY, 3)
-                        .waypoint(850, 350).target(-300, 500).ease(Quad.INOUT))
+                .push(Tween.to(car.position, Vector2Accessor.XY, 3.5f)
+                        .waypoint(850, 350).target(-500, 650).ease(Quad.INOUT))
                 .repeat(100, 0)
                 .start(game.tween);
     }
