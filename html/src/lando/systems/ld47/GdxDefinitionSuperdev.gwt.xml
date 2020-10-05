@@ -11,6 +11,7 @@
 	<extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld47.particles.Particle" />
 	<extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld47.leaderboard.LeaderboardScore" />
 	<extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld47.ui.typinglabel.TypingGlyph" />
+	<extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld47.ui.typinglabel.effects" />
 
 	<collapse-all-properties />
     
