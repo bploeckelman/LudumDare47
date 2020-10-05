@@ -145,11 +145,20 @@ public class SassiAI {
 
         actions.clear();
         actions.add(Actions.boardLeft, Actions.boardRight, Actions.shootNext);
+        // prevent shoots and rams from same side
         if (gameBoard.canShootBlock()) {
-            actions.add(Actions.shootLeft, Actions.shootRight);
+            if (lastAction != Actions.ramRight) {
+                actions.add(Actions.shootRight);
+            } else if (lastAction != Actions.ramLeft) {
+                actions.add(Actions.shootLeft);
+            }
         }
         if (gameBoard.canTransportTetrad()) {
-            actions.add(Actions.ramLeft, Actions.ramRight);
+            if (lastAction != Actions.shootLeft) {
+                actions.add(Actions.ramLeft);
+            } else if (lastAction != Actions.shootRight) {
+                actions.add(Actions.ramRight);
+            }
         }
         if (holdBox.hold != null) {
             actions.add(Actions.shootHold);
