@@ -1,5 +1,6 @@
 package lando.systems.ld47.ui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -16,6 +17,7 @@ public class ScoreUI extends UserInterface {
     private float lineClearedLabel;
     private float x;
     private float y;
+    private float time = 0;
 
     public ScoreUI(GameState gameState, float x, float y) {
         super(gameState.gameScreen);
@@ -29,18 +31,35 @@ public class ScoreUI extends UserInterface {
         lineCleared = gameState.getLineCleared();
         lineClearedLabel = MathUtils.lerp(lineClearedLabel, lineCleared, 0.5f);
         combo = gameState.getCombo();
+        time += dt;
     }
 
     public void draw(SpriteBatch batch, Rectangle bounds) {
+        String timerText = "Timer: ";
+        int timer = Math.round(time);
+        int hours = timer / 3600;
+        int minutes = (timer % 3600) / 60;
+        int seconds = timer % 60;
+        if (hours > 0) {
+            timerText += hours + "h " + minutes + "m " + seconds + "s";
+        }
+        else if(minutes > 0) {
+            timerText += minutes + "m " + seconds + "s";
+        }
+        else {
+            timerText += Math.round(time * 100f) / 100f + "s";
+        }
+        layout.setText(assets.font, timerText, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.left, false);
+        assets.font.draw(batch, layout, x, y);
         String text = "Score: " + Math.round(scoreLabel);
         layout.setText(assets.font, text, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.left, false);
-        assets.font.draw(batch, layout, x, y);
+        assets.font.draw(batch, layout, x, y - 50f);
         String lineClearText = "Line Cleared: " + Math.round(lineClearedLabel);
         layout.setText(assets.font, lineClearText, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.left, false);
-        assets.font.draw(batch, layout, x, y - 50f);
+        assets.font.draw(batch, layout, x, y - 100f);
         String currentComboText = "Current Combo: " + combo;
         layout.setText(assets.font, currentComboText, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.left, false);
-        assets.font.draw(batch, layout, x, y - 100f);
+        assets.font.draw(batch, layout, x, y - 150f);
 
     }
 
