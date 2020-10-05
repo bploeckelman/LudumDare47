@@ -50,9 +50,10 @@ public class HoldUI extends UserInterface {
     public void draw(SpriteBatch batch, Rectangle hudBounds) {
         batch.setColor(Color.WHITE);
         assets.screws.draw(batch, bounds.x, bounds.y, bounds.width, bounds.height);
-        assets.font.getData().setScale(.7f);
-        layout.setText(assets.font, text, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.center, false);
-        assets.font.draw(batch, layout, bounds.x - 85f, bounds.y + size + 20f);
+        assets.bladeFont32.getData().setScale(.7f);
+        layout.setText(assets.bladeFont32, text, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.center, false);
+        assets.bladeFont32.draw(batch, layout, bounds.x - 85f, bounds.y + size + 20f);
+        assets.bladeFont32.getData().setScale(1f);
         if (hold != null) {
             hold.render(batch);
         }

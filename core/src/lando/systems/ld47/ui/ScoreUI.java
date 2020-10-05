@@ -53,19 +53,22 @@ public class ScoreUI extends UserInterface {
             timerText += minutes + "m " + seconds + "s";
         }
         else {
-            timerText += Math.round(time * 100f) / 100f + "s";
+            String formattedString = String.format("%.02f", time);
+            timerText += formattedString + "s";
         }
-        layout.setText(assets.font, timerText, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.left, false);
-        assets.font.draw(batch, layout, x, y);
-        String text = "Score: " + Math.round(scoreLabel);
-        layout.setText(assets.font, text, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.left, false);
-        assets.font.draw(batch, layout, x, y - 50f);
-        String lineClearText = "Line Cleared: " + Math.round(lineClearedLabel);
-        layout.setText(assets.font, lineClearText, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.left, false);
-        assets.font.draw(batch, layout, x, y - 100f);
-        String currentComboText = "Current Combo: " + combo;
-        layout.setText(assets.font, currentComboText, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.left, false);
-        assets.font.draw(batch, layout, x, y - 150f);
+        assets.bladeFont32.getData().setScale(.7f);
+        layout.setText(assets.bladeFont32, timerText, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.left, false);
+        assets.bladeFont32.draw(batch, layout, x, y);
+        String text = "score: " + Math.round(scoreLabel);
+        layout.setText(assets.bladeFont32, text, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.left, false);
+        assets.bladeFont32.draw(batch, layout, x, y - 50f);
+        String lineClearText = "line cleared: " + Math.round(lineClearedLabel);
+        layout.setText(assets.bladeFont32, lineClearText, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.left, false);
+        assets.bladeFont32.draw(batch, layout, x, y - 100f);
+        String currentComboText = "current combo: " + combo;
+        layout.setText(assets.bladeFont32, currentComboText, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.left, false);
+        assets.bladeFont32.draw(batch, layout, x, y - 150f);
+        assets.bladeFont32.getData().setScale(1f);
 
     }
 
