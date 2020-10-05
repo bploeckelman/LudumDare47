@@ -51,9 +51,8 @@ public class Game extends ApplicationAdapter {
 		if (Gdx.app.getType() == Application.ApplicationType.WebGL || Config.showLaunchScreen) {
 			setScreen(new LaunchScreen(this));
 		} else {
-			setScreen(new LaunchScreen(this));
-
-//			setScreen(new TitleScreen(this));
+			//setScreen(new LaunchScreen(this));
+			setScreen(new TitleScreen(this));
 		}
 		Gdx.input.setInputProcessor(new KonamiHandler(this));
 	}

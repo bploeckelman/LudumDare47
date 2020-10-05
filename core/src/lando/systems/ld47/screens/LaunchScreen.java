@@ -10,7 +10,7 @@ import lando.systems.ld47.ui.typinglabel.TypingLabel;
 
 public class LaunchScreen extends BaseScreen {
     private TypingLabel titleLabel;
-    static String title = "{JUMP=.2}{WAVE=0.9;1.2;1.75}{RAINBOW}click to launch{ENDRAINBOW}{ENDWAVE}{ENDJUMP}";
+    static String title = "{JUMP=.2}{WAVE=0.9;1.1;1.25}{RAINBOW}click to launch{ENDRAINBOW}{ENDWAVE}{ENDJUMP}";
     private final ShaderProgram shader;
     private float accum = 0f;
     public LaunchScreen(Game game) {
