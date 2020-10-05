@@ -88,8 +88,8 @@ body
 
     background-image:
     linear-gradient(0deg, 
-    black 12%, 
-    transparent 12%    
+    hsla(0, 0%, 0%, .5) 5%, 
+    transparent 10%    
     ),
 
     linear-gradient(40deg, 
@@ -125,11 +125,92 @@ body
     ;
  
     background-size: 
-    100% 1%, 
+    100% 2%, 
     100% 100%,
     100% 100%,
     100% 100%;
 
+    /* animation: animatedBackground 1s cubic-bezier(0.175, 0.82, 0.165, .15) infinite; */
+    animation: animatedBackground 5s ease-in-out infinite;
+    animation-direction: normal;
+
+}
+
+@keyframes animatedBackground {
+    0% {
+
+        text-shadow: -1px 2px 25px hsl(283, 58%, 71%);
+
+      background-position: 
+      bottom center,
+      top center,
+      top center,
+      top center
+      ;
+
+      background-size: 
+      100% .5%, 
+      100% 100%,
+      100% 100%,
+      100% 100%;
+    }
+    10% {
+        text-shadow: -1px 2px 30px hsl(183, 78%, 71%); 
+
+    }
+    35% {
+
+        background-position: 
+        center center,
+        top center,
+        top center,
+        top center
+        ;
+
+    background-size: 
+    100% 1%, 
+    100% 100%,
+    100% 100%,
+    100% 100%;
+    }
+
+    50% {
+        text-shadow: -1px 2px 20px hsl(283, 58%, 21%);
+
+    }
+    70% {
+
+
+        background-position: 
+        bottom center,
+        top center,
+        top center,
+        top center
+        ;
+  
+        background-size: 
+        100% .5%, 
+        100% 100%,
+        100% 100%,
+        100% 100%;
+      }
+      100% {
+
+        text-shadow: -1px 2px 25px hsl(283, 58%, 71%);
+
+      background-position: 
+      bottom center,
+      top center,
+      top center,
+      top center
+      ;
+
+      background-size: 
+      100% .5%, 
+      100% 100%,
+      100% 100%,
+      100% 100%;
+    }
 }
 
 #leaderboard 
