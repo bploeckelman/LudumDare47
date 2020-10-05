@@ -29,8 +29,8 @@ public class ScoreEntryUI extends UserInterface implements InputProcessor {
     private static final Color aqua          = new Color(0f, 1f, 249f / 255f, 1f);
     private static final Color blue          = new Color(73f / 255f, 0f, 1f, 1f);
 
-    private static final String buttonText = "Submit Score";
-    private static final String namePromptText = "Type your name and click 'submit':";
+    private static final String buttonText = "submit score";
+    private static final String namePromptText = "type your name and click 'submit':";
 
     private final int score;
     private final int rank;
@@ -100,7 +100,7 @@ public class ScoreEntryUI extends UserInterface implements InputProcessor {
                 bounds.y + bounds.height / 2f - entryHeight / 2f - margin_button,
                 entryWidth, entryHeight);
 
-        this.name = "Anonymous";
+        this.name = "anonymous";
     }
 
     public void update(float dt) {
@@ -150,22 +150,22 @@ public class ScoreEntryUI extends UserInterface implements InputProcessor {
             // header text
             {
                 // TODO: rank is a hassle, either figure it out later or skip it
-                String headerText = "Final score: " + score;// + "    rank: " + rank;
-                assets.font.getData().setScale(1.5f);
-                layout.setText(assets.font, headerText, scoreTextColor, bounds.width, Align.center, false);
+                String headerText = "final score: " + score;// + "    rank: " + rank;
+                assets.bladeFont64.getData().setScale(1f);
+                layout.setText(assets.bladeFont64, headerText, scoreTextColor, bounds.width, Align.center, false);
                 headerHeight = layout.height;
                 headerPosY = bounds.y + bounds.height - headerHeight / 2f;
-                assets.font.draw(batch, layout, bounds.x, headerPosY);
-                assets.font.getData().setScale(0.7f);
+                assets.bladeFont64.draw(batch, layout, bounds.x, headerPosY);
+                assets.bladeFont64.getData().setScale(1f);
             }
 
             // score and rank
             {
-                assets.font.getData().setScale(1.1f);
-                layout.setText(assets.font, namePromptText, Color.BLACK, bounds.width, Align.center, false);
+                assets.bladeFont64.getData().setScale(.7f);
+                layout.setText(assets.bladeFont64, namePromptText, Color.BLACK, bounds.width, Align.center, false);
                 float scoreRankPosY = headerPosY - headerHeight - margin_button - layout.height / 2f;
-                assets.font.draw(batch, layout, bounds.x, scoreRankPosY);
-                assets.font.getData().setScale(0.7f);
+                assets.bladeFont64.draw(batch, layout, bounds.x, scoreRankPosY);
+                assets.bladeFont64.getData().setScale(1f);
             }
 
             // name entry field
@@ -174,12 +174,12 @@ public class ScoreEntryUI extends UserInterface implements InputProcessor {
                 batch.draw(assets.whitePixel, boundsNameEntry.x, boundsNameEntry.y, boundsNameEntry.width, boundsNameEntry.height);
                 assets.screws.draw(batch, boundsNameEntry.x, boundsNameEntry.y, boundsNameEntry.width, boundsNameEntry.height);
 
-                assets.font.getData().setScale(1.4f);
-                assets.font.setColor(Color.DARK_GRAY);
-                layout.setText(assets.font, name);
-                assets.font.draw(batch, name, boundsNameEntry.x, boundsNameEntry.y + boundsNameEntry.height / 2f + layout.height / 2f, boundsNameEntry.width, Align.center, false);
-                assets.font.setColor(Color.WHITE);
-                assets.font.getData().setScale(0.7f);
+                assets.bladeFont64.getData().setScale(.7f);
+                assets.bladeFont64.setColor(Color.DARK_GRAY);
+                layout.setText(assets.bladeFont64, name);
+                assets.bladeFont64.draw(batch, name, boundsNameEntry.x, boundsNameEntry.y + boundsNameEntry.height / 2f + layout.height / 2f, boundsNameEntry.width, Align.center, false);
+                assets.bladeFont64.setColor(Color.WHITE);
+                assets.bladeFont64.getData().setScale(1f);
             }
 
             // score submission & cancel buttons
@@ -189,24 +189,24 @@ public class ScoreEntryUI extends UserInterface implements InputProcessor {
                 assets.screws.draw(batch, boundsButtonSubmit.x, boundsButtonSubmit.y, boundsButtonSubmit.width, boundsButtonSubmit.height);
                 batch.setColor(1f, 1f, 1f, 1f);
 
-                assets.font.getData().setScale(1.1f);
-                assets.font.setColor(Color.WHITE);
-                layout.setText(assets.font, buttonText);
-                assets.font.draw(batch, buttonText, boundsButtonSubmit.x, boundsButtonSubmit.y + boundsButtonSubmit.height / 2f + layout.height / 2f, boundsButtonSubmit.width, Align.center, false);
-                assets.font.setColor(1f, 1f, 1f, 1f);
-                assets.font.getData().setScale(0.7f);
+                assets.bladeFont64.getData().setScale(.6f);
+                assets.bladeFont64.setColor(Color.WHITE);
+                layout.setText(assets.bladeFont64, buttonText);
+                assets.bladeFont64.draw(batch, buttonText, boundsButtonSubmit.x, boundsButtonSubmit.y + boundsButtonSubmit.height / 2f + layout.height / 2f, boundsButtonSubmit.width, Align.center, false);
+                assets.bladeFont64.setColor(1f, 1f, 1f, 1f);
+                assets.bladeFont64.getData().setScale(1f);
 
                 batch.setColor(buttonHoveredCancel ? buttonHoverColor : buttonColor);
                 batch.draw(assets.whitePixel, boundsButtonCancel.x, boundsButtonCancel.y, boundsButtonCancel.width, boundsButtonCancel.height);
                 assets.screws.draw(batch, boundsButtonCancel.x, boundsButtonCancel.y, boundsButtonCancel.width, boundsButtonCancel.height);
                 batch.setColor(1f, 1f, 1f, 1f);
 
-                assets.font.getData().setScale(1.1f);
-                assets.font.setColor(Color.WHITE);
-                layout.setText(assets.font, "Cancel");
-                assets.font.draw(batch, "Cancel", boundsButtonCancel.x, boundsButtonCancel.y + boundsButtonCancel.height / 2f + layout.height / 2f, boundsButtonCancel.width, Align.center, false);
-                assets.font.setColor(1f, 1f, 1f, 1f);
-                assets.font.getData().setScale(0.7f);
+                assets.bladeFont64.getData().setScale(.6f);
+                assets.bladeFont64.setColor(Color.WHITE);
+                layout.setText(assets.bladeFont64, "Cancel");
+                assets.bladeFont64.draw(batch, "Cancel", boundsButtonCancel.x, boundsButtonCancel.y + boundsButtonCancel.height / 2f + layout.height / 2f, boundsButtonCancel.width, Align.center, false);
+                assets.bladeFont64.setColor(1f, 1f, 1f, 1f);
+                assets.bladeFont64.getData().setScale(1f);
             }
         }
     }
