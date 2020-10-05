@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerAdapter;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.controllers.mappings.Xbox;
 
@@ -188,6 +189,13 @@ public class PlayerInput extends ControllerAdapter {
         return Gdx.input.isKeyJustPressed(Input.Keys.K)
                 || Gdx.input.isKeyJustPressed(Input.Keys.TAB)
                 || controllerState.holdButtonJustPressed;
+    }
+
+    // if the controller is connected when launching the game it doesn't register, call this to reset it
+    public void recheckController() {
+        if (controllerState.controller == null && !Controllers.getControllers().isEmpty()) {
+            controllerState.controller = Controllers.getControllers().first();
+        }
     }
 
     // ------------------------------------------------------------------------------

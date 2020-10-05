@@ -36,6 +36,8 @@ public class GameScreen extends BaseScreen{
         playMusic(Audio.Musics.blade_runner);
 
         leaderboardService.getScores();
+
+        playerInput.recheckController();
     }
 
     @Override
