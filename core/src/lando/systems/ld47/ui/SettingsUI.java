@@ -45,6 +45,28 @@ public class SettingsUI extends UserInterface {
     private final String headerText = "Settings";
     private final String buttonTextOk = "Ok";
 
+    static class Toggle {
+        public final String description;
+        public Rectangle bounds;
+        public Rectangle boundsText;
+        public Rectangle boundsOn;
+        public Rectangle boundsOff;
+        public boolean enabled;
+        public Toggle(String description) {
+            this.description = description;
+            this.bounds = new Rectangle();
+            this.boundsText = new Rectangle();
+            this.boundsOn = new Rectangle();
+            this.boundsOff = new Rectangle();
+            this.enabled = true;
+        }
+    }
+    private final Toggle musicToggle;
+    private final Toggle soundToggle;
+    private final Toggle ghostToggle;
+    private final float columnWidth;
+    private final float columnHeight;
+
     public SettingsUI(BaseScreen screen) {
         super(screen);
 
@@ -67,6 +89,37 @@ public class SettingsUI extends UserInterface {
         this.boundsButtonOk = new Rectangle(
                 finalWindowBounds.x + finalWindowBounds.width / 2f - buttonWidth / 2f,
                 finalWindowBounds.y + margin_button, buttonWidth, 80f);
+
+        int rows = 3;
+        float headerHeight = 50f; // ??? just a guess
+        float rowMargin = 20f;
+        float yTop = finalWindowBounds.y + finalWindowBounds.height - headerHeight - rowMargin;
+        float yBottom = boundsButtonOk.y + boundsButtonOk.height + rowMargin;
+        float availableHeight = yTop - yBottom;
+        float rowHeight = (availableHeight - ((rows - 1) * rowMargin)) / (float) rows;
+        float rowWidth = (finalWindowBounds.width - 2f * rowMargin);
+        float inset = 20f;
+        this.columnWidth = (1f / 3f) * rowWidth;
+        this.columnHeight = rowHeight;
+
+
+        this.ghostToggle = new Toggle("Ghost outline");
+        this.ghostToggle.bounds.set(finalWindowBounds.x + rowMargin, yBottom, rowWidth, rowHeight);
+        this.ghostToggle.boundsText.set(ghostToggle.bounds.x + 0f * columnWidth + inset, ghostToggle.bounds.y + inset, columnWidth - 2f * inset, columnHeight - 2f * inset);
+        this.ghostToggle.boundsOn  .set(ghostToggle.bounds.x + 1f * columnWidth + inset, ghostToggle.bounds.y + inset, columnWidth - 2f * inset, columnHeight - 2f * inset);
+        this.ghostToggle.boundsOff .set(ghostToggle.bounds.x + 2f * columnWidth + inset, ghostToggle.bounds.y + inset, columnWidth - 2f * inset, columnHeight - 2f * inset);
+
+        this.soundToggle = new Toggle("Sound fx");
+        this.soundToggle.bounds.set(finalWindowBounds.x + rowMargin, yBottom + rowHeight, rowWidth, rowHeight);
+        this.soundToggle.boundsText.set(soundToggle.bounds.x + 0f * columnWidth + inset, soundToggle.bounds.y + inset, columnWidth - 2f * inset, columnHeight - 2f * inset);
+        this.soundToggle.boundsOn  .set(soundToggle.bounds.x + 1f * columnWidth + inset, soundToggle.bounds.y + inset, columnWidth - 2f * inset, columnHeight - 2f * inset);
+        this.soundToggle.boundsOff .set(soundToggle.bounds.x + 2f * columnWidth + inset, soundToggle.bounds.y + inset, columnWidth - 2f * inset, columnHeight - 2f * inset);
+
+        this.musicToggle = new Toggle("Music");
+        this.musicToggle.bounds.set(finalWindowBounds.x + rowMargin, yBottom + 2f * rowHeight, rowWidth, rowHeight);
+        this.musicToggle.boundsText.set(musicToggle.bounds.x + 0f * columnWidth + inset, musicToggle.bounds.y + inset, columnWidth - 2f * inset, columnHeight - 2f * inset);
+        this.musicToggle.boundsOn  .set(musicToggle.bounds.x + 1f * columnWidth + inset, musicToggle.bounds.y + inset, columnWidth - 2f * inset, columnHeight - 2f * inset);
+        this.musicToggle.boundsOff .set(musicToggle.bounds.x + 2f * columnWidth + inset, musicToggle.bounds.y + inset, columnWidth - 2f * inset, columnHeight - 2f * inset);
     }
 
     @Override
@@ -87,6 +140,30 @@ public class SettingsUI extends UserInterface {
             if (boundsButtonOk.contains(touchPos.x, touchPos.y)) {
                 gameState.gameScreen.unpause();
                 hide();
+            }
+
+            if (soundToggle.boundsOn.contains(touchPos.x, touchPos.y)) {
+                soundToggle.enabled = true;
+                gameState.enableSounds();
+            } else if (soundToggle.boundsOff.contains(touchPos.x, touchPos.y)) {
+                soundToggle.enabled = false;
+                gameState.disableSounds();
+            }
+
+            if (musicToggle.boundsOn.contains(touchPos.x, touchPos.y)) {
+                musicToggle.enabled = true;
+                gameState.startMusic();
+            } else if (musicToggle.boundsOff.contains(touchPos.x, touchPos.y)) {
+                musicToggle.enabled = false;
+                gameState.stopMusic();
+            }
+
+            if (ghostToggle.boundsOn.contains(touchPos.x, touchPos.y)) {
+                ghostToggle.enabled = true;
+                gameState.showGhost();
+            } else if (ghostToggle.boundsOff.contains(touchPos.x, touchPos.y)) {
+                ghostToggle.enabled = false;
+                gameState.hideGhost();
             }
         }
     }
@@ -121,7 +198,126 @@ public class SettingsUI extends UserInterface {
 
             // actual settings toggles
             {
-                // TODO
+                // music toggle
+                {
+                    // description text
+                    assets.font.getData().setScale(1.6f);
+                    Color musicTextColor = (musicToggle.enabled) ? deep_sky_blue : Color.DARK_GRAY;
+                    layout.setText(assets.font, musicToggle.description, musicTextColor, musicToggle.boundsText.width, Align.center, false);
+                    assets.font.draw(batch, layout, musicToggle.boundsText.x, musicToggle.boundsText.y + musicToggle.boundsText.height / 2f + layout.height / 2f);
+                    assets.font.getData().setScale(0.7f);
+
+                    // "on" button
+                    if (musicToggle.enabled) {
+                        batch.setColor(aqua);
+                        batch.draw(assets.whitePixel, musicToggle.boundsOn.x, musicToggle.boundsOn.y, musicToggle.boundsOn.width, musicToggle.boundsOn.height);
+                    }
+                    batch.setColor(Color.WHITE);
+                    assets.screws.draw(batch, musicToggle.boundsOn.x, musicToggle.boundsOn.y, musicToggle.boundsOn.width, musicToggle.boundsOn.height);
+
+                    // "on" button text
+                    assets.font.getData().setScale(1f);
+                    Color musicButtonOnTextColor = (musicToggle.enabled) ? deep_pink : Color.DARK_GRAY;
+                    layout.setText(assets.font, "On", musicButtonOnTextColor, musicToggle.boundsOn.width, Align.center, false);
+                    assets.font.draw(batch, layout, musicToggle.boundsOn.x, musicToggle.boundsOn.y + musicToggle.boundsOn.height / 2f + layout.height / 2f);
+                    assets.font.getData().setScale(0.7f);
+
+                    // "off" button
+                    if (!musicToggle.enabled) {
+                        batch.setColor(aqua);
+                        batch.draw(assets.whitePixel, musicToggle.boundsOff.x, musicToggle.boundsOff.y, musicToggle.boundsOff.width, musicToggle.boundsOff.height);
+                    }
+                    batch.setColor(Color.WHITE);
+                    assets.screws.draw(batch, musicToggle.boundsOff.x, musicToggle.boundsOff.y, musicToggle.boundsOff.width, musicToggle.boundsOff.height);
+
+                    // "off" button text
+                    assets.font.getData().setScale(1f);
+                    Color musicButtonOffTextColor = (!musicToggle.enabled) ? deep_pink : Color.DARK_GRAY;
+                    layout.setText(assets.font, "Off", musicButtonOffTextColor, musicToggle.boundsOff.width, Align.center, false);
+                    assets.font.draw(batch, layout, musicToggle.boundsOff.x, musicToggle.boundsOff.y + musicToggle.boundsOff.height / 2f + layout.height / 2f);
+                    assets.font.getData().setScale(0.7f);
+                }
+
+                // sound fx toggle
+                {
+                    // description text
+                    assets.font.getData().setScale(1.6f);
+                    Color soundTextColor = (soundToggle.enabled) ? deep_sky_blue : Color.DARK_GRAY;
+                    layout.setText(assets.font, soundToggle.description, soundTextColor, soundToggle.boundsText.width, Align.center, false);
+                    assets.font.draw(batch, layout, soundToggle.boundsText.x, soundToggle.boundsText.y + soundToggle.boundsText.height / 2f + layout.height / 2f);
+                    assets.font.getData().setScale(0.7f);
+
+                    // "on" button
+                    if (soundToggle.enabled) {
+                        batch.setColor(aqua);
+                        batch.draw(assets.whitePixel, soundToggle.boundsOn.x, soundToggle.boundsOn.y, soundToggle.boundsOn.width, soundToggle.boundsOn.height);
+                    }
+                    batch.setColor(Color.WHITE);
+                    assets.screws.draw(batch, soundToggle.boundsOn.x, soundToggle.boundsOn.y, soundToggle.boundsOn.width, soundToggle.boundsOn.height);
+
+                    // "on" button text
+                    assets.font.getData().setScale(1f);
+                    Color soundButtonOnTextColor = (soundToggle.enabled) ? deep_pink : Color.DARK_GRAY;
+                    layout.setText(assets.font, "On", soundButtonOnTextColor, soundToggle.boundsOn.width, Align.center, false);
+                    assets.font.draw(batch, layout, soundToggle.boundsOn.x, soundToggle.boundsOn.y + soundToggle.boundsOn.height / 2f + layout.height / 2f);
+                    assets.font.getData().setScale(0.7f);
+
+                    // "off" button
+                    if (!soundToggle.enabled) {
+                        batch.setColor(aqua);
+                        batch.draw(assets.whitePixel, soundToggle.boundsOff.x, soundToggle.boundsOff.y, soundToggle.boundsOff.width, soundToggle.boundsOff.height);
+                    }
+                    batch.setColor(Color.WHITE);
+                    assets.screws.draw(batch, soundToggle.boundsOff.x, soundToggle.boundsOff.y, soundToggle.boundsOff.width, soundToggle.boundsOff.height);
+
+                    // "off" button text
+                    assets.font.getData().setScale(1f);
+                    Color soundButtonOffTextColor = (!soundToggle.enabled) ? deep_pink : Color.DARK_GRAY;
+                    layout.setText(assets.font, "Off", soundButtonOffTextColor, soundToggle.boundsOff.width, Align.center, false);
+                    assets.font.draw(batch, layout, soundToggle.boundsOff.x, soundToggle.boundsOff.y + soundToggle.boundsOff.height / 2f + layout.height / 2f);
+                    assets.font.getData().setScale(0.7f);
+                }
+
+                // - ghost outline toggle (on, off)
+                {
+                    // description text
+                    assets.font.getData().setScale(1.25f);
+                    Color ghostTextColor = (ghostToggle.enabled) ? deep_sky_blue : Color.DARK_GRAY;
+                    layout.setText(assets.font, ghostToggle.description, ghostTextColor, ghostToggle.boundsText.width, Align.center, false);
+                    assets.font.draw(batch, layout, ghostToggle.boundsText.x, ghostToggle.boundsText.y + ghostToggle.boundsText.height / 2f + layout.height / 2f);
+                    assets.font.getData().setScale(0.7f);
+
+                    // "on" button
+                    if (ghostToggle.enabled) {
+                        batch.setColor(aqua);
+                        batch.draw(assets.whitePixel, ghostToggle.boundsOn.x, ghostToggle.boundsOn.y, ghostToggle.boundsOn.width, ghostToggle.boundsOn.height);
+                    }
+                    batch.setColor(Color.WHITE);
+                    assets.screws.draw(batch, ghostToggle.boundsOn.x, ghostToggle.boundsOn.y, ghostToggle.boundsOn.width, ghostToggle.boundsOn.height);
+
+                    // "on" button text
+                    assets.font.getData().setScale(1f);
+                    Color ghostButtonOnTextColor = (ghostToggle.enabled) ? deep_pink : Color.DARK_GRAY;
+                    layout.setText(assets.font, "On", ghostButtonOnTextColor, ghostToggle.boundsOn.width, Align.center, false);
+                    assets.font.draw(batch, layout, ghostToggle.boundsOn.x, ghostToggle.boundsOn.y + ghostToggle.boundsOn.height / 2f + layout.height / 2f);
+                    assets.font.getData().setScale(0.7f);
+
+                    // "off" button
+                    if (!ghostToggle.enabled) {
+                        batch.setColor(aqua);
+                        batch.draw(assets.whitePixel, ghostToggle.boundsOff.x, ghostToggle.boundsOff.y, ghostToggle.boundsOff.width, ghostToggle.boundsOff.height);
+                    }
+                    batch.setColor(Color.WHITE);
+                    assets.screws.draw(batch, ghostToggle.boundsOff.x, ghostToggle.boundsOff.y, ghostToggle.boundsOff.width, ghostToggle.boundsOff.height);
+
+                    // "off" button text
+                    assets.font.getData().setScale(1f);
+                    Color ghostButtonOffTextColor = (!ghostToggle.enabled) ? deep_pink : Color.DARK_GRAY;
+                    layout.setText(assets.font, "Off", ghostButtonOffTextColor, ghostToggle.boundsOff.width, Align.center, false);
+                    assets.font.draw(batch, layout, ghostToggle.boundsOff.x, ghostToggle.boundsOff.y + ghostToggle.boundsOff.height / 2f + layout.height / 2f);
+                    assets.font.getData().setScale(0.7f);
+
+                }
             }
 
             // ok button

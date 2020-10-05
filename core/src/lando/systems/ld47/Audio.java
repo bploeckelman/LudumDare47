@@ -16,8 +16,8 @@ public class Audio implements Disposable {
     public static final float MUSIC_VOLUME = 0.5f;
     public static final float SOUND_VOLUME = 0.1f;
 
-    public static final boolean soundEnabled = true;
-    public static final boolean musicEnabled = true;
+    public static boolean soundEnabled = true;
+    public static boolean musicEnabled = true;
 
     // none should not have a sound
     public enum Sounds {
@@ -94,6 +94,7 @@ public class Audio implements Disposable {
     }
 
     public long playSound(Sounds soundOption) {
+        if (!soundEnabled || soundOption == Sounds.none) return -1;
         return playSound(soundOption, SOUND_VOLUME);
     }
 
@@ -180,6 +181,9 @@ public class Audio implements Disposable {
     }
 
     public void stopMusic() {
+        for (Music music : musics.values()) {
+            if (music != null) music.stop();
+        }
         if (currentMusic != null) {
             currentMusic.stop();
         }

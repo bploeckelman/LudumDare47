@@ -36,7 +36,7 @@ public class GameHud {
 //        uiElements.add(nextUI = new NextUI(gameState, this.camera.viewportWidth - 130, bounds.height - 50));
         uiElements.add(gameInfoUI = new GameInfoUI(gameState));
         uiElements.add(leaderboardUI = new LeaderboardUI(gameState));
-        uiElements.add(settingsUI = new SettingsUI(gameState.gameScreen));
+        settingsUI = new SettingsUI(gameState.gameScreen);
 
         controllerText = new StringBuilder();
     }
@@ -55,6 +55,7 @@ public class GameHud {
         for (UserInterface ui : uiElements) {
             ui.update(dt);
         }
+        settingsUI.update(dt);
 
         // DEBUG --------------------------------
         // TODO: replace me with a little icon or something
@@ -93,6 +94,10 @@ public class GameHud {
         }
 
         batch.setColor(Color.WHITE);
+    }
+
+    public void renderSettings(SpriteBatch batch) {
+        settingsUI.draw(batch, null);
     }
 
     public void updateScores(Array<LeaderboardScore> scores) {

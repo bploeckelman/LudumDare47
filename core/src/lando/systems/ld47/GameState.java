@@ -25,8 +25,9 @@ public class GameState {
     private MutableInteger comboScore = new MutableInteger(0);
 
     // Settings
-    public boolean showGhost;
-
+    private boolean playMusic;
+    private boolean playSounds;
+    private boolean showGhost;
 
     public GameState(GameScreen gameScreen) {
         this.gameScreen = gameScreen;
@@ -79,6 +80,42 @@ public class GameState {
 
     public void breakCombo() {
         comboScore.setValue(0);
+    }
+
+    public void startMusic() {
+        if (playMusic) return;
+        playMusic = true;
+        gameScreen.playMusic(Audio.Musics.blade_runner);
+    }
+
+    public void stopMusic() {
+        if (!playMusic) return;
+        playMusic = false;
+        gameScreen.game.audio.stopMusic();
+    }
+
+    public void enableSounds() {
+        if (playSounds) return;
+        playSounds = true;
+        Audio.soundEnabled = true;
+    }
+
+    public void disableSounds() {
+        if (!playSounds) return;
+        playSounds = false;
+        Audio.soundEnabled = false;
+    }
+
+    public void showGhost() {
+        showGhost = true;
+    }
+
+    public void hideGhost() {
+        showGhost = false;
+    }
+
+    public boolean isGhostVisible() {
+        return showGhost;
     }
 
 }
