@@ -53,7 +53,25 @@ public class ScoreUI extends UserInterface {
             timerText += minutes + "m " + seconds + "s";
         }
         else {
-            timerText += Math.round(time * 100f) / 100f + "s";
+            String tempTime = Float.toString(Math.round(time * 100f) / 100f);
+            if (tempTime.contains(".")) {
+                String tempInteger = tempTime.split("\\.")[0];
+                String tempDecimal = tempTime.split("\\.")[1];
+                switch (tempDecimal.length()) {
+                    case 0:
+                        tempDecimal +="00";
+                        break;
+                    case 1:
+                        tempDecimal += "0";
+                        break;
+                    default:
+                        break;
+                }
+                timerText += tempInteger + "." + tempDecimal + "s";
+            }
+            else {
+                timerText += tempTime + "s";
+            }
         }
         assets.bladeFont32.getData().setScale(.7f);
         layout.setText(assets.bladeFont32, timerText, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.left, false);
