@@ -1,5 +1,8 @@
 package lando.systems.ld47.screens;
 
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.equations.Quad;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -8,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld47.Audio;
 import lando.systems.ld47.Game;
 import lando.systems.ld47.entities.TitleCar;
+import lando.systems.ld47.utils.accessors.Vector2Accessor;
 
 public class TitleScreen extends BaseScreen {
 
@@ -19,8 +23,17 @@ public class TitleScreen extends BaseScreen {
         playerInput.recheckController();
 
         car = new TitleCar(game);
-        car.position.set(500, 250);
-        car.setState(TitleCar.State.idle);
+        car.position.set(-300, 300);
+        car.setState(TitleCar.State.moving);
+
+        Timeline.createSequence()
+                .pushPause(2)
+                .push(Tween.to(car.position, Vector2Accessor.XY, 5).target(600, 225).ease(Quad.INOUT))
+                .pushPause(5)
+                .push(Tween.to(car.position, Vector2Accessor.XY, 3)
+                        .waypoint(850, 350).target(-300, 500).ease(Quad.INOUT))
+                .repeat(100, 0)
+                .start(game.tween);
     }
 
     @Override
