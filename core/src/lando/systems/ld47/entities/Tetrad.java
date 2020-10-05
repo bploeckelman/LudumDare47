@@ -89,6 +89,7 @@ public class Tetrad implements Pool.Poolable {
             point.update(dt);
 
         }
+        flashing = gameBoard.tetradToRemove == this;
         if (flashing) {
             color.a = (1f + MathUtils.sin(accum * 10f)) / 2f;
         } else {
@@ -315,8 +316,7 @@ public class Tetrad implements Pool.Poolable {
         vertices[verticesIndex++] = UV1.y;
     }
 
-    public void renderModels(Camera camera) {
-        ShaderProgram shader = game.assets.blockShader;
+    public void renderModels(ShaderProgram shader) {
         mesh.setVertices(vertices);
         mesh.render(shader, GL20.GL_TRIANGLES, 0, verticesIndex/ NUM_COMPONENTS_PER_VERTEX);
     }

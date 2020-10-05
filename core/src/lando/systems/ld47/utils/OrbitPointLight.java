@@ -21,6 +21,6 @@ public class OrbitPointLight extends PointLight{
     public void update(float dt) {
         super.update(dt);
         accum += dt;
-        pos.set(this.initialPos).rotateRad(axis, accum).add(5, 10, 0);
+        pos.set(this.initialPos).rotateRad(axis, (accum/3f)).add(5, 10, 0);
     }
 }

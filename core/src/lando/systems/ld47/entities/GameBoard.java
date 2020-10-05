@@ -32,7 +32,7 @@ public class GameBoard {
     Texture gameTexture;
 
     public Tetrad activeTetrad;
-    private Tetrad tetradToRemove;
+    public Tetrad tetradToRemove;
     public Rectangle gameBounds;
     float fallInterval;
     float timeToFall;
@@ -41,7 +41,7 @@ public class GameBoard {
     private boolean previousBlockCleared = false;
     PerspectiveCamera boardCam;
     private Color ambientColor = new Color(.4f, .4f, .4f, 1f);
-    private Color directionColor = new Color(.6f, .3f, .6f, 1f);
+    private Color directionColor = new Color(.6f, .6f, .6f, 1f);
     private Vector3 directionLight = new Vector3(.1f, -.5f, .8f).nor();
 
     public PointLight[] pointLights;
@@ -77,7 +77,7 @@ public class GameBoard {
         pointLights = new PointLight[MAX_POINT_LIGHTS];
         pointLights[0] = new OrbitPointLight(0, new Vector3(0, 0, 15), new Color(.5f, 0, .5f, 1f), new Vector3(.5f, .5f, 0));
         pointLights[1] = new OrbitPointLight(1, new Vector3(0, 0, -15), new Color(0f, .5f, .5f, 1f), new Vector3(-.5f, .5f, 0f));
-        pointLights[2] = new OrbitPointLight(2, new Vector3(-15, 0, 0), new Color(.5f, .5f, 0f, 1f), new Vector3(0, 1, 0));
+        pointLights[2] = new OrbitPointLight(2, new Vector3(0, -15, 0), new Color(.5f, .5f, 0f, 1f), new Vector3(1, 0, 0));
         pointLights[3] = new PointLight(3, new Vector3(-30, 10, 20), new Color(.3f, .3f, .3f, 1f));
         pointLights[4] = new PointLight(4, new Vector3(-30, 10, 20), new Color(.3f, .3f, .3f, 1f));
     }
@@ -231,6 +231,7 @@ public class GameBoard {
 
         ShaderProgram shader = gameState.gameScreen.assets.boardShader;
         shader.bind();
+        shader.setUniformf("u_viewPos", boardCam.position);
         shader.setUniformMatrix("u_projTrans", boardCam.combined);
         shader.setUniformf("u_ambient", ambientColor);
         shader.setUniformf("u_direction_dir", directionLight);
@@ -240,26 +241,25 @@ public class GameBoard {
         }
         backPlate.renderMesh(shader);
 
+        shader = gameState.gameScreen.assets.blockShader;
 
-
-        gameState.gameScreen.assets.blockShader.bind();
-        gameState.gameScreen.assets.blockShader.setUniformMatrix("u_projTrans", boardCam.combined);
-        gameState.gameScreen.assets.blockShader.setUniformi("u_texture", 0);
+        shader.bind();
+        shader.setUniformMatrix("u_projTrans", boardCam.combined);
+        shader.setUniformf("u_viewPos", boardCam.position);
+        shader.setUniformf("u_ambient", ambientColor);
+        shader.setUniformf("u_direction_dir", directionLight);
+        shader.setUniformf("u_direction_color", directionColor);
+        shader.setUniformi("u_texture", 0);
         gameState.gameScreen.assets.blockTextures.bind(0);
-
-
-        gameState.gameScreen.assets.blockShader.setUniformf("u_ambient", ambientColor);
-        gameState.gameScreen.assets.blockShader.setUniformf("u_direction_dir", directionLight);
-        gameState.gameScreen.assets.blockShader.setUniformf("u_direction_color", directionColor);
         for(PointLight light : pointLights){
-            light.addToShader(gameState.gameScreen.assets.blockShader);
+            light.addToShader(shader);
         }
 
         for (Tetrad tetrad : tetrads) {
-            tetrad.renderModels(boardCam);
+            tetrad.renderModels(shader);
         }
         if (activeTetrad != null) {
-            activeTetrad.renderModels(boardCam);
+            activeTetrad.renderModels(shader);
         }
         Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
         gameFB.end();
