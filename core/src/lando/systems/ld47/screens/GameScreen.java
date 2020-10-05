@@ -118,8 +118,12 @@ public class GameScreen extends BaseScreen{
         gameBoard.renderFrameBuffer(batch);
     }
 
+    boolean gameEnded = false;
     public void gameOver() {
-        game.setScreen(new EndScreen(game, gameHud.getCurrentScore(), gameHud.getCurrentRank()));
+        if (!gameEnded) {
+            game.setScreen(new EndScreen(game, gameHud.getCurrentScore(), gameHud.getCurrentRank()));
+            gameEnded = true;
+        }
     }
 
     public boolean isPaused() {

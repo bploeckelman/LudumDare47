@@ -307,6 +307,7 @@ public class ScoreEntryUI extends UserInterface implements InputProcessor {
 
         // actually add the new character
         name += character;
+        Gdx.app.log("endScreen", character+"");
 
         return true;
     }

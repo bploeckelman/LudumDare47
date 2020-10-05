@@ -21,6 +21,7 @@ public class ControlsScreen extends BaseScreen {
         debounceTime -= dt;
 
         if (debounceTime <= 0 && Gdx.input.justTouched() || playerInput.isAnyButtonPressed()){
+            debounceTime = 5f;
             game.setScreen(new GameScreen(game));
         }
     }

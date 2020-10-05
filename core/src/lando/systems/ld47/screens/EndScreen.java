@@ -48,6 +48,7 @@ public class EndScreen extends BaseScreen {
     private final Vector3 touchPos;
     private final Rectangle boundsButtonRestart;
     private boolean buttonHoveredRestart;
+    float debounce = 1f;
 
     public EndScreen(Game game, int currentScore, int currentRank) {
         super(game);
@@ -95,10 +96,12 @@ public class EndScreen extends BaseScreen {
         float margin = 10f;
         float buttonSize = 80f;
         this.boundsButtonRestart = new Rectangle(margin, hudCamera.viewportHeight - buttonSize - margin, buttonSize, buttonSize);
+        debounce = 1f;
     }
 
     @Override
     public void update(float dt) {
+        debounce -= dt;
         mousePos.set(Gdx.input.getX(), Gdx.input.getY(), 0f);
         hudCamera.unproject(mousePos);
 
@@ -107,11 +110,10 @@ public class EndScreen extends BaseScreen {
         if (scoreEntryUI.isHidden() && Gdx.input.justTouched()) {
             touchPos.set(mousePos);
 
-            if (boundsButtonRestart.contains(touchPos.x, touchPos.y)) {
-                game.setScreen(new GameScreen(game));
+            if ( debounce <= 0 && boundsButtonRestart.contains(touchPos.x, touchPos.y)) {
+                game.setScreen(new GameScreen(game), assets.heartShader, 1f);
+                debounce = 5f;
             }
-
-
 
         }
 
