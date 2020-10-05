@@ -20,6 +20,8 @@ public class Assets implements Disposable {
     private final AssetDescriptor<Texture> launchTextureAsset = new AssetDescriptor<>("images/launch.png", Texture.class);
     private final AssetDescriptor<Texture> titleTextureAsset = new AssetDescriptor<>("images/title.png", Texture.class);
     private final AssetDescriptor<BitmapFont> riseFont16Asset = new AssetDescriptor<>("fonts/chevyray-rise-16.fnt", BitmapFont.class);
+    private final AssetDescriptor<BitmapFont> bladeFont16Asset = new AssetDescriptor<>("fonts/blade-runner-16.fnt", BitmapFont.class);
+    private final AssetDescriptor<BitmapFont> bladeFont32Asset = new AssetDescriptor<>("fonts/blade-runner-16.fnt", BitmapFont.class);
 
     public enum Loading { SYNC, ASYNC }
 
@@ -28,6 +30,8 @@ public class Assets implements Disposable {
     public ShapeRenderer shapes;
     public GlyphLayout layout;
     public BitmapFont font;
+    public BitmapFont bladeFont16;
+    public BitmapFont bladeFont32;
     public boolean initialized;
 
     public Texture launchImage;
@@ -93,6 +97,8 @@ public class Assets implements Disposable {
         mgr.load(titleTextureAsset);
         mgr.load(launchTextureAsset);
         mgr.load(riseFont16Asset);
+        mgr.load(bladeFont16Asset);
+        mgr.load(bladeFont32Asset);
 
         // audio
         mgr.load("audio/sample-sound.wav", Sound.class);
@@ -116,6 +122,8 @@ public class Assets implements Disposable {
         launchImage = mgr.get(launchTextureAsset);
         titleImage = mgr.get(titleTextureAsset);
         font = mgr.get(riseFont16Asset);
+        bladeFont16 = mgr.get(bladeFont16Asset);
+        bladeFont32 = mgr.get(bladeFont32Asset);
 
         blockTextures = mgr.get(blockTextureAsset);
         blockTextures.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
