@@ -198,6 +198,22 @@ public class PlayerInput extends ControllerAdapter {
         }
     }
 
+    public boolean isAnyButtonPressed() {
+        if (controllerState.controller == null) return false;
+
+        // check dpad
+        PovDirection povDirection = controllerState.controller.getPov(0);
+        if (povDirection != PovDirection.center) return true;
+
+        int numButtons = 20; // there's not actually 20 buttons, but this catches all of them and returns true if any are pressed
+        for (int i = 0; i < numButtons; ++i) {
+            if (controllerState.controller.getButton(i)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // ------------------------------------------------------------------------------
 
     @Override

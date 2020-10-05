@@ -164,9 +164,7 @@ public class GameBoard {
         }
 
         if (!boardResolving) {
-
-            playerInput.update(dt);
-                if (activeTetrad == null) {
+            if (activeTetrad == null) {
                 activeTetrad = gameState.popNext();
 
                 activeTetrad.insertIntoBoard(this);

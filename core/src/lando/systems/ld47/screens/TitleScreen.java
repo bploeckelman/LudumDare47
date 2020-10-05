@@ -11,13 +11,16 @@ public class TitleScreen extends BaseScreen {
     public TitleScreen(Game game) {
         super(game);
         playMusic(Audio.Musics.mood_track2);
+        playerInput.recheckController();
     }
 
     @Override
     public void update(float dt) {
         super.update(dt);
 
-        if (Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+        if (Gdx.input.justTouched()
+         || Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)
+         || playerInput.isAnyButtonPressed()){
             game.setScreen(new GameScreen(game));
         }
     }

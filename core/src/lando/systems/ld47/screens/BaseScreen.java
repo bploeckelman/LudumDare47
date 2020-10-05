@@ -57,6 +57,7 @@ public abstract class BaseScreen extends InputAdapter {
     public void update(float dt) {
         shaker.update(dt);
         particles.update(dt);
+        playerInput.update(dt);
         leaderboardService.update(dt);
     }
 
