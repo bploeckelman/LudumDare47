@@ -176,8 +176,8 @@ public class ScoreEntryUI extends UserInterface implements InputProcessor {
 
                 assets.bladeFont64.getData().setScale(1.1f);
                 assets.bladeFont64.setColor(Color.DARK_GRAY);
-                layout.setText(assets.bladeFont64, name);
-                assets.bladeFont64.draw(batch, name, boundsNameEntry.x, boundsNameEntry.y + boundsNameEntry.height / 2f + layout.height / 2f, boundsNameEntry.width, Align.center, false);
+                layout.setText(assets.bladeFont64, name.toLowerCase());
+                assets.bladeFont64.draw(batch, name.toLowerCase(), boundsNameEntry.x, boundsNameEntry.y + boundsNameEntry.height / 2f + layout.height / 2f, boundsNameEntry.width, Align.center, false);
                 assets.bladeFont64.setColor(Color.WHITE);
                 assets.bladeFont64.getData().setScale(1f);
             }
