@@ -92,40 +92,25 @@ public class GameBoard {
         pointLights[4] = new PointLight(4, new Vector3(-30, 10, 20), new Color(.3f, .3f, .3f, 1f));
     }
 
+
+    Tetrad lastSwap = null;
     // this happens in an update loop, so it's cool
-    public Tetrad swapActiveTetrad(Tetrad tetrad) {
+    public Tetrad swapActiveTetrad(Tetrad hold) {
         Tetrad current = activeTetrad;
-        Vector2 origin = null;
-        if (current != null) {
-            origin = current.removeFromBoard();
+        if (hold == null) {
+            if (current == null) { return null; }
+
+            current.removeFromBoard();
+            lastSwap = gameState.popNext();
+        } else if (current == lastSwap) {
+            gameState.gameScreen.playSound(Audio.Sounds.tet_noswap);
+            return hold;
+        } else {
+            // current piece not the last one swapped in
+            lastSwap = hold;
         }
-
-        if (tetrad == null) {
-            origin = null;
-            tetrad = gameState.popNext();
-        }
-
-        // figure out positioning
-        tetrad.insertIntoBoard(this, origin);
-        // Test that is actually fits in the game
-        if (invalidMove(tetrad, Vector2.Zero)) {
-            if (!invalidMove(tetrad, new Vector2(-1, 0))) {
-                tetrad.origin.x -= 1;
-            }
-            else if (!invalidMove(tetrad, new Vector2(1, 0))) {
-                tetrad.origin.x += 1;
-            } else {
-                // can't fit into the board
-                // TODO: Play some sound here
-                if (current != null) {
-                    current.insertIntoBoard(this, tetrad.origin);
-                }
-                return tetrad;
-
-            }
-        }
-
-        activeTetrad = tetrad;
+        lastSwap.insertIntoBoard(this);
+        activeTetrad = lastSwap;
 
         return current;
     }

@@ -413,20 +413,12 @@ public class Tetrad implements Pool.Poolable {
     }
 
     public void insertIntoBoard(GameBoard gameBoard) {
-        insertIntoBoard(gameBoard, null);
-    }
-
-    public void insertIntoBoard(GameBoard gameBoard, Vector2 curOrigin) {
         this.gameBoard = gameBoard;
-        if (curOrigin != null) {
-            this.origin = curOrigin;
-        } else {
-            int height = 0;
-            for (TetradPiece point : points) {
-                if (point.y > height) height = point.y;
-            }
-            this.origin = new Vector2(4, 19 - height);
+        int height = 0;
+        for (TetradPiece point : points) {
+            if (point.y > height) height = point.y;
         }
+        this.origin = new Vector2(4, 19 - height);
     }
 
     public Vector2 removeFromBoard() {

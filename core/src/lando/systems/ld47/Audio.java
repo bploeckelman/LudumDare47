@@ -22,7 +22,7 @@ public class Audio implements Disposable {
     // none should not have a sound
     public enum Sounds {
         none, cha_ching,
-        tet_plunge, tet_rotate, tet_land, tet_clearLine,
+        tet_plunge, tet_rotate, tet_land, tet_clearLine, tet_noswap,
         holdUIExplode, crash, fireballExplosion,
         dec_shoot, dec_move, dec_hover, dec_teleport
     }
