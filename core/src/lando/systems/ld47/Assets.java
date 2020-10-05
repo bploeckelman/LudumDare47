@@ -49,6 +49,9 @@ public class Assets implements Disposable {
     public TextureRegion whitePixel;
     public TextureRegion whiteCircle;
     public TextureRegion gameBoardTexture;
+    public TextureRegion gamepadIcon;
+    public TextureRegion settingsIcon;
+    public TextureRegion uploadIcon;
     public TextureRegion[] blockFaces;
     //public TextureRegion tetradSquare;
     public Animation<TextureRegion> orangeBlock;
@@ -156,6 +159,10 @@ public class Assets implements Disposable {
         whitePixel = atlas.findRegion("white-pixel");
         whiteCircle = atlas.findRegion("white-circle");
         gameBoardTexture = atlas.findRegion("backpanel");
+        gamepadIcon = atlas.findRegion("icons/gamepad");
+//        settingsIcon = atlas.findRegion("icons/settings");
+        settingsIcon = atlas.findRegion("icons/gear");
+        uploadIcon = atlas.findRegion("icons/upload");
 
         //tetradSquare = atlas.findRegion("tetrad-square");
         blueBlock = new Animation<>(0.1f, atlas.findRegions("block-blue"), Animation.PlayMode.LOOP);

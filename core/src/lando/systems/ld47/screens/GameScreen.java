@@ -110,4 +110,7 @@ public class GameScreen extends BaseScreen{
         gameBoard.pause();
     }
 
+    public boolean isGamepadConnected() {
+        return playerInput.isGamepadConnected();
+    }
 }

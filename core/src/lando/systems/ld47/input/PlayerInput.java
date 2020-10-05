@@ -200,13 +200,6 @@ public class PlayerInput extends ControllerAdapter {
                 || controllerState.holdButtonJustPressed;
     }
 
-    // if the controller is connected when launching the game it doesn't register, call this to reset it
-    public void recheckController() {
-        if (controllerState.controller == null && !Controllers.getControllers().isEmpty()) {
-            controllerState.controller = Controllers.getControllers().first();
-        }
-    }
-
     public boolean isAnyButtonPressed() {
         if (controllerState.controller == null) return false;
 
@@ -225,6 +218,17 @@ public class PlayerInput extends ControllerAdapter {
 
     public boolean isPauseButtonJustPressed() {
         return controllerState.pauseButtonJustPressed;
+    }
+
+    public boolean isGamepadConnected() {
+        return (controllerState.controller != null);
+    }
+
+    // if the controller is connected when launching the game it doesn't register, call this to reset it
+    public void recheckController() {
+        if (controllerState.controller == null && !Controllers.getControllers().isEmpty()) {
+            controllerState.controller = Controllers.getControllers().first();
+        }
     }
 
     // ------------------------------------------------------------------------------
