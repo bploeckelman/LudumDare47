@@ -172,8 +172,7 @@ public class GameBoard {
                 activeTetrad.insertIntoBoard(this);
                 if (invalidMove(activeTetrad, Vector2.Zero)) {
                     //GAME OVER
-                    //TODO something else
-                    tetrads.clear();
+                    gameState.gameScreen.gameOver();
                 }
                 timeToFall = fallInterval;
             }

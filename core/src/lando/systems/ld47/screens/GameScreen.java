@@ -45,11 +45,6 @@ public class GameScreen extends BaseScreen{
         shader = game.idkfa ? game.assets.cityShader2 : game.assets.cityShader;
         accum += dt;
 
-        // TODO: remove
-        if (Gdx.input.isKeyJustPressed(Input.Keys.P)){
-            game.setScreen(new EndScreen(game, gameHud.getCurrentScore(), gameHud.getCurrentRank()));
-        }
-
         gameBoard.update(dt);
         opponent.update(dt);
         gameHud.update(dt);
@@ -86,4 +81,9 @@ public class GameScreen extends BaseScreen{
         }
         batch.end();
     }
+
+    public void gameOver() {
+        game.setScreen(new EndScreen(game, gameHud.getCurrentScore(), gameHud.getCurrentRank()));
+    }
+
 }
