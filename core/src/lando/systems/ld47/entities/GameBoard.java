@@ -41,7 +41,7 @@ public class GameBoard {
     private boolean previousBlockCleared = false;
     PerspectiveCamera boardCam;
     private Color ambientColor = new Color(.3f, .3f, .3f, 1f);
-    private Color directionColor = new Color(.6f, .6f, .6f, 1f);
+    private Color directionColor = new Color(.6f, .3f, .6f, 1f);
     private Vector3 directionLight = new Vector3(.1f, -.5f, .5f).nor();
 
     public PointLight[] pointLights;
@@ -75,9 +75,9 @@ public class GameBoard {
         backPlate = new GameBackPlate();
 
         pointLights = new PointLight[MAX_POINT_LIGHTS];
-        pointLights[0] = new OrbitPointLight(0, new Vector3(0, 0, 15), new Color(.6f, 0, .6f, 1f), new Vector3(.5f, .5f, 0));
-        pointLights[1] = new OrbitPointLight(1, new Vector3(0, 0, -15), new Color(0f, .6f, .6f, 1f), new Vector3(-.5f, .5f, 0f));
-        pointLights[2] = new OrbitPointLight(2, new Vector3(-15, 0, 0), new Color(.6f, .6f, 0f, 1f), new Vector3(0, 1, 0));
+        pointLights[0] = new OrbitPointLight(0, new Vector3(0, 0, 15), new Color(.5f, 0, .5f, 1f), new Vector3(.5f, .5f, 0));
+        pointLights[1] = new OrbitPointLight(1, new Vector3(0, 0, -15), new Color(0f, .5f, .5f, 1f), new Vector3(-.5f, .5f, 0f));
+        pointLights[2] = new OrbitPointLight(2, new Vector3(-15, 0, 0), new Color(.5f, .5f, 0f, 1f), new Vector3(0, 1, 0));
         pointLights[3] = new PointLight(3, new Vector3(-30, 10, 20), new Color(.3f, .3f, .3f, 1f));
         pointLights[4] = new PointLight(4, new Vector3(-30, 10, 20), new Color(.3f, .3f, .3f, 1f));
     }

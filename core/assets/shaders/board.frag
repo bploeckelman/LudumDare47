@@ -30,11 +30,11 @@ void main() {
     float delta = 0.1 / 2.0;
     float x = fract(v_pos.x);
     x = min(x, 1.0 - x);
-    float xdelta = fwidth(x);
+    float xdelta = abs(dFdx(x)) + abs(dFdy(x));
     x = smoothstep(x - xdelta, x + xdelta, thickness);
     float y = fract(v_pos.y);
     y = min(y, 1.0 - y);
-    float ydelta = fwidth(y);
+    float ydelta = abs(dFdx(y)) + abs(dFdy(y));
     y = smoothstep(y - ydelta, y + ydelta, thickness);
     float grid =clamp(x + y, 0.0, 1.0);
 
