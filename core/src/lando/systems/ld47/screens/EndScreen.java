@@ -24,7 +24,7 @@ public class EndScreen extends BaseScreen {
     static String theme = "Made for Ludum Dare 47: Stuck in a Loop";
     static String thanks = "Thanks for playing our game!";
     static String developers = "Developed by:\nDoug Graham\nBrian Ploeckelman\nBrian Rossman\nJeffrey Hwang";
-    static String artists = "Art by:\nMatt Neumann and Luke Bain";
+    static String artists = "Art by:\nMatt Neumann";
     static String emotionalSupport = "Emotional Support:\nAsuka and Cherry";
     static String music = "Sound by:\nPeat Vee";
     static String libgdx = "Made with {COLOR=red}<3{COLOR=white} and LibGDX";
@@ -36,33 +36,33 @@ public class EndScreen extends BaseScreen {
 
     public EndScreen(Game game, int currentScore, int currentRank) {
         super(game);
-        titleLabel = new TypingLabel(assets.font, title, 0f, Config.windowHeight / 2f + 290f);
+        titleLabel = new TypingLabel(assets.bladeFont64, title.toLowerCase(), 0f, Config.windowHeight / 2f + 290f);
         titleLabel.setWidth(Config.windowWidth);
-        titleLabel.setFontScale(1.5f);
+        titleLabel.setFontScale(1f);
 
-        themeLabel = new TypingLabel(assets.font, theme, 0f, Config.windowHeight / 2f + 200f);
+        themeLabel = new TypingLabel(assets.bladeFont32, theme.toLowerCase(), 0f, Config.windowHeight / 2f + 220f);
         themeLabel.setWidth(Config.windowWidth);
         themeLabel.setFontScale(1f);
 
-        leftCreditLabel = new TypingLabel(assets.font, developers + "\n\n" + emotionalSupport + "\n\n", 75f, Config.windowHeight / 2f + 155f);
+        leftCreditLabel = new TypingLabel(assets.bladeFont32, developers.toLowerCase() + "\n\n" + emotionalSupport.toLowerCase() + "\n\n", 75f, Config.windowHeight / 2f + 135f);
         leftCreditLabel.setWidth(Config.windowWidth / 2f - 150f);
         leftCreditLabel.setLineAlign(Align.left);
         leftCreditLabel.setFontScale(1f);
 
-        rightCreditLabel = new TypingLabel(assets.font, artists + "\n\n" + music + "\n\n" + libgdx, Config.windowWidth / 2 + 75f, Config.windowHeight / 2f + 155f);
+        rightCreditLabel = new TypingLabel(assets.bladeFont32, artists.toLowerCase() + "\n\n" + music.toLowerCase() + "\n\n" + libgdx.toLowerCase(), Config.windowWidth / 2 + 75f, Config.windowHeight / 2f + 135f);
         rightCreditLabel.setWidth(Config.windowWidth / 2f - 150f);
         rightCreditLabel.setLineAlign(Align.left);
         rightCreditLabel.setFontScale(1f);
 
-        thanksLabel = new TypingLabel(assets.font, thanks, 0f, 125f);
+        thanksLabel = new TypingLabel(assets.bladeFont32, thanks.toLowerCase(), 0f, 105f);
         thanksLabel.setWidth(Config.windowWidth);
         thanksLabel.setLineAlign(Align.center);
         thanksLabel.setFontScale(1f);
 
-        disclaimerLabel = new TypingLabel(assets.font, "{JUMP=.2}{WAVE=0.9;1.2;1.75}{RAINBOW}" + disclaimer + "{ENDRAINBOW}{ENDWAVE}{ENDJUMP}", 0f, 75f);
+        disclaimerLabel = new TypingLabel(assets.bladeFont32, "{JUMP=.2}{WAVE=0.9;1.2;1.75}{RAINBOW}" + disclaimer + "{ENDRAINBOW}{ENDWAVE}{ENDJUMP}", 0f, 75f);
         disclaimerLabel.setWidth(Config.windowWidth);
         thanksLabel.setLineAlign(Align.center);
-        disclaimerLabel.setFontScale(.75f);
+        disclaimerLabel.setFontScale(.7f);
 
         scoreEntryUI = new ScoreEntryUI(this, currentScore, currentRank);
         if (currentScore != 0) {

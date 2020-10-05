@@ -53,8 +53,7 @@ public class ScoreUI extends UserInterface {
             timerText += minutes + "m " + seconds + "s";
         }
         else {
-            String formattedString = String.format("%.02f", time);
-            timerText += formattedString + "s";
+            timerText += Math.round(time * 100f) / 100f + "s";
         }
         assets.bladeFont32.getData().setScale(.7f);
         layout.setText(assets.bladeFont32, timerText, Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth / 4 - 20f, Align.left, false);
