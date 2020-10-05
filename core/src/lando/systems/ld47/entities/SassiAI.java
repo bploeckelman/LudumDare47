@@ -225,7 +225,7 @@ public class SassiAI {
             case shootLeft:
             case shootRight:
                 direction = (action == Actions.shootRight) ? Opponent.Direction.left : Opponent.Direction.right;
-                // opponent.shoot(target);
+                opponent.shoot(target);
                 break;
             case ramLeft:
             case ramRight:
