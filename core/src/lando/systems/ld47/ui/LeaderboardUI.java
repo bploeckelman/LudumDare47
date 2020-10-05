@@ -112,8 +112,8 @@ public class LeaderboardUI extends UserInterface {
         }
 
         if (currentRank >= 19) {
-            layout.setText(assets.bladeFont16, currentRank + ": ", Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
-            assets.bladeFont16.draw(batch, layout, rankColumnX, gameState.gameScreen.hudCamera.viewportHeight - startingY - (30*17));
+//            layout.setText(assets.bladeFont16, currentRank + ": ", Color.WHITE, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
+//            assets.bladeFont16.draw(batch, layout, rankColumnX, gameState.gameScreen.hudCamera.viewportHeight - startingY - (30*17));
 
             layout.setText(assets.bladeFont16, currentLeaderboardScore.getName().toLowerCase(), Color.RED, gameState.gameScreen.hudCamera.viewportWidth, Align.left, false);
             assets.bladeFont16.draw(batch, layout, nameColumnX, gameState.gameScreen.hudCamera.viewportHeight - startingY - (30*17));
