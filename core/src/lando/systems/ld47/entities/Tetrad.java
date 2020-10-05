@@ -87,8 +87,23 @@ public class Tetrad implements Pool.Poolable {
 
         for (TetradPiece point : points) {
             point.update(dt);
-
         }
+
+        int minX = 4;
+        int maxX = -1;
+        int minY = 4;
+        int maxY = -1;
+        for (TetradPiece point : points) {
+            minX = Math.min(point.x, minX);
+            maxX = Math.max(point.x, maxX);
+            minY = Math.min(point.y, minY);
+            maxY = Math.max(point.y, maxY);
+        }
+        int deltaX = maxX - minX + 1;
+        int deltaY = maxY - minY + 1;
+
+        center.set((deltaX + minX)/2f, (deltaY + minY)/2f);
+
         flashing = gameBoard.tetradToRemove == this;
         if (flashing) {
             color.a = (1f + MathUtils.sin(accum * 10f)) / 2f;
