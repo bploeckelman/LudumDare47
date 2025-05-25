@@ -1,0 +1,61 @@
+'pete',7000
+'cherry',12400
+'CHong',16600
+'MOOMIN',32200
+'FLURRY',3000
+'anonymous',2400
+'anonymous',600
+'eL FURIAS',2200
+'ssssssssss',2400
+'Best',3800
+'madison',10200
+'alek',11800
+'No Grapes',10800
+'madison',29000
+'Minibetrayal',14000
+'probably doug',4000
+'nexus',9400
+'tyrell',10800
+'Siddharth',1200
+'slapshot',6200
+'so close',10000
+'topwise',8800
+'anonymuse',11400
+'ludumite',7200
+'next up',8600
+'oh dear why',13000
+'harris one',17000
+'cascadia',14600
+'groceries',16600
+'craig',5600
+'Marco',3800
+'Hadesfury',17600
+'Andidebob',7000
+'UGLYSWEDISHFISH',17600
+'MeCubed',21600
+'    Steamdr4gon',5800
+'Party Lead Vi',32000
+'marcusuke',2600
+'anonymous',6400
+'ragnar',11200
+'s',6600
+'alex',6200
+'rash',17600
+'Randy',9600
+'quaaludum dare',25000
+'sanojian',2800
+'gladys',13600
+'skleembof',1600
+'skleembof',2400
+'glo',24800
+'glo',3000
+'SYNONYMOUS',14600
+'Sage',20600
+'Zeekza',40200
+'ironman is a lie',200
+'anonymous',6200
+'anonymous',1000
+'anonymous',3000
+'mp And DG',2200
+'Marky mark',8400
+'douG',8200

@@ -21,6 +21,188 @@
               <script type="text/javascript" src="html/html.nocache.js"></script>
        </body>
 
+       <!--
+         NOTE(2025-05-25): this game used to have a live webservice for high score tracking,
+           but the webservice has been sunset because it was no longer worth maintaining through
+           a server migration. The leaderboard is now statically generated from a database dump.
+       -->
+       <script>
+         document.getElementById('gameViewport').setAttribute('content',
+           'width=device-width initial-scale=' + 1/window.devicePixelRatio);
+
+         window.onkeydown =
+           function(event) {
+             // prevent all navigation keys except the space key
+             if([33, 34, 35, 36, 37, 38, 39, 40].indexOf(event.keyCode) > -1) {
+               event.preventDefault();
+               return false;
+             }
+           };
+
+         window.onkeypress =
+           function(event) {
+             // prevent the space key (page scroll)
+             if(event.code === "Space"){
+               event.preventDefault();
+               return false;
+             }
+           };
+
+         function handleMouseDown(evt) {
+           evt.preventDefault();
+           evt.stopPropagation();
+           window.focus();
+         }
+
+         function handleMouseUp(evt) {
+           evt.preventDefault();
+           evt.stopPropagation();
+           evt.target.style.cursor = '';
+         }
+
+         function addCell(tr, val) {
+           var td = document.createElement('td');
+           td.innerHTML = val;
+           tr.appendChild(td)
+         }
+
+         function addRow(tbl, val_1, val_2) {
+           var tr = document.createElement('tr');
+           addCell(tr, val_1.toLowerCase());
+           addCell(tr, val_2);
+           tbl.appendChild(tr)
+         }
+
+         // Hardcoded scores from the database dump
+         const hardcodedScores = [
+           {name: "pete", score: 7000},
+           {name: "cherry", score: 12400},
+           {name: "CHong", score: 16600},
+           {name: "MOOMIN", score: 32200},
+           {name: "FLURRY", score: 3000},
+           {name: "anonymous", score: 2400},
+           {name: "anonymous", score: 600},
+           {name: "eL FURIAS", score: 2200},
+           {name: "ssssssssss", score: 2400},
+           {name: "Best", score: 3800},
+           {name: "madison", score: 10200},
+           {name: "alek", score: 11800},
+           {name: "No Grapes", score: 10800},
+           {name: "madison", score: 29000},
+           {name: "Minibetrayal", score: 14000},
+           {name: "probably doug", score: 4000},
+           {name: "nexus", score: 9400},
+           {name: "tyrell", score: 10800},
+           {name: "Siddharth", score: 1200},
+           {name: "slapshot", score: 6200},
+           {name: "so close", score: 10000},
+           {name: "topwise", score: 8800},
+           {name: "anonymuse", score: 11400},
+           {name: "ludumite", score: 7200},
+           {name: "next up", score: 8600},
+           {name: "oh dear why", score: 13000},
+           {name: "harris one", score: 17000},
+           {name: "cascadia", score: 14600},
+           {name: "groceries", score: 16600},
+           {name: "craig", score: 5600},
+           {name: "Marco", score: 3800},
+           {name: "Hadesfury", score: 17600},
+           {name: "Andidebob", score: 7000},
+           {name: "UGLYSWEDISHFISH", score: 17600},
+           {name: "MeCubed", score: 21600},
+           {name: "    Steamdr4gon", score: 5800},
+           {name: "Party Lead Vi", score: 32000},
+           {name: "marcusuke", score: 2600},
+           {name: "anonymous", score: 6400},
+           {name: "ragnar", score: 11200},
+           {name: "s", score: 6600},
+           {name: "alex", score: 6200},
+           {name: "rash", score: 17600},
+           {name: "Randy", score: 9600},
+           {name: "quaaludum dare", score: 25000},
+           {name: "sanojian", score: 2800},
+           {name: "gladys", score: 13600},
+           {name: "skleembof", score: 1600},
+           {name: "skleembof", score: 2400},
+           {name: "glo", score: 24800},
+           {name: "glo", score: 3000},
+           {name: "SYNONYMOUS", score: 14600},
+           {name: "Sage", score: 20600},
+           {name: "Zeekza", score: 40200},
+           {name: "ironman is a lie", score: 200},
+           {name: "anonymous", score: 6200},
+           {name: "anonymous", score: 1000},
+           {name: "anonymous", score: 3000},
+           {name: "mp And DG", score: 2200},
+           {name: "Marky mark", score: 8400},
+           {name: "douG", score: 8200}
+         ];
+
+         // Sort scores in descending order (highest first)
+         const sortedScores = hardcodedScores.sort((a, b) => b.score - a.score);
+
+         // Initialize pagination
+         let page = 0;
+         let canAdvance = true;
+         const scoresPerPage = 10; // Adjust this based on your original pagination size
+
+         // Initialize the leaderboard on page load
+         (function init(){
+           displayPage(0);
+         })();
+
+         const getPage = function(type) {
+           if(type == "next"){
+             if (canAdvance && (page + 1) * scoresPerPage < sortedScores.length) {
+               page++;
+             }
+           }
+
+           if(type == "previous"){
+             if(page > 0) {
+               page--;
+             }
+           }
+
+           displayPage(page);
+         }
+
+         function displayPage(pageNum) {
+           const startIndex = pageNum * scoresPerPage;
+           const endIndex = Math.min(startIndex + scoresPerPage, sortedScores.length);
+           const pageScores = sortedScores.slice(startIndex, endIndex);
+
+           const tbl = document.getElementById('leaderboard');
+
+           // Clear existing rows
+           while (tbl.firstChild) {
+             tbl.removeChild(tbl.firstChild);
+           }
+
+           // Add scores for this page
+           for (let score of pageScores) {
+             addRow(tbl, score.name, score.score);
+           }
+
+           // Update page display
+           document.getElementById('current-page').innerHTML = pageNum + 1;
+
+           // Update canAdvance flag
+           canAdvance = endIndex < sortedScores.length;
+         }
+
+         document.getElementById('embed-html').addEventListener('mousedown', handleMouseDown, false);
+         document.getElementById('embed-html').addEventListener('mouseup', handleMouseUp, false);
+
+         document.getElementById("previous").addEventListener('click',function(){
+           getPage('previous')
+         });
+         document.getElementById("next").addEventListener('click',function(){
+           getPage('next')
+         });
+       </script>
+
+<!-- NOTE: old script that pulled scores from the web service, sunset on 2025-05-25 related to a server migration
        <script>
               document.getElementById('gameViewport').setAttribute('content',
                  'width=device-width initial-scale=' + 1/window.devicePixelRatio);
@@ -143,4 +325,5 @@
                      getPage('next')
               });
        </script>
+-->
 </html>

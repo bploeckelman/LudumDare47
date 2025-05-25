@@ -58,5 +58,4 @@ public class LeaderboardScore implements Comparable<LeaderboardScore> {
     public String toString() {
         return "[Score: " + getName() + ", " + getScore() + "]";
     }
-
 }
